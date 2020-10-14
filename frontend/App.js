@@ -220,18 +220,23 @@ function TapNavigator() {
 }
 
 function CustomDrawerContent(props) {
+  // const [username, setUsername] = useState(null);
+
+  // useEffect(async () => {
+  //   username = await AsyncStorage.getItem('username')
+  // })
   return (
-    <SafeAreaView style={{flex:1}}>
-      <ScrollView style={{marginLeft: 20}}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollArea}>
         <TouchableOpacity
           onPress={() => props.navigation.navigate('메뉴')}
-          style={{marginTop: 20}}
+          style={styles.linkBtn}
         >
           <Text>메뉴</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => props.navigation.navigate('내 정보')}
-          style={{marginTop: 20}}
+          style={styles.linkBtn}
         >
           <Text>내 정보</Text>
         </TouchableOpacity>
@@ -276,6 +281,18 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollArea: {
+    marginLeft: 20,
+  },
+  linkBtn: {
+    marginTop: 20,
+  },
+})
 
 // class App extends Component {
 //   constructor(props) {
