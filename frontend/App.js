@@ -22,16 +22,20 @@ import Update from './screens/Account/update';
 import UpdateImg from './screens/Account/updateImg';
 import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
+
 import Record from './screens/Record/record';
 import DetailImage from './screens/Record/detail_image';
+import MyDatePicker from './screens/Record/date_picker';
+
 import Rank from './screens/Rank/rank';
+
 import Community from './screens/Community/community';
 import Comment from './screens/Community/comment';
 import CreateSelect from './screens/Community/create_select';
 import CreateArticle from './screens/Community/create_article';
 import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
-// import Home from './screens/home';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
@@ -93,6 +97,11 @@ function RecordStack() {
         name="DetailImage"
         component={DetailImage}
         options={{title: '상세 이미지'}}
+      />
+      <Stack.Screen 
+        name="MyDatePicker"
+        component={MyDatePicker}
+        options={{title: '날짜 선택'}}
       />
     </Stack.Navigator>
   )

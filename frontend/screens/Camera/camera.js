@@ -42,24 +42,8 @@ export default class Camera extends Component {
         this.setState({
           avatarSource: source,
         });
+        this.props.onCamera(response);
 
-        var data = new FormData();
-        data.append('data', response.data);
-        data.append('type', response.type);
-        data.append('fileName', response.fileName);
-        fetch(`${serverUrl}gallery/saveMenu/`, {
-          method: 'POST',
-          body: data,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Token ${token}`,
-          },
-        })
-          .then(() => {
-            this.props.onCamera();
-          })
-          .catch((error) => console.error(error));
-        
       }
     });
   };
