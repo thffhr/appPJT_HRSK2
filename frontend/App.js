@@ -53,7 +53,7 @@ function CommunityStack() {
       <Stack.Screen
         name="MyFeed"
         component={MyFeed}
-        options={{title: '내 피드'}}
+        options={{title: '내 피드 디테일 사진'}}
       />
       <Stack.Screen
         name="UserFeed"
