@@ -495,21 +495,23 @@ export default class Record extends Component {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={{marginBottom: 10}}>식단을 삭제하시겠습니까?</Text>
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text style={styles.textStyle}>아니오</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={() => {
-                  this.delMenu();
-                }}>
-                <Text style={styles.textStyle}>네</Text>
-              </TouchableHighlight>
+              <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
+              <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.delMenu();
+                  }}>
+                  <Text style={styles.textStyle}>삭제</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <Text style={styles.textStyle}>취소</Text>
+                </TouchableHighlight>
+              </View>
             </View>
           </View>
         </Modal>
@@ -905,15 +907,33 @@ export default class Record extends Component {
                   {Object.entries(this.state.selectedDate)
                     .filter(([key, value]) => key !== 'date')
                     .map(([key, value], i) => {
-                      return (
-                        <View style={styles.macroBox} key={i}>
-                          <Text style={styles.macroTxt}>{key}</Text>
-                          <Text style={styles.macroTxt}>
-                            {value}
-                            {'   '}kcal
-                          </Text>
-                        </View>
-                      );
+                      if (key !== '총합') {
+                        return (
+                          <View style={styles.macroBox} key={i}>
+                            <Text style={styles.macroTxt}>{key}</Text>
+                            <Text style={styles.macroTxt}>
+                              {value}
+                              {'   '}kcal
+                            </Text>
+                          </View>
+                        );
+                      } else if (key === '총합') {
+                        return (
+                          <View
+                            style={[styles.macroBox, {fontWeight: 'bold'}]}
+                            key={i}>
+                            <Text
+                              style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                              {key}
+                            </Text>
+                            <Text
+                              style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                              {value}
+                              {'   '}kcal
+                            </Text>
+                          </View>
+                        );
+                      }
                     })}
                 </View>
               )}
@@ -1088,10 +1108,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
+  modalButton: {
+    backgroundColor: '#FCA652',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
     elevation: 2,
   },
   // btn3

@@ -74,6 +74,7 @@ class Profile extends Component {
       profileImage: this.state.profileImage,
       username: username,
       active: this.state.active,
+      weight: this.state.weight,
     });
   };
   render() {

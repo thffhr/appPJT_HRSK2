@@ -162,24 +162,30 @@ export default class Community extends Component {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={{marginBottom: 10}}>레시피 내용</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
+              </TouchableHighlight>
+              </View>
+              <View style={{margin:10, alignContent: 'center'}}>
               {this.state.modalData
                 .split('|')
                 .filter((word) => word)
                 .map((line, i) => {
                   return (
-                    <Text>
-                      {i + 1}. {line}
+                    <View style={{flexDirection: 'row', marginVertical: 3}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
+                    <Text style={{fontSize: 17}}>
+                      {line}
                     </Text>
+                    </View>
                   );
                 })}
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </TouchableHighlight>
+              </View>
             </View>
           </View>
         </Modal>
@@ -190,40 +196,46 @@ export default class Community extends Component {
                 {this.state.articles.map((article) => {
                   return (
                     <View style={styles.article} key={article.id}>
-                      <View style={styles.writer}>
-                        {article.user.profileImage && (
-                          <Image
-                            style={styles.writerImg}
-                            source={{
-                              uri: `${serverUrl}gallery${article.user.profileImage}`,
-                            }}
-                          />
-                        )}
-                        {!article.user.profileImage && (
-                          <Image
-                            style={styles.writerImg}
-                            source={{
-                              uri:
-                                'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                            }}
-                          />
-                        )}
-                        <TouchableHighlight
-                          onPress={() => {
-                            this.props.navigation.push('UserFeed', {
-                              username: article.user.username,
-                            });
-                          }}>
-                          <Text
-                            style={{
-                              marginLeft: 10,
-                              fontSize: 20,
-                              fontWeight: 'bold',
+                      {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
+                        <View style={styles.writer}>
+                          <View style={{flexDirection: 'row', alignItems: 'center',}}>
+                          {article.user.profileImage && (
+                            <Image
+                              style={styles.writerImg}
+                              source={{
+                                uri: `${serverUrl}gallery${article.user.profileImage}`,
+                              }}
+                            />
+                          )}
+                          {!article.user.profileImage && (
+                            <Image
+                              style={styles.writerImg}
+                              source={{
+                                uri:
+                                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                              }}
+                            />
+                          )}
+                          <TouchableHighlight
+                            onPress={() => {
+                              this.props.navigation.push('UserFeed', {
+                                username: article.user.username,
+                              });
                             }}>
-                            {article.user.username}
-                          </Text>
-                        </TouchableHighlight>
-                      </View>
+                            <Text
+                              style={{
+                                marginLeft: 10,
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                              }}>
+                              {article.user.username}
+                            </Text>
+                          </TouchableHighlight>
+                          </View>
+                          {/* 여기에 북마크, 삭제 등등 추가 */}
+                          <Icon name="ellipsis-vertical" style={{marginRight: 40, fontSize: 20}}></Icon>
+                        </View>
+                      {/* </View> */}
                       {/* <View style={styles.tags}>
                           {article.tags.map((tag) => {
                             return (
@@ -538,6 +550,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   writerImg: {
     borderRadius: 50,
@@ -622,11 +635,12 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
+    width: '60%',
     margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    padding: 15,
+    // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -637,10 +651,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
+    width: 100,
+    backgroundColor: '#FCA652',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     elevation: 2,
+    alignContent: 'center',
   },
   textStyle: {
     color: 'white',
