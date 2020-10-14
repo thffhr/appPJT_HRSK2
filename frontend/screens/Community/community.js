@@ -97,7 +97,22 @@ export default class Community extends Component {
         console.error(err);
       });
   };
-  swtichBtn = (flag) => {
+  swtichBtn = async (flag) => { 
+    if (!flag) {
+      const username = await AsyncStorage.getItem('username');
+      fetch(`${serverUrl}accounts/profile/${username}/`, {
+        method: 'GET',
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            userData: response,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
     this.setState({
       selectedHome: flag,
     });
@@ -198,39 +213,41 @@ export default class Community extends Component {
                     <View style={styles.article} key={article.id}>
                       {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
                         <View style={styles.writer}>
-                          <View style={{flexDirection: 'row', alignItems: 'center',}}>
-                          {article.user.profileImage && (
-                            <Image
-                              style={styles.writerImg}
-                              source={{
-                                uri: `${serverUrl}gallery${article.user.profileImage}`,
-                              }}
-                            />
-                          )}
-                          {!article.user.profileImage && (
-                            <Image
-                              style={styles.writerImg}
-                              source={{
-                                uri:
-                                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                              }}
-                            />
-                          )}
-                          <TouchableHighlight
-                            onPress={() => {
-                              this.props.navigation.push('UserFeed', {
-                                username: article.user.username,
-                              });
-                            }}>
-                            <Text
-                              style={{
-                                marginLeft: 10,
-                                fontSize: 20,
-                                fontWeight: 'bold',
+                          <View>
+                          <TouchableOpacity
+                              style={styles.userBtn}
+                              onPress={() => {
+                                this.props.navigation.push('UserFeed', {
+                                  username: article.user.username,
+                                });
                               }}>
-                              {article.user.username}
-                            </Text>
-                          </TouchableHighlight>
+                            {article.user.profileImage && (
+                              <Image
+                                style={styles.writerImg}
+                                source={{
+                                  uri: `${serverUrl}gallery${article.user.profileImage}`,
+                                }}
+                              />
+                            )}
+                            {!article.user.profileImage && (
+                              <Image
+                                style={styles.writerImg}
+                                source={{
+                                  uri:
+                                    'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                                }}
+                              />
+                            )}
+                            
+                              <Text
+                                style={{
+                                  marginLeft: 10,
+                                  fontSize: 20,
+                                  fontWeight: 'bold',
+                                }}>
+                                {article.user.username}
+                              </Text>
+                            </TouchableOpacity>
                           </View>
                           {/* 여기에 북마크, 삭제 등등 추가 */}
                           <Icon name="ellipsis-vertical" style={{marginRight: 40, fontSize: 20}}></Icon>
@@ -517,15 +534,12 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
-    // borderBottomColor: 'gray',
-    // borderBottomWidth: 2,
     backgroundColor: '#fca652',
     elevation: 5,
     flexDirection: 'row',
   },
   haru: {
     fontSize: 30,
-    // fontWeight: 'bold',
     color: '#FFFFFF',
     fontFamily: 'BMJUA',
     marginLeft: 15,
@@ -543,6 +557,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     marginVertical: 20,
+  },
+  userBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   writer: {
     marginLeft: '5%',
@@ -563,7 +581,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   articleBelow: {
-    marginLeft: '5%',
+    marginHorizontal: '5%',
   },
   likeText: {
     marginBottom: 10,

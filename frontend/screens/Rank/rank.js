@@ -9,6 +9,8 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  Modal,
+  TouchableHighlight,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -45,6 +47,8 @@ class Rank extends Component {
       btn1_color: '#fca652',
       btn2_color: 'transparent',
       active: 'btn1',
+      modalData: '',
+      modalVisible: false,
     };
   }
   onBtn1 = () => {
@@ -99,13 +103,25 @@ class Rank extends Component {
         console.log(err);
       });
   };
+  setModalVisible = (visible, recipe) => {
+    if (visible) {
+      this.setState({
+        modalData: recipe,
+      });
+    } else {
+      this.setState({
+        modalData: '',
+      });
+    }
+    this.setState({modalVisible: visible});
+  };
   componentDidMount() {
     this.getArticles();
     this.getDatas();
-  }
+  };
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.navbar}>
           <Text style={styles.haru}>하루세끼</Text>
         </View>
@@ -121,7 +137,55 @@ class Rank extends Component {
             <Text style={styles.btnText}>팔로워</Text>
           </TouchableOpacity>
         </View>
-        <View style={{width: '100%'}}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}>
+          <View
+            style={{
+              width: '100%',
+              height: H,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}></View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
+              </TouchableHighlight>
+              </View>
+              <View style={{margin:10, alignContent: 'center'}}>
+              {this.state.modalData
+                .split('|')
+                .filter((word) => word)
+                .map((line, i) => {
+                  return (
+                    <View style={{flexDirection: 'row', marginVertical: 3}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
+                    <Text style={{fontSize: 17}}>
+                      {line}
+                    </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <ScrollView>
           {this.state.active == 'btn1' && (
             <View style={{width: '100%'}}>
               <View style={styles.rankArea}>
@@ -374,35 +438,45 @@ class Rank extends Component {
               {this.state.BestUser.map((user, i) => {
                 return (
                   <View style={styles.follow} key={user.id}>
+                    <TouchableOpacity
+                    style={styles.userBtn}
+                      onPress={() => {
+                        this.props.navigation.push('UserFeed', {
+                          username: user.username,
+                        })
+                      }}
+                    >
                     <Text style={styles.ranking}>{i + 1}</Text>
-                    {this.state.profileImage && (
-                      <Image
-                        style={styles.profileImg}
-                        source={{
-                          uri: `${serverUrl}gallery` + this.state.profileImage,
-                        }}
-                      />
-                    )}
-                    {!this.state.profileImage && (
-                      <Image
-                        style={styles.profileImg}
-                        source={{
-                          uri:
-                            'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                        }}
-                      />
-                    )}
-                    <Text style={styles.followUser}>{user.username}</Text>
-                    <Text style={styles.followCnt}>
-                      {user.num_of_followers}
-                    </Text>
+                      {this.state.profileImage && (
+                        <Image
+                          style={styles.profileImg}
+                          source={{
+                            uri: `${serverUrl}gallery` + this.state.profileImage,
+                          }}
+                        />
+                      )}
+                      {!this.state.profileImage && (
+                        <Image
+                          style={styles.profileImg}
+                          source={{
+                            uri:
+                              'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                          }}
+                        />
+                      )}
+                      <Text style={styles.followUser}>{user.username}</Text>
+                      <Text style={styles.followUser}>
+                        {user.num_of_followers} 명
+                      </Text>
+                    </TouchableOpacity>
+
                   </View>
                 );
               })}
             </View>
           )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -431,7 +505,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   btn1: {
     flexDirection: 'row',
@@ -472,7 +546,6 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%',
     flexDirection: 'column',
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   title: {
     fontSize: 25,
@@ -520,6 +593,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   follow: {
+  },
+  userBtn: {
     flexDirection: 'row',
     marginTop: '10%',
     marginLeft: '10%',
@@ -528,25 +603,19 @@ const styles = StyleSheet.create({
   ranking: {
     marginRight: '5%',
     fontSize: W * 0.1,
-    fontFamily: 'BMHANNA',
-    width: W * 0.05,
+    fontFamily: 'BMJUA',
+    width: W * 0.07,
   },
   followUser: {
     marginRight: '5%',
-    fontSize: W * 0.07,
-    fontFamily: 'BMHANNA',
+    fontSize: W * 0.06,
+    fontFamily: 'BMJUA',
     width: W * 0.35,
-  },
-  followCnt: {
-    marginRight: '5%',
-    fontSize: W * 0.07,
-    fontFamily: 'BMHANNA',
-    width: W * 0.25,
   },
   profileImg: {
     borderRadius: W * 0.15,
-    width: W * 0.15,
-    height: W * 0.15,
+    width: W * 0.13,
+    height: W * 0.13,
     marginRight: '5%',
   },
   Box: {
@@ -603,6 +672,29 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'HANNAAir',
     marginBottom: 30,
+  },
+  // modal
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    width: '60%',
+    margin: 20,
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    padding: 15,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
