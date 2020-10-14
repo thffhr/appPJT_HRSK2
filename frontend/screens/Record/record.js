@@ -802,62 +802,61 @@ export default class Record extends Component {
             </View>
           )}
           {this.state.active == 'btn1' && (
-              <View style={styles.pictureBox}>
-                {this.state.pictures.map((picture) => {
-                  const borderColor =
-                    picture.id === this.state.selected.id
-                      ? '#FCA652'
-                      : 'transparent';
-                  return (
-                    <TouchableOpacity
-                      style={[styles.imgBtn, {borderColor: borderColor}]}
-                      key={picture.id}
-                      onPress={() => {
-                        const time = picture['created_at'];
-                        const year = time.substring(0, 4);
-                        const month = time.substring(5, 7);
-                        const date = time.substring(8, 10);
-                        const pictureDate = {
-                          year: year,
-                          month: month,
-                          date: date,
-                        };
-  
-                        this.setState({
-                          selected: {id: picture.id, image: picture.image},
-                        });
-                        this.props.navigation.push('DetailImage', {
-                          imageId: picture.id,
-                          image: picture.image,
-                          picture: picture,
-                          pictureDate: pictureDate,
-                        });
-                      }}>
-                      <Image
-                        style={styles.picture}
-                        source={{
-                          uri: `${serverUrl}gallery` + picture.image,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  );
-                })}
-                {/* {Object.entries(this.state.pictures).map(([key, value], i) => {
-                  return (
-                    <TouchableOpacity
-                      style={styles.imageBox}
-                      key={i}
-                      onPress={() => {
-                        this.onDetailImage(key, value, i);
-                      }}>
-                      <Text>
-                        {key} {value}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })} */}
-              </View>
+            <View style={styles.pictureBox}>
+              {this.state.pictures.map((picture) => {
+                const borderColor =
+                  picture.id === this.state.selected.id
+                    ? '#FCA652'
+                    : 'transparent';
+                return (
+                  <TouchableOpacity
+                    style={[styles.imgBtn, {borderColor: borderColor}]}
+                    key={picture.id}
+                    onPress={() => {
+                      const time = picture['created_at'];
+                      const year = time.substring(0, 4);
+                      const month = time.substring(5, 7);
+                      const date = time.substring(8, 10);
+                      const pictureDate = {
+                        year: year,
+                        month: month,
+                        date: date,
+                      };
 
+                      this.setState({
+                        selected: {id: picture.id, image: picture.image},
+                      });
+                      this.props.navigation.push('DetailImage', {
+                        imageId: picture.id,
+                        image: picture.image,
+                        picture: picture,
+                        pictureDate: pictureDate,
+                      });
+                    }}>
+                    <Image
+                      style={styles.picture}
+                      source={{
+                        uri: `${serverUrl}gallery` + picture.image,
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+              {/* {Object.entries(this.state.pictures).map(([key, value], i) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.imageBox}
+                    key={i}
+                    onPress={() => {
+                      this.onDetailImage(key, value, i);
+                    }}>
+                    <Text>
+                      {key} {value}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })} */}
+            </View>
           )}
           {this.state.active == 'btn3' && ( // calendar
             <View style={styles.calendarArea}>
@@ -938,7 +937,9 @@ export default class Record extends Component {
             </View>
           )}
         </ScrollView>
-        <Camera onCamera={this.onBtn1}/>
+        {this.state.active === 'btn1' && (
+          <Camera onCamera={this.onBtn1}/>
+        )}
       </View>
     );
   }
@@ -962,7 +963,6 @@ const styles = StyleSheet.create({
   },
   haru: {
     fontSize: 30,
-    // fontWeight: 'bold',
     fontFamily: 'BMJUA',
     color: '#fff',
   },
