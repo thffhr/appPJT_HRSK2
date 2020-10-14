@@ -127,39 +127,43 @@ class Rank extends Component {
               <View style={styles.rankArea}>
                 <Text style={styles.title}>Top 3</Text>
                 <View style={styles.rankBox}>
-                  {this.state.BestArticle.map((article) => {
+                  {this.state.BestArticle.map((article, i) => {
                     return (
-                      <View style={styles.topThree} key={article.id}>
-                        <Image
-                          style={{width: '100%', height: '50%'}}
-                          source={{
-                            uri: `${serverUrl}gallery` + article.image,
-                          }}
-                        />
-                        <View style={{flexDirection: 'row', marginLeft: '5%'}}>
-                          <Icon
-                            name="heart"
-                            style={{fontSize: 20, color: 'red'}}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              fontFamily: 'BMDOHYEON',
-                              marginVertical: '3%',
-                            }}>
-                            {' '}
-                            {article.num_of_like} likes
-                          </Text>
-                        </View>
-                        <Text
-                          style={{
-                            fontSize: 15,
-                            fontFamily: 'BMDOHYEON',
-                            marginLeft: '5%',
-                          }}>
-                          {article.user.username}
-                        </Text>
-                      </View>
+                      <>
+                        {i < 3 && (
+                          <View style={styles.topThree} key={article.id}>
+                            <Image
+                              style={{width: '100%', height: '50%'}}
+                              source={{
+                                uri: `${serverUrl}gallery` + article.image,
+                              }}
+                            />
+                            <View style={{flexDirection: 'row', marginLeft: '5%'}}>
+                              <Icon
+                                name="heart"
+                                style={{fontSize: 20, color: 'red'}}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 15,
+                                  fontFamily: 'BMDOHYEON',
+                                  marginVertical: '3%',
+                                }}>
+                                {' '}
+                                {article.num_of_like} likes
+                              </Text>
+                            </View>
+                            <Text
+                              style={{
+                                fontSize: 15,
+                                fontFamily: 'BMDOHYEON',
+                                marginLeft: '5%',
+                              }}>
+                              {article.user.username}
+                            </Text>
+                          </View>
+                        )}
+                      </>
                     );
                   })}
                 </View>
