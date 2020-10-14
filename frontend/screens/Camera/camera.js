@@ -55,9 +55,7 @@ export default class Camera extends Component {
             Authorization: `Token ${token}`,
           },
         })
-          // .then((response) => response.json())
           .then(() => {
-            // console.log(response);
             this.props.onCamera();
           })
           .catch((error) => console.error(error));
