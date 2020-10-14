@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, Dimensions, Modal, TouchableHighlight, AsyncStorage } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {CommonActions} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 // const serverUrl = 'http://localhost:8080/';
@@ -56,6 +57,12 @@ export default class MyDatePicker extends Component {
       },
     })
       .then(() => {
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '메뉴'}],
+          }),
+        );
       })
       .catch((error) => console.error(error));
         
