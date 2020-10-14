@@ -95,12 +95,11 @@ def update_info(request):
     save_data['weight'] = int(request.data['weight'])
     save_data['height'] = int(request.data['height'])
     basal_metabolism = 0
-    if request.data['sex'] == 'male':
-        print(1)
+    if request.user.sex == 'male':
         basal_metabolism = 66.47 + \
             (13.75 * save_data['weight']) + (5 *
                                              save_data['height']) - (6.76 * save_data['age'])
-    elif request.data['sex'] == 'female':
+    elif request.user.sex == 'female':
         basal_metabolism = 655.1 + \
             (9.56 * save_data['weight']) + (1.85 *
                                             save_data['height']) - (4.68 * save_data['age'])
@@ -112,8 +111,7 @@ def update_info(request):
     elif request.data['active'] == 'low':
         basal_metabolism *= 0.9
 
-    request.data['basal_metabolism'] = int(basal_metabolism)
-    print(basal_metabolism)
+    save_data['basal_metabolism'] = int(basal_metabolism)
     serializer = UserSerializer(user, data=save_data, partial=True)
     if serializer.is_valid(raise_exception=True):
         serializer.save()
@@ -207,10 +205,12 @@ def isfollow(request, username):
         result = json.dumps(result)
         return Response(False)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_basal(request):
     return Response(int(request.user.basal_metabolism))
+
 
 @api_view(['POST'])
 def getBestUsers(request):
