@@ -185,7 +185,7 @@ class Rank extends Component {
             </View>
           </View>
         </Modal>
-        <ScrollView style={{width: '100%'}}>
+        <ScrollView>
           {this.state.active == 'btn1' && (
             <View style={{width: '100%'}}>
               <View style={styles.rankArea}>
@@ -465,8 +465,8 @@ class Rank extends Component {
                         />
                       )}
                       <Text style={styles.followUser}>{user.username}</Text>
-                      <Text style={styles.followCnt}>
-                        {user.num_of_followers}
+                      <Text style={styles.followUser}>
+                        {user.num_of_followers} 명
                       </Text>
                     </TouchableOpacity>
 
@@ -546,7 +546,6 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%',
     flexDirection: 'column',
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   title: {
     fontSize: 25,
@@ -594,8 +593,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   follow: {
-    
-    
   },
   userBtn: {
     flexDirection: 'row',
@@ -606,25 +603,19 @@ const styles = StyleSheet.create({
   ranking: {
     marginRight: '5%',
     fontSize: W * 0.1,
-    fontFamily: 'BMHANNA',
-    width: W * 0.05,
+    fontFamily: 'BMJUA',
+    width: W * 0.07,
   },
   followUser: {
     marginRight: '5%',
-    fontSize: W * 0.07,
-    fontFamily: 'BMHANNA',
+    fontSize: W * 0.06,
+    fontFamily: 'BMJUA',
     width: W * 0.35,
-  },
-  followCnt: {
-    marginRight: '5%',
-    fontSize: W * 0.07,
-    fontFamily: 'BMHANNA',
-    width: W * 0.25,
   },
   profileImg: {
     borderRadius: W * 0.15,
-    width: W * 0.15,
-    height: W * 0.15,
+    width: W * 0.13,
+    height: W * 0.13,
     marginRight: '5%',
   },
   Box: {

@@ -213,7 +213,14 @@ export default class Community extends Component {
                     <View style={styles.article} key={article.id}>
                       {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
                         <View style={styles.writer}>
-                          <View style={{flexDirection: 'row', alignItems: 'center',}}>
+                          <View>
+                          <TouchableOpacity
+                              style={styles.userBtn}
+                              onPress={() => {
+                                this.props.navigation.push('UserFeed', {
+                                  username: article.user.username,
+                                });
+                              }}>
                             {article.user.profileImage && (
                               <Image
                                 style={styles.writerImg}
@@ -231,12 +238,7 @@ export default class Community extends Component {
                                 }}
                               />
                             )}
-                            <TouchableHighlight
-                              onPress={() => {
-                                this.props.navigation.push('UserFeed', {
-                                  username: article.user.username,
-                                });
-                              }}>
+                            
                               <Text
                                 style={{
                                   marginLeft: 10,
@@ -245,7 +247,7 @@ export default class Community extends Component {
                                 }}>
                                 {article.user.username}
                               </Text>
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                           </View>
                           {/* 여기에 북마크, 삭제 등등 추가 */}
                           <Icon name="ellipsis-vertical" style={{marginRight: 40, fontSize: 20}}></Icon>
@@ -532,15 +534,12 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
-    // borderBottomColor: 'gray',
-    // borderBottomWidth: 2,
     backgroundColor: '#fca652',
     elevation: 5,
     flexDirection: 'row',
   },
   haru: {
     fontSize: 30,
-    // fontWeight: 'bold',
     color: '#FFFFFF',
     fontFamily: 'BMJUA',
     marginLeft: 15,
@@ -558,6 +557,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     marginVertical: 20,
+  },
+  userBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   writer: {
     marginLeft: '5%',
