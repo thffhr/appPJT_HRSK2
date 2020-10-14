@@ -88,10 +88,10 @@ class CreateArticle extends Component {
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 1,
-            routes: [{name: 'Home'}],
+            routes: [{name: 'Community'}],
           }),
         );
-        this.props.navigation.push('Community');
+        // this.props.navigation.push('Community');
       })
       .catch((err) => {
         console.log(err);
