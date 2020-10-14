@@ -50,6 +50,7 @@ export default class Community extends Component {
   };
   getAllArticles = async () => {
     const token = await AsyncStorage.getItem('auth-token');
+    const username = await AsyncStorage.getItem('username');
     fetch(`${serverUrl}articles/readAll/`, {
       method: 'POST',
       headers: {
@@ -440,11 +441,15 @@ export default class Community extends Component {
                   </View>
                   <View style={styles.cntBox}>
                     <Text style={styles.cntContent}>팔로워</Text>
-                    <Text style={styles.cntContent}>0</Text>
+                    <Text style={styles.cntContent}>
+                    {this.state.userData.num_of_followers}
+                    </Text>
                   </View>
                   <View style={styles.cntBox}>
                     <Text style={styles.cntContent}>팔로잉</Text>
-                    <Text style={styles.cntContent}>0</Text>
+                    <Text style={styles.cntContent}>
+                      {this.state.userData.num_of_followings}
+                    </Text>
                   </View>
                 </View>
                 <View style={styles.pictureBox}>
