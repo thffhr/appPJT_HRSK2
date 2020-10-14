@@ -123,7 +123,7 @@ export default class DetatilImage extends Component {
               }}
             />
 
-            {/* {this.state.onCaption && (
+            {this.state.onCaption && (
               <View>
                 {this.state.foods &&
                   this.state.foods.map((food, i) => {
@@ -185,7 +185,7 @@ export default class DetatilImage extends Component {
                     );
                   })}
               </View>
-            )} */}
+            )}
           </ScrollView>
         </View>
       </View>

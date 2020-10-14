@@ -213,7 +213,9 @@ def saveMenu(request):
         foods = get_object_or_404(Food, DESC_KOR=kfoodName)
         # new_food.food 는 같은 이름 찾아서 넣어야댐
         new_food.location = foodlist[i][idx:]  # 좌표값
-        new_food.save(image=new_food, food=foods)
+        new_food.image = new_menu
+        new_food.food = foods
+        new_food.save()
 
     # predict = predict_img('media/' + str(new_menu.image)) #db 저장 위치
     return Response("파일을 저장했습니다.")
@@ -242,7 +244,7 @@ def myImgs(request):
         my_imgs.append(MenuSerializer(image).data)
     return Response(my_imgs)
 
- 
+
 def getImage(request, uri):
     images = []
     data = open('media/image/' + uri, "rb").read()
@@ -257,68 +259,60 @@ def getChart(request, date):
     Send = {'TotalCal': 0, 'Menus': {
         '아침': {}, '점심': {}, '저녁': {}, '간식': {}, '야식': {}, }}
     # Send = {'TotalCal' : 0, }
-    for i in range(len(Menus)):
-        time = ['아침', '점심', '저녁', '간식', '야식']
-        cnt = Menus[i].count
-        for t in range(len(time)):
-            if Menus[i].mealTime == time[t]:
-                print(t, Menus[i].mealTime)
-                food = Menus[i].food
-                print(food)
-                print(food.DESC_KOR)
+    # '아침': {meal:[menu2food_1, menu2food_2], nutrient: [탄,단,지]}
+    time = ['아침', '점심', '저녁', '간식', '야식']
+    for menu in Menus:
+        print(menu)
+        for t in time:
+            if menu.mealTime == t:
+                print(menu.id)
+                menu2foods = Menu2food.objects.filter(image=menu)
+                if 'meal' not in Send['Menus'][t]:
+                    Send['Menus'][t]['meal'] = []
                 T, D, G = 0, 0, 0
-                Send['Menus'][time[t]] = {}
-                Send['Menus'][time[t]]['meal'] = []
-                # for food in Foods:
-                Send['Menus'][time[t]]['meal'].append(
-                    [food.DESC_KOR, int(food.NUTR_CONT1)*cnt])
-                T += int(food.NUTR_CONT2)*cnt
-                D += int(food.NUTR_CONT3)*cnt
-                G += int(food.NUTR_CONT4)*cnt
-                print(T, D, G)
+                for menu2food in menu2foods:
+                    print(menu2food.food.DESC_KOR)
+                    Send['Menus'][t]['meal'].append(
+                        [menu2food.food.DESC_KOR, float(menu2food.food.NUTR_CONT1)*menu2food.value, menu2food.id, menu2food.value])
+                    T += float(menu2food.food.NUTR_CONT2)*menu2food.value
+                    D += float(menu2food.food.NUTR_CONT3)*menu2food.value
+                    G += float(menu2food.food.NUTR_CONT4)*menu2food.value
+                    Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
+                        menu2food.value
                 total = T+D+G
-                Send['Menus'][time[t]]['nutrient'] = [
+                Send['Menus'][t]['nutrient'] = [
                     (T/total)*100, (D/total)*100, (G/total)*100]
-                Send['Menus'][time[t]]['cnt'] = cnt
-        Send['TotalCal'] += int(Menus[i].totalCal)*cnt
-    print(Send)
     return Response(Send)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def plusCnt(request):
-    print(request.data)
-    d = request.data['date']
-    mt = request.data['mealtime']
-    selectedMenu = get_object_or_404(
-        Menu, user=request.user, created_at__contains=d, mealTime=mt)
-    selectedMenu.count += 1
-    selectedMenu.save()
-    print(selectedMenu.count)
+    menu2food_id = request.data['menu2food_id']
+    menu2food = get_object_or_404(
+        Menu2food, id=menu2food_id)
+    menu2food.value += 1
+    menu2food.save()
     return Response('늘렸다')
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def minusCnt(request):
-    d2 = request.data['date']
-    mt2 = request.data['mealtime']
-    selectedMenu2 = get_object_or_404(
-        Menu, user=request.user, created_at__contains=d2, mealTime=mt2)
-    selectedMenu2.count -= 1
-    selectedMenu2.save()
-    print(selectedMenu2.count)
+    menu2food_id = request.data['menu2food_id']
+    menu2food = get_object_or_404(
+        Menu2food, id=menu2food_id)
+    menu2food.value -= 1
+    menu2food.save()
     return Response('줄었다')
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def deleteMenu(request):
-    del_d = request.data['date']
-    del_mt = request.data['mealtime']
+    menu2food_id = request.data['menu2food_id']
     del_Menu = get_object_or_404(
-        Menu, user=request.user, created_at__contains=del_d, mealTime=del_mt)
+        Menu2food, id=menu2food_id)
     del_Menu.delete()
     return Response("식단이 삭제되었습니다.")
 

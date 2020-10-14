@@ -377,17 +377,12 @@ export default class Record extends Component {
     });
   };
 
-  minusCnt = (year, month, date, day, mealtime, cnt) => {
+  minusCnt = (year, month, date, day, cnt, menu2food_id) => {
     if (cnt <= 1) {
-      this.setModalVisible(true, year, month, date, mealtime);
+      this.setModalVisible(true, year, month, date, menu2food_id);
     } else {
-      var newYear = this.pad(`${year}`, 4);
-      var newMonth = this.pad(`${month}`, 2);
-      var newDate = this.pad(`${date}`, 2);
-      var SendDate = `${newYear}-${newMonth}-${newDate}`;
       var form = new FormData();
-      form.append('date', SendDate);
-      form.append('mealtime', mealtime);
+      form.append('menu2food_id', menu2food_id);
       fetch(`${serverUrl}gallery/minusCnt/`, {
         method: 'POST',
         body: form,
@@ -405,14 +400,9 @@ export default class Record extends Component {
     }
   };
 
-  plusCnt = (year, month, date, day, mealtime) => {
-    var newYear = this.pad(`${year}`, 4);
-    var newMonth = this.pad(`${month}`, 2);
-    var newDate = this.pad(`${date}`, 2);
-    var SendDate = `${newYear}-${newMonth}-${newDate}`;
+  plusCnt = (year, month, date, day, menu2food_id) => {
     var form = new FormData();
-    form.append('date', SendDate);
-    form.append('mealtime', mealtime);
+    form.append('menu2food_id', menu2food_id);
     fetch(`${serverUrl}gallery/plusCnt/`, {
       method: 'POST',
       body: form,
@@ -429,24 +419,19 @@ export default class Record extends Component {
       .catch((err) => console.error(err));
   };
 
-  setModalVisible = (visible, year, month, date, mealtime) => {
+  setModalVisible = (visible, year, month, date, menu2food_id) => {
     this.setState({
       modalVisible: visible,
       modal_year: year,
       modal_month: month,
       modal_date: date,
-      modal_mealtime: mealtime,
+      modal_menu2food_id: menu2food_id,
     });
   };
 
   delMenu = () => {
-    var newYear = this.pad(`${this.state.modal_year}`, 4);
-    var newMonth = this.pad(`${this.state.modal_month}`, 2);
-    var newDate = this.pad(`${this.state.modal_date}`, 2);
-    var SendDate = `${newYear}-${newMonth}-${newDate}`;
     var form = new FormData();
-    form.append('date', SendDate);
-    form.append('mealtime', this.state.modal_mealtime);
+    form.append('menu2food_id', this.state.modal_menu2food_id);
     fetch(`${serverUrl}gallery/deleteMenu/`, {
       method: 'POST',
       body: form,
@@ -709,13 +694,11 @@ export default class Record extends Component {
                                             this.state.dateTime.month,
                                             this.state.dateTime.date,
                                             this.state.dateTime.day,
-                                            k,
-                                            v['cnt'],
+                                            m[3],
+                                            m[2],
                                           )
                                         }></Icon>
-                                      <Text style={{fontSize: 18}}>
-                                        {v['cnt']}
-                                      </Text>
+                                      <Text style={{fontSize: 18}}>{m[3]}</Text>
                                       <Icon
                                         name="add-circle-outline"
                                         style={{
@@ -729,7 +712,7 @@ export default class Record extends Component {
                                             this.state.dateTime.month,
                                             this.state.dateTime.date,
                                             this.state.dateTime.day,
-                                            k,
+                                            m[2],
                                           )
                                         }></Icon>
                                     </View>
@@ -937,9 +920,7 @@ export default class Record extends Component {
             </View>
           )}
         </ScrollView>
-        {this.state.active === 'btn1' && (
-          <Camera onCamera={this.onBtn1}/>
-        )}
+        {this.state.active === 'btn1' && <Camera onCamera={this.onBtn1} />}
       </View>
     );
   }
