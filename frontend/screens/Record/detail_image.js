@@ -10,6 +10,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {CommonActions} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('screen');
 // const serverUrl = 'http://localhost:8080/';
@@ -56,6 +57,24 @@ export default class DetatilImage extends Component {
       onCaption: !this.state.onCaption,
     });
   };
+  onDelete = async() => {
+    const token = await AsyncStorage.getItem('auth-token');
+    fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(() => {
+        alert('삭제되었습니다.')
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '메뉴'}],
+          }),
+        );
+      })
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -88,6 +107,11 @@ export default class DetatilImage extends Component {
                 name="eye-off"
               />
             )}
+            <Icon 
+              name="trash"
+              onPress={this.onDelete}
+              style={styles.onCaption}
+            />
           </View>
           <ScrollView style={styles.imageBody}>
             <Image
