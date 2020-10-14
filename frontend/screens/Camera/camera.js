@@ -3,6 +3,9 @@ import {SafeAreaView, View, StyleSheet, TouchableOpacity, AsyncStorage} from 're
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 
+// const serverUrl = 'http://localhost:8080/';
+const serverUrl = 'http://10.0.2.2:8080/';
+// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
 
 export default class Camera extends Component {
   constructor(props) {
@@ -35,6 +38,7 @@ export default class Camera extends Component {
         const source = {uri: response.uri};
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        
         this.setState({
           avatarSource: source,
         });
@@ -54,28 +58,34 @@ export default class Camera extends Component {
           // .then((response) => response.json())
           .then(() => {
             // console.log(response);
+            this.props.onCamera();
           })
           .catch((error) => console.error(error));
+        
       }
     });
   };
   render() {
     return (
-      <SafeAreaView>
-        <TouchableOpacity style={styles.btnBox} onPress={this.onCamera}>
-          <View style={styles.btnContent}>
-            <Icon name="camera" style={styles.cameraLogo}></Icon>
-          </View>
-        </TouchableOpacity>
-      </SafeAreaView>
+      <TouchableOpacity style={styles.btnBox} onPress={this.onCamera}>
+        <Icon name="camera" style={styles.cameraLogo}></Icon>
+      </TouchableOpacity>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  btnBox: {},
-  btnContent: {},
+  btnBox: {
+    backgroundColor: '#fca652',
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+    borderRadius: 100,
+    padding: 15,
+    elevation: 5,
+  },
   cameraLogo: {
-    fontSize: 30,
+    fontSize: 40,
+    color: '#fff',
   },
 })

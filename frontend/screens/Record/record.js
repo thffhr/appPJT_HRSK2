@@ -169,7 +169,7 @@ export default class Record extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   onBtn2 = async () => {
@@ -802,7 +802,6 @@ export default class Record extends Component {
             </View>
           )}
           {this.state.active == 'btn1' && (
-            <SafeAreaView >
               <View style={styles.pictureBox}>
                 {this.state.pictures.map((picture) => {
                   const borderColor =
@@ -858,8 +857,7 @@ export default class Record extends Component {
                   );
                 })} */}
               </View>
-              <Camera />
-            </SafeAreaView>
+
           )}
           {this.state.active == 'btn3' && ( // calendar
             <View style={styles.calendarArea}>
@@ -940,6 +938,7 @@ export default class Record extends Component {
             </View>
           )}
         </ScrollView>
+        <Camera onCamera={this.onBtn1}/>
       </View>
     );
   }
@@ -948,6 +947,7 @@ export default class Record extends Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height: height,
     flex: 1,
     backgroundColor: '#FFFBE6',
   },
