@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, AsyncStorage, Text, View} from 'react-native';
+import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView} from 'react-native';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -37,6 +37,7 @@ import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -218,13 +219,44 @@ function TapNavigator() {
   )
 }
 
+function CustomDrawerContent(props) {
+  // const [username, setUsername] = useState(null);
+
+  // useEffect(async () => {
+  //   username = await AsyncStorage.getItem('username')
+  // })
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollArea}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('메뉴')}
+          style={styles.linkBtn}
+        >
+          <Text>메뉴</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('내 정보')}
+          style={styles.linkBtn}
+        >
+          <Text>내 정보</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
+
 // Drawer
 function DrawerStack() {
   return (
     <>
-      <Drawer.Navigator initialRouteName="메뉴" screenOptions={{
-        headerShown: false,
-      }}>
+      <Drawer.Navigator 
+        initialRouteName="메뉴" 
+        drawerPosition="right" 
+        drawerContent={props => CustomDrawerContent(props)}
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Drawer.Screen name="메뉴" component={TapNavigator} />
         <Drawer.Screen name="내 정보" component={ProfileScreen} />
       </Drawer.Navigator>
@@ -249,6 +281,18 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollArea: {
+    marginLeft: 20,
+  },
+  linkBtn: {
+    marginTop: 20,
+  },
+})
 
 // class App extends Component {
 //   constructor(props) {
