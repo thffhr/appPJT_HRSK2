@@ -286,18 +286,11 @@ const styles = StyleSheet.create({
     fontFamily: 'BMJUA',
     marginLeft: 15,
   },
-  // detailHeader: {
-  //   flexDirection: 'row',
-  // },
-  // backBtn: {
-  //   fontSize: 30,
-  // },
 
   article: {
     flexDirection: 'column',
     width: '100%',
-    marginVertical: 20,
-    paddingVertical: 20,
+    marginVertical: 10,
   },
   writer: {
     marginLeft: '5%',
