@@ -10,6 +10,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {CommonActions} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('screen');
 // const serverUrl = 'http://localhost:8080/';
@@ -56,6 +57,24 @@ export default class DetatilImage extends Component {
       onCaption: !this.state.onCaption,
     });
   };
+  onDelete = async() => {
+    const token = await AsyncStorage.getItem('auth-token');
+    fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+      .then(() => {
+        alert('삭제되었습니다.')
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '메뉴'}],
+          }),
+        );
+      })
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -74,20 +93,27 @@ export default class DetatilImage extends Component {
                 {this.state.dateTime.date}일
               </Text>
             </View>
-            {!this.state.onCaption && (
-              <Icon
+            <View style={styles.iconBox}>
+              {!this.state.onCaption && (
+                <Icon
+                  style={styles.onCaption}
+                  onPress={this.onCaption}
+                  name="eye"
+                />
+              )}
+              {this.state.onCaption && (
+                <Icon
+                  style={styles.onCaption}
+                  onPress={this.onCaption}
+                  name="eye-off"
+                />
+              )}
+              <Icon 
+                name="trash"
+                onPress={this.onDelete}
                 style={styles.onCaption}
-                onPress={this.onCaption}
-                name="eye"
               />
-            )}
-            {this.state.onCaption && (
-              <Icon
-                style={styles.onCaption}
-                onPress={this.onCaption}
-                name="eye-off"
-              />
-            )}
+            </View>
           </View>
           <ScrollView style={styles.imageBody}>
             <Image
@@ -194,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: width * 0.05,
+    marginHorizontal: width * 0.03,
     marginVertical: height * 0.015,
   },
   backBtn: {
@@ -219,14 +245,10 @@ const styles = StyleSheet.create({
   // caption
   onCaption: {
     fontSize: 30,
+    marginLeft: 10,
+    color: 'gray',
   },
-  offCaption: {
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-  },
-  captionTxt: {
-    fontSize: 25,
-    fontFamily: 'BMJUA',
-    textAlign: 'center',
+  iconBox: {
+    flexDirection: 'row',
   },
 });
