@@ -216,7 +216,6 @@ def saveMenu(request):
         new_food.image = new_menu
         new_food.food = foods
         new_food.save()
-
     # predict = predict_img('media/' + str(new_menu.image)) #db 저장 위치
     return Response("파일을 저장했습니다.")
     # response = FileResponse(open(f"media/image/{request.data['fileName']}", 'rb'))
@@ -274,9 +273,12 @@ def getChart(request, date):
                     print(menu2food.food.DESC_KOR)
                     Send['Menus'][t]['meal'].append(
                         [menu2food.food.DESC_KOR, float(menu2food.food.NUTR_CONT1)*menu2food.value, menu2food.id, menu2food.value])
-                    T += float(menu2food.food.NUTR_CONT2)*menu2food.value
-                    D += float(menu2food.food.NUTR_CONT3)*menu2food.value
-                    G += float(menu2food.food.NUTR_CONT4)*menu2food.value
+                    if menu2food.food.NUTR_CONT2:
+                        T += float(menu2food.food.NUTR_CONT2)*menu2food.value
+                    if menu2food.food.NUTR_CONT3:
+                        D += float(menu2food.food.NUTR_CONT3)*menu2food.value
+                    if menu2food.food.NUTR_CONT4:
+                        G += float(menu2food.food.NUTR_CONT4)*menu2food.value
                     Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
                 total = T+D+G
