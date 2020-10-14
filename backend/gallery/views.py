@@ -112,13 +112,13 @@ def saveMenu(request):
                'chicken-rice': '치킨까스',
                'fried-rice': '계란볶음밥',
                'tempura-bowl': '채소튀김',
-               'bibimbap': '정성가득비빔밥',
+               'bibimbap': '비빔밥',
                'toast': '베이컨 치즈 토스트',
                'croissant': '빵, 크로와상',
                'roll-bread': '빵, 하드 롤빵',
                'raisin-bread': '건포도토종효모빵용 빵',
                'chip-butty': '허니버터칩메이플시럽',
-               'hamburger': '햄버거, 소고기패티',
+               'hamburger': '햄버거',
                'pizza': '피자',
                'sandwiches': '샌드위치',
                'udon-noodle': '우동',
@@ -132,7 +132,7 @@ def saveMenu(request):
                'Japanese-style-pancake': '케이크, 팬케이크',
                'takoyaki': '타코야끼볼',
                'gratin': '콘치즈그라탕',
-               'sauteed-vegetables': 'LOTTE 야채크래커',
+               'sauteed-vegetables': '감자채소볶음',
                'croquette': '빵, 크로켓',
                'grilled-eggplant': '가치, 구운것',
                'sauteed-spinach': '시금치, 볶은것',
@@ -210,7 +210,10 @@ def saveMenu(request):
         fname = foodlist[i][0:idx].strip()
         kfoodName = my_dict[fname]
         # input_menu = get_object_or_404(Menu, id=new_menu.id)
-        foods = get_object_or_404(Food, DESC_KOR=kfoodName)
+        try:
+            foods = get_object_or_404(Food, DESC_KOR=kfoodName)
+        except:
+            foods = Food.objects.filter(DESC_KOR=kfoodName)[0]
         # new_food.food 는 같은 이름 찾아서 넣어야댐
         new_food.location = foodlist[i][idx:]  # 좌표값
         new_food.image = new_menu
