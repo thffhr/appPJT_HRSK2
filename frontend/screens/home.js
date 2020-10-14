@@ -13,8 +13,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 
 // const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://10.0.2.2:8080/';
-// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
+// const serverUrl = 'http://10.0.2.2:8080/';
+const serverUrl = 'http://j3a410.p.ssafy.io/api/';
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;

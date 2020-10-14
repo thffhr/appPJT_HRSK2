@@ -14,8 +14,8 @@ import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://10.0.2.2:8080/';
-// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
+// const serverUrl = 'http://10.0.2.2:8080/';
+const serverUrl = 'http://j3a410.p.ssafy.io/api/';
 
 class CreateArticle extends Component {
   constructor(props) {
