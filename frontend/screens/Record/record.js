@@ -15,6 +15,7 @@ import {
   Dimensions,
   Image,
   AsyncStorage,
+  SafeAreaView,
 } from 'react-native';
 import {
   Calendar,
@@ -25,7 +26,8 @@ import {
 } from 'react-native-calendars';
 import Pie from 'react-native-pie';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {get} from 'react-native/Libraries/Utilities/PixelRatio';
+// import {get} from 'react-native/Libraries/Utilities/PixelRatio';
+import Camera from '../Camera/camera';
 
 const {width, height} = Dimensions.get('screen');
 // const serverUrl = 'http://localhost:8080/';
@@ -167,7 +169,7 @@ export default class Record extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   onBtn2 = async () => {
@@ -935,6 +937,9 @@ export default class Record extends Component {
             </View>
           )}
         </ScrollView>
+        {this.state.active === 'btn1' && (
+          <Camera onCamera={this.onBtn1}/>
+        )}
       </View>
     );
   }
@@ -943,6 +948,7 @@ export default class Record extends Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height: height,
     flex: 1,
     backgroundColor: '#FFFBE6',
   },
@@ -957,7 +963,6 @@ const styles = StyleSheet.create({
   },
   haru: {
     fontSize: 30,
-    // fontWeight: 'bold',
     fontFamily: 'BMJUA',
     color: '#fff',
   },

@@ -8,7 +8,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, AsyncStorage, Text, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -31,7 +31,7 @@ import CreateSelect from './screens/Community/create_select';
 import CreateArticle from './screens/Community/create_article';
 import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
-import Home from './screens/home';
+// import Home from './screens/home';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
