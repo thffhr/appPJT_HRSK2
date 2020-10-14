@@ -82,10 +82,10 @@ export default class UpdateImg extends React.Component {
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
-              routes: [{name: 'Home'}],
+              routes: [{name: 'Profile'}],
             }),
           );
-          this.props.navigation.push('Profile');
+          // this.props.navigation.push('내 정보');
         })
         .catch((err) => {
           console.log(err);
@@ -101,10 +101,10 @@ export default class UpdateImg extends React.Component {
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
-              routes: [{name: 'Home'}],
+              routes: [{name: 'Profile'}],
             }),
           );
-          this.props.navigation.push('Profile');
+          // this.props.navigation.push('내 정보');
         })
         .catch((err) => {
           console.log(err);
