@@ -3,7 +3,7 @@ from .models import Menu
 from .models import Menu2food
 from .models import Food
 
-from .serializers import MenuSerializer
+from .serializers import MenuSerializer, FoodSerializer
 from accounts.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -261,16 +261,13 @@ def getChart(request, date):
     # '아침': {meal:[menu2food_1, menu2food_2], nutrient: [탄,단,지]}
     time = ['아침', '점심', '저녁', '간식', '야식']
     for menu in Menus:
-        print(menu)
         for t in time:
             if menu.mealTime == t:
-                print(menu.id)
                 menu2foods = Menu2food.objects.filter(image=menu)
                 if 'meal' not in Send['Menus'][t]:
                     Send['Menus'][t]['meal'] = []
                 T, D, G = 0, 0, 0
                 for menu2food in menu2foods:
-                    print(menu2food.food.DESC_KOR)
                     Send['Menus'][t]['meal'].append(
                         [menu2food.food.DESC_KOR, float(menu2food.food.NUTR_CONT1)*menu2food.value, menu2food.id, menu2food.value])
                     if menu2food.food.NUTR_CONT2:
@@ -324,22 +321,40 @@ def deleteMenu(request):
 def getCalendar(request):
     Menus = Menu.objects.filter(user=request.user)
     MenusDict = {}
-    for i in range(len(Menus)):
-        print(Menus[i].mealTime)
-        created_at = str(Menus[i].created_at)
-        if created_at.split()[0] not in MenusDict.keys():
+    for menu in Menus:
+        created_at = str(menu.created_at)
+        target = created_at.split()[0]
+        if target not in MenusDict.keys():
             # 아침, 점심, 저녁, 간식, 야식, 총칼로리
-            MenusDict[created_at.split()[0]] = [0, 0, 0, 0, 0, 0]
-        if Menus[i].mealTime == '아침':
-            MenusDict[created_at.split()[0]][0] += float(Menus[i].totalCal)
-        elif Menus[i].mealTime == '점심':
-            MenusDict[created_at.split()[0]][1] += float(Menus[i].totalCal)
-        elif Menus[i].mealTime == '저녁':
-            MenusDict[created_at.split()[0]][2] += float(Menus[i].totalCal)
-        elif Menus[i].mealTime == '간식':
-            MenusDict[created_at.split()[0]][3] += float(Menus[i].totalCal)
-        elif Menus[i].mealTime == '야식':
-            MenusDict[created_at.split()[0]][4] += float(Menus[i].totalCal)
-        else:
-            MenusDict[created_at.split()[0]][5] += float(Menus[i].totalCal)
+            MenusDict[target] = [0, 0, 0, 0, 0, 0]
+        menu2foods = Menu2food.objects.filter(image=menu)
+        tot = 0
+        for menu2food in menu2foods:
+            tot += float(menu2food.food.NUTR_CONT1) * menu2food.value
+        if menu.mealTime == '아침':
+            MenusDict[target][0] += tot
+        elif menu.mealTime == '점심':
+            MenusDict[target][1] += tot
+        elif menu.mealTime == '저녁':
+            MenusDict[target][2] += tot
+        elif menu.mealTime == '간식':
+            MenusDict[target][3] += tot
+        elif menu.mealTime == '야식':
+            MenusDict[target][4] += tot
+
+    MenusDict[target][5] += sum(MenusDict[target][:5])
     return Response(MenusDict)
+
+
+@api_view(['POST'])
+def getFood(request, menu_id):
+    menu = get_object_or_404(Menu, id=menu_id)
+    menu2foods = Menu2food.objects.filter(image=menu)
+    lst = []
+    for menu2food in menu2foods:
+        food = menu2food.food
+        serializer = FoodSerializer(food)
+        value = menu2food.value
+        location = list(map(int, menu2food.location[1:-1].split(', ')))
+        lst.append([serializer.data, value, location])
+    return Response(lst)

@@ -30,6 +30,7 @@ export default class DetatilImage extends Component {
       info: {
         menu_id: this.props.route.params.imageId,
       },
+      colors: ['#2bff32', '#f5dd73', '#34ebc9', '#f578ec', '#f57373'],
     };
   }
   componentDidMount() {
@@ -57,23 +58,22 @@ export default class DetatilImage extends Component {
       onCaption: !this.state.onCaption,
     });
   };
-  onDelete = async() => {
+  onDelete = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`
-      }
-    })
-      .then(() => {
-        alert('삭제되었습니다.')
-        this.props.navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [{name: '메뉴'}],
-          }),
-        );
-      })
+        Authorization: `Token ${token}`,
+      },
+    }).then(() => {
+      alert('삭제되었습니다.');
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: '메뉴'}],
+        }),
+      );
+    });
   };
   render() {
     return (
@@ -108,7 +108,7 @@ export default class DetatilImage extends Component {
                   name="eye-off"
                 />
               )}
-              <Icon 
+              <Icon
                 name="trash"
                 onPress={this.onDelete}
                 style={styles.onCaption}
@@ -116,32 +116,50 @@ export default class DetatilImage extends Component {
             </View>
           </View>
           <ScrollView style={styles.imageBody}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: `${serverUrl}gallery` + this.state.image,
-              }}
-            />
-
-            {this.state.onCaption && (
-              <View>
-                {this.state.foods &&
-                  this.state.foods.map((food, i) => {
-                    return (
+            <View>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: `${serverUrl}gallery` + this.state.image,
+                }}
+              />
+              {this.state.onCaption &&
+                this.state.foods &&
+                this.state.foods.map((food, i) => {
+                  const k = 0.8;
+                  const color = this.state.colors[i];
+                  return (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        left: food[2][0] * k,
+                        top: food[2][1] * k,
+                        width: food[2][2] * k,
+                        height: food[2][3] * k,
+                        borderWidth: 2,
+                        borderColor: color,
+                      }}>
                       <View
                         style={{
-                          position: 'absolute',
-                          left: food[2][0],
-                          top: food[2][1],
-                          width: food[2][2],
-                          height: food[2][3],
-                          borderWidth: 2,
-                          borderColor: '#2bff32',
-                        }}></View>
-                    );
-                  })}
-              </View>
-            )}
+                          flexDirection: 'row',
+                        }}>
+                        <Text
+                          style={{
+                            backgroundColor: color,
+                            padding: 4,
+                            borderBottomRightRadius: 4,
+                            borderBottomLeftRadius: 4,
+                            borderTopRightRadius: 4,
+                            fontWeight: 'bold',
+                          }}>
+                          {food[0]['DESC_KOR']}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+            </View>
+
             {this.state.onCaption && (
               <View>
                 {this.state.foods &&
@@ -164,7 +182,7 @@ export default class DetatilImage extends Component {
                             fontSize: 25,
                             fontFamily: 'BMHANNAAir',
                             color: '#232323',
-                            paddingTop: 20,
+                            paddingTop: 10,
                             marginHorizontal: 20,
                             marginVertical: 10,
                           }}>
@@ -175,11 +193,11 @@ export default class DetatilImage extends Component {
                             fontSize: 25,
                             fontFamily: 'BMHANNAAir',
                             color: '#232323',
-                            paddingTop: 20,
+                            paddingTop: 10,
                             marginHorizontal: 20,
                             marginVertical: 10,
                           }}>
-                          {food[0]['SERVING_SIZE']}
+                          {food[0]['SERVING_SIZE']} g
                         </Text>
                       </View>
                     );
@@ -226,10 +244,13 @@ const styles = StyleSheet.create({
   backBtn: {
     fontSize: 30,
   },
-  imageBody: {},
+  imageBody: {
+    marginBottom: 140,
+  },
   image: {
+    width: width,
     height: width,
-    position: 'relative',
+    // resizeMode:'contain'
   },
   // date
   chartDayicon: {

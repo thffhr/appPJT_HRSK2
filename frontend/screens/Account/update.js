@@ -28,7 +28,7 @@ class Update extends Component {
       age: '',
       sex: this.props.route.sex,
       height: '',
-      weight: '',
+      weight: this.props.route.weight,
       bm: this.props.route.bm,
     };
   }
@@ -68,7 +68,6 @@ class Update extends Component {
   };
   onProfile = async () => {
     const token = await AsyncStorage.getItem('auth-token');
-    console.log(1);
     if (this.state.height && this.state.weight && this.state.age) {
       fetch(`${serverUrl}accounts/update/`, {
         method: 'PATCH',
@@ -89,7 +88,7 @@ class Update extends Component {
     this.props.navigation.dispatch(
       CommonActions.reset({
         index: 1,
-        routes: [{name: 'Home'}],
+        routes: [{name: 'Profile'}],
       }),
     );
   };

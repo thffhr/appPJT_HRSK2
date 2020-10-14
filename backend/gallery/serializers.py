@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Menu
+from food.models import Food
 from accounts.serializers import UserSerializer
 # from drf_extra_fields.fields import Base64ImageField
+
 
 class MenuSerializer(serializers.ModelSerializer):
     # user = UserSerializer(required=False)
@@ -18,3 +20,9 @@ class MenuSerializer(serializers.ModelSerializer):
     #     image=validated_data.pop('image')
     #     data=validated_data.pop('data')
     #     return Menue.objects.create(data=data,image=image)
+
+
+class FoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food
+        fields = '__all__'

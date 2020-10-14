@@ -907,15 +907,33 @@ export default class Record extends Component {
                   {Object.entries(this.state.selectedDate)
                     .filter(([key, value]) => key !== 'date')
                     .map(([key, value], i) => {
-                      return (
-                        <View style={styles.macroBox} key={i}>
-                          <Text style={styles.macroTxt}>{key}</Text>
-                          <Text style={styles.macroTxt}>
-                            {value}
-                            {'   '}kcal
-                          </Text>
-                        </View>
-                      );
+                      if (key !== '총합') {
+                        return (
+                          <View style={styles.macroBox} key={i}>
+                            <Text style={styles.macroTxt}>{key}</Text>
+                            <Text style={styles.macroTxt}>
+                              {value}
+                              {'   '}kcal
+                            </Text>
+                          </View>
+                        );
+                      } else if (key === '총합') {
+                        return (
+                          <View
+                            style={[styles.macroBox, {fontWeight: 'bold'}]}
+                            key={i}>
+                            <Text
+                              style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                              {key}
+                            </Text>
+                            <Text
+                              style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                              {value}
+                              {'   '}kcal
+                            </Text>
+                          </View>
+                        );
+                      }
                     })}
                 </View>
               )}
