@@ -471,6 +471,17 @@ export default class Record extends Component {
       })
       .catch((error) => console.log(error));
   };
+  onDate = (image) => {
+    var newYear = this.pad(`${year}`, 4);
+    var newMonth = this.pad(`${month}`, 2);
+    var newDate = this.pad(`${date}`, 2);
+    var sendDate = `${newYear}-${newMonth}-${newDate}`;
+    this.props.navigation.navigate('MyDatePicker', {
+      date: sendDate,
+      image: image,
+
+    })
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -920,7 +931,7 @@ export default class Record extends Component {
             </View>
           )}
         </ScrollView>
-        {this.state.active === 'btn1' && <Camera onCamera={this.onBtn1} />}
+        {this.state.active === 'btn1' && <Camera onCamera={(image) => this.onDate(image)} />}
       </View>
     );
   }
