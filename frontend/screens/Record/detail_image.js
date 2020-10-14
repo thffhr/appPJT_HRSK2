@@ -93,25 +93,27 @@ export default class DetatilImage extends Component {
                 {this.state.dateTime.date}일
               </Text>
             </View>
-            {!this.state.onCaption && (
-              <Icon
+            <View style={styles.iconBox}>
+              {!this.state.onCaption && (
+                <Icon
+                  style={styles.onCaption}
+                  onPress={this.onCaption}
+                  name="eye"
+                />
+              )}
+              {this.state.onCaption && (
+                <Icon
+                  style={styles.onCaption}
+                  onPress={this.onCaption}
+                  name="eye-off"
+                />
+              )}
+              <Icon 
+                name="trash"
+                onPress={this.onDelete}
                 style={styles.onCaption}
-                onPress={this.onCaption}
-                name="eye"
               />
-            )}
-            {this.state.onCaption && (
-              <Icon
-                style={styles.onCaption}
-                onPress={this.onCaption}
-                name="eye-off"
-              />
-            )}
-            <Icon 
-              name="trash"
-              onPress={this.onDelete}
-              style={styles.onCaption}
-            />
+            </View>
           </View>
           <ScrollView style={styles.imageBody}>
             <Image
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: width * 0.05,
+    marginHorizontal: width * 0.03,
     marginVertical: height * 0.015,
   },
   backBtn: {
@@ -243,14 +245,10 @@ const styles = StyleSheet.create({
   // caption
   onCaption: {
     fontSize: 30,
+    marginLeft: 10,
+    color: 'gray',
   },
-  offCaption: {
-    backgroundColor: 'transparent',
-    borderRadius: 10,
-  },
-  captionTxt: {
-    fontSize: 25,
-    fontFamily: 'BMJUA',
-    textAlign: 'center',
+  iconBox: {
+    flexDirection: 'row',
   },
 });
