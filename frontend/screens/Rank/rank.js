@@ -438,28 +438,38 @@ class Rank extends Component {
               {this.state.BestUser.map((user, i) => {
                 return (
                   <View style={styles.follow} key={user.id}>
+                    <TouchableOpacity
+                    style={styles.userBtn}
+                      onPress={() => {
+                        this.props.navigation.push('UserFeed', {
+                          username: user.username,
+                        })
+                      }}
+                    >
                     <Text style={styles.ranking}>{i + 1}</Text>
-                    {this.state.profileImage && (
-                      <Image
-                        style={styles.profileImg}
-                        source={{
-                          uri: `${serverUrl}gallery` + this.state.profileImage,
-                        }}
-                      />
-                    )}
-                    {!this.state.profileImage && (
-                      <Image
-                        style={styles.profileImg}
-                        source={{
-                          uri:
-                            'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                        }}
-                      />
-                    )}
-                    <Text style={styles.followUser}>{user.username}</Text>
-                    <Text style={styles.followCnt}>
-                      {user.num_of_followers}
-                    </Text>
+                      {this.state.profileImage && (
+                        <Image
+                          style={styles.profileImg}
+                          source={{
+                            uri: `${serverUrl}gallery` + this.state.profileImage,
+                          }}
+                        />
+                      )}
+                      {!this.state.profileImage && (
+                        <Image
+                          style={styles.profileImg}
+                          source={{
+                            uri:
+                              'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                          }}
+                        />
+                      )}
+                      <Text style={styles.followUser}>{user.username}</Text>
+                      <Text style={styles.followCnt}>
+                        {user.num_of_followers}
+                      </Text>
+                    </TouchableOpacity>
+
                   </View>
                 );
               })}
@@ -584,6 +594,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   follow: {
+    
+    
+  },
+  userBtn: {
     flexDirection: 'row',
     marginTop: '10%',
     marginLeft: '10%',

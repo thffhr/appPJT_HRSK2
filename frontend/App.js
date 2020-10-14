@@ -122,6 +122,11 @@ function RankStack() {
         component={Comment}
         options={{title: '댓글'}}
       />
+      <Stack.Screen
+        name="UserFeed"
+        component={UserFeed}
+        options={{title: '유저 피드'}}
+      />
     </Stack.Navigator>
   )
 }
