@@ -15,6 +15,7 @@ import {
   Dimensions,
   Image,
   AsyncStorage,
+  SafeAreaView,
 } from 'react-native';
 import {
   Calendar,
@@ -25,7 +26,8 @@ import {
 } from 'react-native-calendars';
 import Pie from 'react-native-pie';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {get} from 'react-native/Libraries/Utilities/PixelRatio';
+// import {get} from 'react-native/Libraries/Utilities/PixelRatio';
+import Camera from '../Camera/camera';
 
 const {width, height} = Dimensions.get('screen');
 // const serverUrl = 'http://localhost:8080/';
@@ -800,61 +802,64 @@ export default class Record extends Component {
             </View>
           )}
           {this.state.active == 'btn1' && (
-            <View style={styles.pictureBox}>
-              {this.state.pictures.map((picture) => {
-                const borderColor =
-                  picture.id === this.state.selected.id
-                    ? '#FCA652'
-                    : 'transparent';
-                return (
-                  <TouchableOpacity
-                    style={[styles.imgBtn, {borderColor: borderColor}]}
-                    key={picture.id}
-                    onPress={() => {
-                      const time = picture['created_at'];
-                      const year = time.substring(0, 4);
-                      const month = time.substring(5, 7);
-                      const date = time.substring(8, 10);
-                      const pictureDate = {
-                        year: year,
-                        month: month,
-                        date: date,
-                      };
-
-                      this.setState({
-                        selected: {id: picture.id, image: picture.image},
-                      });
-                      this.props.navigation.push('DetailImage', {
-                        imageId: picture.id,
-                        image: picture.image,
-                        picture: picture,
-                        pictureDate: pictureDate,
-                      });
-                    }}>
-                    <Image
-                      style={styles.picture}
-                      source={{
-                        uri: `${serverUrl}gallery` + picture.image,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-              {/* {Object.entries(this.state.pictures).map(([key, value], i) => {
-                return (
-                  <TouchableOpacity
-                    style={styles.imageBox}
-                    key={i}
-                    onPress={() => {
-                      this.onDetailImage(key, value, i);
-                    }}>
-                    <Text>
-                      {key} {value}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })} */}
-            </View>
+            <SafeAreaView >
+              <View style={styles.pictureBox}>
+                {this.state.pictures.map((picture) => {
+                  const borderColor =
+                    picture.id === this.state.selected.id
+                      ? '#FCA652'
+                      : 'transparent';
+                  return (
+                    <TouchableOpacity
+                      style={[styles.imgBtn, {borderColor: borderColor}]}
+                      key={picture.id}
+                      onPress={() => {
+                        const time = picture['created_at'];
+                        const year = time.substring(0, 4);
+                        const month = time.substring(5, 7);
+                        const date = time.substring(8, 10);
+                        const pictureDate = {
+                          year: year,
+                          month: month,
+                          date: date,
+                        };
+  
+                        this.setState({
+                          selected: {id: picture.id, image: picture.image},
+                        });
+                        this.props.navigation.push('DetailImage', {
+                          imageId: picture.id,
+                          image: picture.image,
+                          picture: picture,
+                          pictureDate: pictureDate,
+                        });
+                      }}>
+                      <Image
+                        style={styles.picture}
+                        source={{
+                          uri: `${serverUrl}gallery` + picture.image,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+                {/* {Object.entries(this.state.pictures).map(([key, value], i) => {
+                  return (
+                    <TouchableOpacity
+                      style={styles.imageBox}
+                      key={i}
+                      onPress={() => {
+                        this.onDetailImage(key, value, i);
+                      }}>
+                      <Text>
+                        {key} {value}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })} */}
+              </View>
+              <Camera />
+            </SafeAreaView>
           )}
           {this.state.active == 'btn3' && ( // calendar
             <View style={styles.calendarArea}>
