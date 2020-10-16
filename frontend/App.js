@@ -25,8 +25,8 @@ import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
 
 import Record from './screens/Record/record';
-import DetailImage from './screens/Record/detail_image';
-import MyDatePicker from './screens/Record/date_picker';
+import DetailImage from './screens/Record/gallery/detail_image';
+import MyDatePicker from './screens/Record/gallery/date_picker';
 
 import Rank from './screens/Rank/rank';
 import BestArticle from './screens/Rank/best_article';
