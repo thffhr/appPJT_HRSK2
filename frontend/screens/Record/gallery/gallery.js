@@ -3,23 +3,13 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  Modal,
-  TouchableHighlight,
+
   Dimensions,
   Image,
   AsyncStorage,
   SafeAreaView,
 } from 'react-native';
-import {
-  Calendar,
-  CalendarList,
-  Agenda,
-  LocaleConfig,
-  Arrow,
-} from 'react-native-calendars';
-import Pie from 'react-native-pie';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Camera from '../../Camera/camera';
 
