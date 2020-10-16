@@ -39,6 +39,9 @@ import CreateArticle from './screens/Community/create_article';
 import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
 
+// component
+import RankTabBar from './components/RankTapBar';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -238,10 +241,14 @@ function TapNavigator() {
 
 function RankTabs() {
   return (
-    <Tab.Navigator initialRouteName="BestArticle">
+    <TopTab.Navigator 
+      initialRouteName="BestArticle"
+      tabBarPosition="top"
+      tabBar={props => <RankTabBar {...props} />}
+    >
       <TopTab.Screen name="식단" component={BestArticle} />
       <TopTab.Screen name="팔로워" component={BestUser} />
-    </Tab.Navigator>
+    </TopTab.Navigator>
   );
 }
 

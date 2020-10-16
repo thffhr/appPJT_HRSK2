@@ -85,9 +85,9 @@ export default class BestArticle extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.navbar}>
+        {/* <View style={styles.navbar}>
           <Text style={styles.haru}>하루세끼</Text>
-        </View>
+        </View> */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -393,6 +393,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFBE6',
     width: '100%',
     flex: 1,
+    paddingTop: 20,
   },
   navbar: {
     width: '100%',

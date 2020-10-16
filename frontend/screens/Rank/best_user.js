@@ -28,11 +28,9 @@ export default class BestUser extends Component {
   };
 
   componentDidMount() {
-    console.log(1)
     this.getDatas();
   };
   getDatas = () => {
-    console.log(2)
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -53,10 +51,6 @@ export default class BestUser extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
-
         <ScrollView>
           <View style={styles.Box}>
             {this.state.BestUser.map((user, i) => {
@@ -109,6 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFBE6',
     width: '100%',
     flex: 1,
+    paddingTop: 20,
   },
   navbar: {
     width: '100%',
