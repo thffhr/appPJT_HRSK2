@@ -207,7 +207,6 @@ export default class Record extends Component {
         this.setState({
           nextDays: response,
         });
-        console.log(response);
         var tempObject = {};
         for (var key of Object.keys(this.state.nextDays)) {
           tempObject = {
@@ -393,7 +392,6 @@ export default class Record extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response);
           this.onFetch(year, month, date, day);
         })
         .catch((err) => console.error(err));
@@ -413,7 +411,6 @@ export default class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.onFetch(year, month, date, day);
       })
       .catch((err) => console.error(err));
@@ -442,7 +439,6 @@ export default class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setModalVisible(!this.state.modalVisible);
         this.onFetch(year, month, date, day);
       })
@@ -466,8 +462,7 @@ export default class Record extends Component {
         Authorization: `Token ${this.state.authToken}`,
       },
     })
-      .then((response) => {
-        console.log(response);
+      .then(() => {
       })
       .catch((error) => console.log(error));
   };
@@ -647,7 +642,6 @@ export default class Record extends Component {
                   alignItems: 'center',
                 }}>
                 {Object.entries(this.state.dayMenus).map(([k, v], idx) => {
-                  console.log(k, v);
                   if (Object.keys(v).length !== 0) {
                     return (
                       <>
