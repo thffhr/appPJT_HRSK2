@@ -12,6 +12,7 @@ import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import SplashScreen from 'react-native-splash-screen';
 
@@ -28,6 +29,8 @@ import DetailImage from './screens/Record/detail_image';
 import MyDatePicker from './screens/Record/date_picker';
 
 import Rank from './screens/Rank/rank';
+import BestArticle from './screens/Rank/best_article';
+import BestUser from './screens/Rank/best_user';
 
 import Community from './screens/Community/community';
 import Comment from './screens/Community/comment';
@@ -42,9 +45,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const TopTab = createMaterialTopTabNavigator();
 
 // Stack
-
 function CommunityStack() {
   return (
     <Stack.Navigator initialRouteName="Community" screenOptions={{
@@ -110,14 +113,29 @@ function RecordStack() {
 
 function RankStack() {
   return (
-    <Stack.Navigator initialRouteName="Rank" screenOptions={{
+    <Stack.Navigator initialRouteName="RankTabs" screenOptions={{
       headerShown: false,
     }}>
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Rank"
         component={Rank}
         options={{title: '랭킹페이지'}}
+      /> */}
+      <Stack.Screen 
+        name="RankTabs"
+        component={RankTabs}
+        option={{title: '랭킹 탭스'}}
       />
+      {/* <Stack.Screen 
+        name="BestArticle"
+        component={BestArticle}
+        option={{title: '베스트 아티클'}}
+      />
+      <Stack.Screen 
+        name="BestUser"
+        component={BestUser}
+        option={{title: '베스트 유저'}}
+      /> */}
       <Stack.Screen
         name="Comment"
         component={Comment}
@@ -189,13 +207,12 @@ function ProfileScreen() {
 function TapNavigator() {
   return (
     <Tab.Navigator 
+      initialRouteName="기록"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === '홈') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === '커뮤니티') {
+          if (route.name === '커뮤니티') {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === '기록') {
             iconName = focused ? 'calendar' : 'calendar-outline';
@@ -217,6 +234,15 @@ function TapNavigator() {
       <Tab.Screen name="랭킹" component={RankStack} />
     </Tab.Navigator>
   )
+}
+
+function RankTabs() {
+  return (
+    <Tab.Navigator initialRouteName="BestArticle">
+      <TopTab.Screen name="식단" component={BestArticle} />
+      <TopTab.Screen name="팔로워" component={BestUser} />
+    </Tab.Navigator>
+  );
 }
 
 function CustomDrawerContent(props) {
@@ -294,145 +320,3 @@ const styles = StyleSheet.create({
   },
 })
 
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       isLoggedIn: false,
-//     };
-//   }
-//   async componentDidMount() {
-//     SplashScreen.hide();
-//     // you might want to do the I18N setup here
-//     const username = await AsyncStorage.getItem('username');
-//     if (username !== null) {
-//       this.setState({isLoggedIn: true});
-//     }
-//   }
-//   // //////////////////////////////////////////
-//   // useInterval = (callback, delay) => {
-//   //   const savedCallback = useRef();
-//   //   // Remember the latest callback.
-//   //   useEffect(() => {
-//   //     savedCallback.current = callback;
-//   //   }, [callback]);
-//   //   // Set up the interval.
-//   //   useEffect(() => {
-//   //     function tick() {
-//   //       savedCallback.current();
-//   //     }
-//   //     if (delay !== null) {
-//   //       let id = setInterval(tick, delay);
-//   //       return () => clearInterval(id);
-//   //     }
-//   //   }, [delay]);
-//   // };
-//   // /////////////////////////////////////////
-//   render() {
-//     return (
-//       <NavigationContainer style={styles.container}>
-//         <Stack.Navigator
-//           initialRouteName="Login"
-//           screenOptions={{
-//             headerShown: false,
-//           }}>
-//           <Stack.Screen
-//             name="Login"
-//             component={Login}
-//             options={{title: '로그인'}}
-//           />
-//           <Stack.Screen
-//             name="Signup"
-//             component={Signup}
-//             options={{title: '회원가입'}}
-//           />
-//           <Stack.Screen
-//             name="Home"
-//             component={Home}
-//             options={{title: '하루세끼'}}
-//           />
-//           <Stack.Screen
-//             name="Record"
-//             component={Record}
-//             options={{title: '내 기록'}}
-//           />
-//           <Stack.Screen
-//             name="DetailImage"
-//             component={DetailImage}
-//             options={{title: '상세 이미지'}}
-//           />
-//           <Stack.Screen
-//             name="Profile"
-//             component={Profile}
-//             options={{title: '프로필'}}
-//           />
-//           <Stack.Screen
-//             name="UpdateImg"
-//             component={UpdateImg}
-//             options={{title: '프로필이미지변경'}}
-//           />
-//           <Stack.Screen
-//             name="Update"
-//             component={Update}
-//             options={{title: '프로필변경'}}
-//           />
-//           <Stack.Screen
-//             name="Startsex"
-//             component={Startsex}
-//             options={{title: '성별입력'}}
-//           />
-//           <Stack.Screen
-//             name="Startinfo"
-//             component={Startinfo}
-//             options={{title: '정보입력'}}
-//           />
-//           <Stack.Screen
-//             name="Rank"
-//             component={Rank}
-//             options={{title: '랭킹페이지'}}
-//           />
-//           <Stack.Screen
-//             name="Community"
-//             component={Community}
-//             options={{title: '커뮤니티'}}
-//           />
-//           <Stack.Screen
-//             name="MyFeed"
-//             component={MyFeed}
-//             options={{title: '내 피드'}}
-//           />
-//           <Stack.Screen
-//             name="UserFeed"
-//             component={UserFeed}
-//             options={{title: '유저 피드'}}
-//           />
-//           <Stack.Screen
-//             name="Comment"
-//             component={Comment}
-//             options={{title: '댓글'}}
-//           />
-//           <Stack.Screen
-//             name="CreateSelect"
-//             component={CreateSelect}
-//             options={{title: '사진선택'}}
-//           />
-//           <Stack.Screen
-//             name="CreateArticle"
-//             component={CreateArticle}
-//             options={{title: '게시물작성'}}
-//           />
-//         </Stack.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
-// export default App;

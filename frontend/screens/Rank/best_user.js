@@ -23,14 +23,16 @@ export default class BestUser extends Component {
     super(props)
 
     this.state = {
-      BestUser: '',
+      BestUser: [],
     }
   };
 
   componentDidMount() {
+    console.log(1)
     this.getDatas();
   };
   getDatas = () => {
+    console.log(2)
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -39,6 +41,7 @@ export default class BestUser extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log(response)
         this.setState({
           BestUser: response,
         });

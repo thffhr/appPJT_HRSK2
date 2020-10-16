@@ -21,7 +21,7 @@ const serverUrl = 'http://10.0.2.2:8080/';
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-export default class BestUser extends Component {
+export default class BestArticle extends Component {
   constructor(props) {
     super(props)
 
@@ -449,6 +449,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  writerImg: {
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+  },
   profileImg: {
     borderRadius: W * 0.15,
     width: W * 0.13,
@@ -481,6 +486,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'HANNAAir',
     marginBottom: 30,
+  },
+  articleImg: {
+    width: '100%',
+    height: 400,
+    marginBottom: 10,
   },
   // modal
   centeredView: {
