@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -24,11 +24,14 @@ import UpdateImg from './screens/Account/updateImg';
 import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
 
-import Record from './screens/Record/record';
+// import Record from './screens/Record/record';
+import Gallery from './screens/Record/gallery/gallery';
+import Record from './screens/Record/record/record';
+import Calendar from './screens/Record/calendar/calendar';
 import DetailImage from './screens/Record/gallery/detail_image';
 import MyDatePicker from './screens/Record/gallery/date_picker';
 
-import Rank from './screens/Rank/rank';
+// import Rank from './screens/Rank/rank';
 import BestArticle from './screens/Rank/best_article';
 import BestUser from './screens/Rank/best_user';
 
@@ -43,7 +46,6 @@ import UserFeed from './screens/Community/user_feed';
 import RankTabBar from './components/RankTapBar';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -97,7 +99,7 @@ function RecordStack() {
     }}>
       <Stack.Screen
         name="Record"
-        component={Record}
+        component={RecordTaps}
         options={{title: '내 기록'}}
       />
       <Stack.Screen
@@ -129,16 +131,6 @@ function RankStack() {
         component={RankTabs}
         option={{title: '랭킹 탭스'}}
       />
-      {/* <Stack.Screen 
-        name="BestArticle"
-        component={BestArticle}
-        option={{title: '베스트 아티클'}}
-      />
-      <Stack.Screen 
-        name="BestUser"
-        component={BestUser}
-        option={{title: '베스트 유저'}}
-      /> */}
       <Stack.Screen
         name="Comment"
         component={Comment}
@@ -250,6 +242,20 @@ function RankTabs() {
       <TopTab.Screen name="팔로워" component={BestUser} />
     </TopTab.Navigator>
   );
+}
+
+function RecordTaps() {
+  return (
+    <TopTab.Navigator
+      initialRouteName="BestArticle"
+      tabBarPosition="top"
+      tabBar={props => <RankTabBar {...props} />}
+    >
+      <TopTab.Screen name="사진" component={Gallery}/>
+      <TopTab.Screen name="기록" component={Record}/>
+      <TopTab.Screen name="달력" component={Calendar}/>
+    </TopTab.Navigator>
+  )
 }
 
 function CustomDrawerContent(props) {

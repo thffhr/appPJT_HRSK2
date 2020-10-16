@@ -76,49 +76,47 @@ export default class Gallery extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={{width: '100%'}}>
-          {this.state.active == 'btn1' && (
-            <View style={styles.pictureBox}>
-              {this.state.pictures.map((picture) => {
-                const borderColor =
-                  picture.id === this.state.selected.id
-                    ? '#FCA652'
-                    : 'transparent';
-                return (
-                  <TouchableOpacity
-                    style={[styles.imgBtn, {borderColor: borderColor}]}
-                    key={picture.id}
-                    onPress={() => {
-                      const time = picture['created_at'];
-                      const year = time.substring(0, 4);
-                      const month = time.substring(5, 7);
-                      const date = time.substring(8, 10);
-                      const pictureDate = {
-                        year: year,
-                        month: month,
-                        date: date,
-                      };
+          <View style={styles.pictureBox}>
+            {this.state.pictures.map((picture) => {
+              const borderColor =
+                picture.id === this.state.selected.id
+                  ? '#FCA652'
+                  : 'transparent';
+              return (
+                <TouchableOpacity
+                  style={[styles.imgBtn, {borderColor: borderColor}]}
+                  key={picture.id}
+                  onPress={() => {
+                    const time = picture['created_at'];
+                    const year = time.substring(0, 4);
+                    const month = time.substring(5, 7);
+                    const date = time.substring(8, 10);
+                    const pictureDate = {
+                      year: year,
+                      month: month,
+                      date: date,
+                    };
 
-                      this.setState({
-                        selected: {id: picture.id, image: picture.image},
-                      });
-                      this.props.navigation.push('DetailImage', {
-                        imageId: picture.id,
-                        image: picture.image,
-                        picture: picture,
-                        pictureDate: pictureDate,
-                      });
-                    }}>
-                    <Image
-                      style={styles.picture}
-                      source={{
-                        uri: `${serverUrl}gallery` + picture.image,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          )}
+                    this.setState({
+                      selected: {id: picture.id, image: picture.image},
+                    });
+                    this.props.navigation.push('DetailImage', {
+                      imageId: picture.id,
+                      image: picture.image,
+                      picture: picture,
+                      pictureDate: pictureDate,
+                    });
+                  }}>
+                  <Image
+                    style={styles.picture}
+                    source={{
+                      uri: `${serverUrl}gallery` + picture.image,
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </ScrollView>
         <Camera onCamera={(image) => this.onDate(image)} />
       </SafeAreaView>
@@ -132,6 +130,7 @@ const styles = StyleSheet.create({
     height: height,
     flex: 1,
     backgroundColor: '#FFFBE6',
+    paddingTop: 20,
   },
   pictureBox: {
     flexDirection: 'row',

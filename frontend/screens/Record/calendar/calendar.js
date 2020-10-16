@@ -1,26 +1,20 @@
-import React, {
-  Component,
-  //  useRef, useState, useEffect
-} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   ScrollView,
   StyleSheet,
   Text,
   Dimensions,
-  Image,
   AsyncStorage,
   SafeAreaView,
 } from 'react-native';
 import {
-  Calendar,
   CalendarList,
   Agenda,
   LocaleConfig,
   Arrow,
 } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Camera from '../Camera/camera';
 
 // const serverUrl = 'http://localhost:8080/';
 const serverUrl = 'http://10.0.2.2:8080/';
@@ -77,7 +71,7 @@ let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
 let day = today.getDay(); // 요일
 
-export default class Record extends Component {
+export default class Calendar extends Component {
   constructor(props) {
     super(props);
 
@@ -254,7 +248,6 @@ export default class Record extends Component {
             )}
           </View>
         </ScrollView>
-        {this.state.active === 'btn1' && <Camera onCamera={(image) => this.onDate(image)} />}
       </SafeAreaView>
     );
   }
