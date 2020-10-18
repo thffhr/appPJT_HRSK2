@@ -67,13 +67,16 @@ class Signup extends Component {
     return (
       <View style={styles.container}>
         <Image
-          source={require('../../assets/images/로고.png')}
+          source={require('../../assets/images/keyboard.png')}
           style={styles.image}
         />
+        <View style={styles.guide}>
+          <Text style={styles.guideTxt}>생성할 아이디와 비밀번호를 입력해주세요.</Text>
+        </View>
         <View>
           <TextInput
             style={styles.inputArea}
-            placeholder="닉네임을 입력하세요."
+            placeholder="아이디"
             onChangeText={(text) => {
               this.setState({
                 signupData: {
@@ -85,7 +88,7 @@ class Signup extends Component {
           />
           <TextInput
             style={styles.inputArea}
-            placeholder="이메일을 입력하세요."
+            placeholder="이메일"
             onChangeText={(text) => {
               this.setState({
                 signupData: {
@@ -139,10 +142,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFBE6',
   },
-  description: {
-    fontSize: W * 0.03,
-    fontWeight: 'bold',
+  guide: {
+    width: W * 0.7,
     marginVertical: H * 0.01,
+  },
+  guideTxt: {
+    textAlign: 'center',
+    fontSize: 25,
+    fontFamily: 'BMHANNA',
+    color: 'darkgray',
   },
   signupBtn: {
     backgroundColor: '#fca652',
@@ -150,33 +158,32 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: H * 0.01,
     marginBottom: H * 0.01,
-    width: '70%',
+    width: W * 0.7,
   },
   signupButton: {
     width: '100%',
     alignItems: 'center',
   },
   signBtnText: {
-    color: 'white',
-    fontSize: W * 0.04,
-    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 20,
+    fontFamily: 'BMJUA',
   },
   inputArea: {
     width: W * 0.7,
     height: W * 0.1,
-    fontSize: W * 0.03,
-    borderBottomColor: 'gray',
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderLeftColor: 'transparent',
+    fontSize: W * 0.04,
+    borderColor: 'lightgray',
     borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#fff',
     marginTop: H * 0.01,
     marginBottom: H * 0.01,
+    padding: W * 0.02,
   },
   image: {
-    width: W * 0.3,
-    height: W * 0.3,
-    marginBottom: W * 0.15,
+    width: W * 0.4,
+    height: W * 0.23,
   },
 });
 

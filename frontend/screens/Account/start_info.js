@@ -70,9 +70,9 @@ class Startinfo extends Component {
         />
         <Text
           style={{
-            fontSize: W * 0.05,
-            fontWeight: 'bold',
-            color: 'gray',
+            fontSize: 25,
+            fontFamily: 'BMHANNA',
+            color: 'darkgray',
             textAlign: 'center',
             marginVertical: W * 0.05,
           }}>
@@ -88,7 +88,7 @@ class Startinfo extends Component {
               }}
             />
             <Text
-              style={{marginTop: W * 0.05, fontSize: W * 0.04, color: 'gray'}}>
+              style={styles.unit}>
               cm
             </Text>
           </View>
@@ -101,7 +101,7 @@ class Startinfo extends Component {
               }}
             />
             <Text
-              style={{marginTop: W * 0.05, fontSize: W * 0.04, color: 'gray'}}>
+              style={styles.unit}>
               kg
             </Text>
           </View>
@@ -114,7 +114,7 @@ class Startinfo extends Component {
               }}
             />
             <Text
-              style={{marginTop: W * 0.05, fontSize: W * 0.04, color: 'gray'}}>
+              style={styles.unit}>
               세
             </Text>
           </View>
@@ -147,18 +147,25 @@ const styles = StyleSheet.create({
   },
   textGroup: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   inputArea: {
     width: W * 0.5,
     height: W * 0.1,
-    fontSize: W * 0.03,
-    borderBottomColor: 'gray',
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderLeftColor: 'transparent',
+    fontSize: W * 0.04,
+    borderColor: 'lightgray',
     borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#fff',
     marginTop: H * 0.01,
     marginBottom: H * 0.01,
+    padding: W * 0.02,
+  },
+  unit: {
+    marginTop: W * 0.04,
+    fontSize: W * 0.045,
+    color: 'gray',
+    marginLeft: 5,
   },
   location: {
     position: 'absolute',

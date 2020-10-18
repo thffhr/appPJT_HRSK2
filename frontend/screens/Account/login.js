@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   inputArea: {
     width: W * 0.7,
     height: W * 0.1,
-    fontSize: W * 0.03,
+    fontSize: W * 0.04,
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginBtnText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 20,
     fontFamily: 'BMJUA',
   },
