@@ -387,7 +387,7 @@ export default class BestArticle extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#fbfbe6',
     width: '100%',
     flex: 1,
     paddingTop: 20,

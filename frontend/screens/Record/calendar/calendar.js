@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height,
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#fbfbe6',
   },
   dateBox: {
     marginTop: 20,

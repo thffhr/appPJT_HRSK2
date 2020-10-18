@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#fbfbe6',
   },
   guide: {
     width: W * 0.7,

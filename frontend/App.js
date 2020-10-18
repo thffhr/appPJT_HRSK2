@@ -7,11 +7,10 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import SplashScreen from 'react-native-splash-screen';
@@ -24,14 +23,12 @@ import UpdateImg from './screens/Account/updateImg';
 import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
 
-// import Record from './screens/Record/record';
 import Gallery from './screens/Record/gallery/gallery';
 import Record from './screens/Record/record/record';
 import Calendar from './screens/Record/calendar/calendar';
 import DetailImage from './screens/Record/gallery/detail_image';
 import MyDatePicker from './screens/Record/gallery/date_picker';
 
-// import Rank from './screens/Rank/rank';
 import BestArticle from './screens/Rank/best_article';
 import BestUser from './screens/Rank/best_user';
 
@@ -43,7 +40,7 @@ import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
 
 // component
-// import RankTabBar from './components/RankTapBar';
+import CustomDrawerContent from './components/CustomDrawerContent';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -133,11 +130,6 @@ function RankStack() {
     <Stack.Navigator initialRouteName="RankTabs" screenOptions={{
       headerShown: false,
     }}>
-      {/* <Stack.Screen
-        name="Rank"
-        component={Rank}
-        options={{title: '랭킹페이지'}}
-      /> */}
       <Stack.Screen 
         name="RankTabs"
         component={RankTabs}
@@ -271,32 +263,6 @@ function RecordTaps() {
   )
 }
 
-function CustomDrawerContent(props) {
-  // const [username, setUsername] = useState(null);
-
-  // useEffect(async () => {
-  //   username = await AsyncStorage.getItem('username')
-  // })
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollArea}>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('메뉴')}
-          style={styles.linkBtn}
-        >
-          <Text>메뉴</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('내 정보')}
-          style={styles.linkBtn}
-        >
-          <Text>내 정보</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
-  )
-}
-
 // Drawer
 function DrawerStack() {
   return (
@@ -308,6 +274,9 @@ function DrawerStack() {
         screenOptions={{
           headerShown: false,
         }}
+        // drawerIcon={{foucsed: true, color: 'red', size: 20}}
+        hideStatusBar={true}
+        statusBarAnimation={true}
       >
         <Drawer.Screen name="메뉴" component={TapNavigator} />
         <Drawer.Screen name="내 정보" component={ProfileScreen} />
@@ -333,16 +302,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollArea: {
-    marginLeft: 20,
-  },
-  linkBtn: {
-    marginTop: 20,
-  },
-})
-
