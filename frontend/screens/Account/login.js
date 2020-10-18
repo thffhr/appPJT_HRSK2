@@ -84,12 +84,12 @@ class Login extends Component {
         <View>
           <TextInput
             style={styles.inputArea}
-            placeholder="아이디를 입력하세요."
+            placeholder="아이디"
             onChangeText={this.handleEmail}
           />
           <TextInput
             style={styles.inputArea}
-            placeholder="비밀번호를 입력하세요."
+            placeholder="비밀번호"
             secureTextEntry={true}
             onChangeText={this.handlePassword}
           />
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#FBFBE6',
   },
   titleGroup: {
     flexDirection: 'row',
@@ -159,22 +159,21 @@ const styles = StyleSheet.create({
     width: W * 0.7,
     height: W * 0.1,
     fontSize: W * 0.03,
-    borderBottomColor: 'gray',
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderLeftColor: 'transparent',
+    borderColor: 'lightgray',
     borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#fff',
     marginTop: H * 0.01,
     marginBottom: H * 0.01,
+    padding: W * 0.02,
   },
   loginBtn: {
-    // alignItems: 'center',
     backgroundColor: '#fca652',
     padding: W * 0.02,
     borderRadius: 5,
     marginTop: H * 0.01,
     marginBottom: H * 0.01,
-    width: '70%',
+    width: W * 0.7,
   },
   loginButton: {
     width: '100%',
@@ -182,8 +181,8 @@ const styles = StyleSheet.create({
   },
   loginBtnText: {
     color: 'white',
-    fontSize: W * 0.04,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: 'BMJUA',
   },
   findBox: {
     flexDirection: 'row',
