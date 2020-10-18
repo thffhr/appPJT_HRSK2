@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height,
     flex: 1,
-    backgroundColor: '#FFFBE6',
-    paddingTop: 20,
+    backgroundColor: '#fbfbe6',
+    paddingTop: 10,
   },
   pictureBox: {
     flexDirection: 'row',

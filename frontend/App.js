@@ -43,7 +43,7 @@ import MyFeed from './screens/Community/my_feed';
 import UserFeed from './screens/Community/user_feed';
 
 // component
-import RankTabBar from './components/RankTapBar';
+// import RankTabBar from './components/RankTapBar';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -51,6 +51,18 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const TopTab = createMaterialTopTabNavigator();
+const tapOptions = {
+  activeTintColor: '#fca652',
+  inactiveTintColor:'gray',
+  style:{
+    backgroundColor:'#fbfbe6',
+    borderBottomWidth: 1,
+    borderBottomColor: 'darkgray',
+  },
+  indicatorStyle: {
+    backgroundColor: '#fca652',
+  },
+}
 
 // Stack
 function CommunityStack() {
@@ -236,7 +248,7 @@ function RankTabs() {
     <TopTab.Navigator 
       initialRouteName="BestArticle"
       tabBarPosition="top"
-      tabBar={props => <RankTabBar {...props} />}
+      tabBarOptions={tapOptions}
     >
       <TopTab.Screen name="식단" component={BestArticle} />
       <TopTab.Screen name="팔로워" component={BestUser} />
@@ -244,12 +256,13 @@ function RankTabs() {
   );
 }
 
+
 function RecordTaps() {
   return (
     <TopTab.Navigator
       initialRouteName="BestArticle"
       tabBarPosition="top"
-      tabBar={props => <RankTabBar {...props} />}
+      tabBarOptions={tapOptions}
     >
       <TopTab.Screen name="사진" component={Gallery}/>
       <TopTab.Screen name="기록" component={Record}/>
