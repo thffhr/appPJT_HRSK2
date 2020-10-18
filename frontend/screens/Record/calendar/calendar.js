@@ -15,10 +15,7 @@ import {
   Arrow,
 } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-// const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://10.0.2.2:8080/';
-// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
+import {serverUrl} from '../../../constants';
 
 const {width, height} = Dimensions.get('screen');
 

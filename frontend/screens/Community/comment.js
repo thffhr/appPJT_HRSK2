@@ -11,10 +11,7 @@ import {
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
-
-// const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://10.0.2.2:8080/';
-// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
+import {serverUrl} from '../../constants';
 
 const {width, height} = Dimensions.get('screen');
 

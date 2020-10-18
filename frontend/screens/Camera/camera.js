@@ -3,10 +3,6 @@ import {SafeAreaView, View, StyleSheet, TouchableOpacity, AsyncStorage} from 're
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 
-// const serverUrl = 'http://localhost:8080/';
-const serverUrl = 'http://10.0.2.2:8080/';
-// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
-
 export default class Camera extends Component {
   constructor(props) {
     super(props);
