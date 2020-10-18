@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#fbfbe6',
   },
   navbar: {
     width: '100%',
