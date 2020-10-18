@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#FFFBE6',
+    backgroundColor: '#fbfbe6',
     alignItems: 'center',
   },
   profileImg: {

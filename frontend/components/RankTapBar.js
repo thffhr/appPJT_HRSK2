@@ -7,11 +7,11 @@ export default function RankTabBar({ state, descriptors, navigation, position })
     <View style={{ 
       flexDirection: 'row',
       height: 50,
-      backgroundColor: '#fca652',
+      backgroundColor: '#fBFBE6',
       justifyContent: 'space-between',
       alignItems: 'center',
-      borderBottomWidth: 2,
-      borderBottomColor: 'lightgray',
+      // borderBottomWidth: 2,
+      // borderBottomColor: 'lightgray',
     }}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -48,7 +48,7 @@ export default function RankTabBar({ state, descriptors, navigation, position })
           inputRange,
           outputRange: inputRange.map(i => (i === index ? 1 : 0.3)),
         });
-
+        
         return (
           <TouchableOpacity
             accessibilityRole="button"
@@ -62,7 +62,7 @@ export default function RankTabBar({ state, descriptors, navigation, position })
             <Animated.Text style={{ 
               opacity,
               textAlign: 'center',
-              color: '#fff',
+              color: 'darkgray',
               fontSize: 15,
               fontFamily: 'BMJUA'
             }}>
