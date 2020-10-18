@@ -23,14 +23,12 @@ import UpdateImg from './screens/Account/updateImg';
 import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
 
-// import Record from './screens/Record/record';
 import Gallery from './screens/Record/gallery/gallery';
 import Record from './screens/Record/record/record';
 import Calendar from './screens/Record/calendar/calendar';
 import DetailImage from './screens/Record/gallery/detail_image';
 import MyDatePicker from './screens/Record/gallery/date_picker';
 
-// import Rank from './screens/Rank/rank';
 import BestArticle from './screens/Rank/best_article';
 import BestUser from './screens/Rank/best_user';
 
@@ -132,11 +130,6 @@ function RankStack() {
     <Stack.Navigator initialRouteName="RankTabs" screenOptions={{
       headerShown: false,
     }}>
-      {/* <Stack.Screen
-        name="Rank"
-        component={Rank}
-        options={{title: '랭킹페이지'}}
-      /> */}
       <Stack.Screen 
         name="RankTabs"
         component={RankTabs}
