@@ -7,6 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
+import { AsyncStorage } from 'react-native';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -55,9 +56,11 @@ const tapOptions = {
     backgroundColor:'#fbfbe6',
     borderBottomWidth: 1,
     borderBottomColor: 'darkgray',
+  
   },
   indicatorStyle: {
-    backgroundColor: '#fca652',
+    borderBottomColor: '#fca652',
+    borderBottomWidth: 5,
   },
 }
 
@@ -264,7 +267,7 @@ function RecordTaps() {
 }
 
 // Drawer
-function DrawerStack() {
+function DrawerStack(props) {
   return (
     <>
       <Drawer.Navigator 
@@ -279,7 +282,7 @@ function DrawerStack() {
         statusBarAnimation={true}
       >
         <Drawer.Screen name="메뉴" component={TapNavigator} />
-        <Drawer.Screen name="내 정보" component={ProfileScreen} />
+        <Drawer.Screen name="내 정보" component={ProfileScreen}/>
       </Drawer.Navigator>
     </>
   )
@@ -289,7 +292,7 @@ const stackApp = createStackNavigator();
 
 export default function App() {
   useEffect(() => {
-    SplashScreen.hide();
+    SplashScreen.hide(); 
   });
   return (
     <NavigationContainer>

@@ -26,16 +26,17 @@ class Update extends Component {
       sex: this.props.route.sex,
       height: '',
       weight: this.props.route.weight,
+      // weight: 60,
       bm: this.props.route.bm,
     };
   }
+  shouldComponentUpdate() {
+
+  };
   async componentDidMount() {
     // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
     this.getInfo();
-  }
+  };
   getInfo = () => {
     fetch(`${serverUrl}accounts/profile/${this.state.username}`, {
       method: 'GET',
@@ -219,10 +220,11 @@ class Update extends Component {
             <Text style={styles.infoValue}>{this.state.bm} kcal</Text>
           </View>
         </View>
-
+        {/* <Text>{this.state.weight}</Text> */}
         <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
           <Text style={styles.delText}>회원탈퇴</Text>
         </TouchableOpacity>
+        
       </View>
     );
   }
