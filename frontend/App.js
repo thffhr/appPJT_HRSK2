@@ -283,6 +283,7 @@ function DrawerStack(props) {
       >
         <Drawer.Screen name="메뉴" component={TapNavigator} />
         <Drawer.Screen name="내 정보" component={ProfileScreen}/>
+        {/* <Drawer.Screen name="커스텀" component={CustomDrawerContent} /> */}
       </Drawer.Navigator>
     </>
   )

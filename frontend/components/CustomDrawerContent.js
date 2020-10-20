@@ -17,7 +17,7 @@ import {serverUrl, user} from '../constants';
 // }
 
 export default function CustomDrawerContent(props) {
-    // const [user, setUser] = useState(null);
+    // const [user, setUser] = useState('qwer');
     
     // useEffect(() => {
     //   setUser(
@@ -29,7 +29,7 @@ export default function CustomDrawerContent(props) {
       <SafeAreaView style={styles.container}>
         <DrawerContentScrollView style={styles.scrollArea}>
           <View>
-            <Text>{user.username}dsf</Text>
+            <Text>dsf</Text>
             <Image 
               source={{
                 uri: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
@@ -65,6 +65,50 @@ export default function CustomDrawerContent(props) {
       </SafeAreaView>
     )
   }
+
+// export default class CustomDrawerContent extends Component {
+//   render() {
+//     return (
+//       <SafeAreaView style={styles.container}>
+//         <DrawerContentScrollView style={styles.scrollArea}>
+//           <View>
+//             <Text>{user.username}dsf</Text>
+//             <Image 
+//               source={{
+//                 uri: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+//               }}
+//               style={{height: 20}}
+//             />
+//           </View>
+//           <TouchableOpacity
+//             onPress={() => props.navigation.navigate('메뉴')}
+//             style={styles.linkBtn}
+//           >
+//             <Text style={styles.drawerTxt}>메뉴</Text>
+//           </TouchableOpacity>
+//           <TouchableOpacity
+//             onPress={() => props.navigation.navigate('내 정보')}
+//             style={styles.linkBtn}
+//           >
+//             <Text style={styles.drawerTxt}>내 정보</Text>
+//           </TouchableOpacity>
+//         </DrawerContentScrollView>
+  
+//         <DrawerItem 
+//           icon={({color, size}) => (
+//             <Icon 
+//               name='log-out-outline'
+//               color={color}
+//               size={size}
+//           />)}
+//           label="로그아웃"
+//           labelStyle={{fontFamily: 'BMJUA', fontSize: 20,}}
+//           onPress={() => {}}
+//         />
+//       </SafeAreaView>
+//     )
+//   }
+// }
 
   const styles = StyleSheet.create({
     container: {
