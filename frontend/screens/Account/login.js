@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  PixelRatio,
   Image,
   View,
   Text,
@@ -13,9 +12,16 @@ import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import { NavigationActions } from 'react-navigation';
 import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+import { login } from '../../src/action/user';
+// import store from '../../src/store/index';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
+
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
+})
 
 class Login extends Component {
   constructor(props) {
@@ -25,7 +31,7 @@ class Login extends Component {
       username: '',
       password: '',
     };
-  }
+  };
   async componentDidMount() {
     const token = await AsyncStorage.getItem('auth-token');
     if (token) {
@@ -36,7 +42,7 @@ class Login extends Component {
         }),
       );
     }
-  }
+  };
   handleEmail = (text) => {
     this.setState({username: text});
   };
@@ -56,6 +62,12 @@ class Login extends Component {
         if (response.key) {
           AsyncStorage.setItem('auth-token', response.key);
           AsyncStorage.setItem('username', this.state.username);
+          const userData = {
+            token: response.key,
+            username: this.state.username,
+          }
+          // store.dispatch(login(userData));
+          login();
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
@@ -203,4 +215,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+// export default Login;
+export default connect(null, mapDispatchToProps)(Login);

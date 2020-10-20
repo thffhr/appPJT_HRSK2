@@ -6,8 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState, useEffect} from 'react';
-import { AsyncStorage } from 'react-native';
+import React, {Component} from 'react';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -44,6 +43,9 @@ import UserFeed from './screens/Community/user_feed';
 import CustomDrawerContent from './components/CustomDrawerContent';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Provider } from 'react-redux';
+import { store } from './src/store/index';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -267,42 +269,64 @@ function RecordTaps() {
 }
 
 // Drawer
-function DrawerStack(props) {
-  return (
-    <>
-      <Drawer.Navigator 
-        initialRouteName="메뉴" 
-        drawerPosition="right" 
-        drawerContent={props => CustomDrawerContent(props)}
-        screenOptions={{
-          headerShown: false,
-        }}
-        // drawerIcon={{foucsed: true, color: 'red', size: 20}}
-        hideStatusBar={true}
-        statusBarAnimation={true}
-      >
-        <Drawer.Screen name="메뉴" component={TapNavigator} />
-        <Drawer.Screen name="내 정보" component={ProfileScreen}/>
-        {/* <Drawer.Screen name="커스텀" component={CustomDrawerContent} /> */}
-      </Drawer.Navigator>
-    </>
-  )
+// function DrawerStack(props) {
+class DrawerStack extends Component {
+  constructor(props){
+    super(props);
+  };
+  render() {
+    return (
+      <>
+        <Drawer.Navigator 
+          initialRouteName="메뉴" 
+          drawerPosition="right" 
+          drawerContent={() => <CustomDrawerContent navigation={this.props.navigation}/>}
+          screenOptions={{
+            headerShown: false,
+          }}
+          // drawerIcon={{foucsed: true, color: 'red', size: 20}}
+          hideStatusBar={true}
+          statusBarAnimation={true}
+        >
+          <Drawer.Screen name="메뉴" component={TapNavigator} />
+          <Drawer.Screen name="내 정보" component={ProfileScreen}/>
+          {/* <Drawer.Screen name="커스텀" component={CustomDrawerContent} /> */}
+        </Drawer.Navigator>
+      </>
+    )
+  }
 }
 
 const stackApp = createStackNavigator();
+// export default function App() {
+export default class App extends Component {
+  constructor(props){
+    super(props);
 
-export default function App() {
-  useEffect(() => {
+  };
+  componentDidMount() {
     SplashScreen.hide(); 
-  });
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="로그인" screenOptions={{
-      headerShown: false,
-    }}>
-        <stackApp.Screen name="로그인" component={AcccountStack} />
-        <stackApp.Screen name="drawer" component={DrawerStack} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  };
+  render() {
+    return (
+      // <NavigationContainer>
+      //   <Stack.Navigator initialRouteName="로그인" screenOptions={{
+      //     headerShown: false,
+      //   }}>
+      //     <stackApp.Screen name="로그인" component={AcccountStack} />
+      //     <stackApp.Screen name="drawer" component={DrawerStack} />
+      //   </Stack.Navigator>
+      // </NavigationContainer>
+      <Provider store={store} >
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="로그인" screenOptions={{
+            headerShown: false,
+          }}>
+            <stackApp.Screen name="로그인" component={AcccountStack} />
+            <stackApp.Screen name="drawer" component={DrawerStack} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    );
+  }  
 }
