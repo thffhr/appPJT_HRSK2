@@ -1,11 +1,10 @@
-import { ActionSheetIOS } from "react-native";
-
 export const LOGIN = 'LOGIN';
 
 export function login(user) {
-    console.log('action')
+    console.log('action: ', user)
     return {
         type: LOGIN,
         user: user,
     }
+    
 };

@@ -4,15 +4,15 @@ const initialState = {
     user: null,
 };
 
-const userReducer = (state = initialState, action) => {
-    console.log('reducer')
-    console.log(action)
+function userReducer(state=initialState, action) {
+    console.log('reducer: ', action);
     switch(action.type) {
-        case LOGIN: {
+        case LOGIN:
             console.log('reducer complete');
             return Object.assign({}, state, {user: action.user} )
-        }
+
         default:
+            console.log('default')
             return state
     }
 };

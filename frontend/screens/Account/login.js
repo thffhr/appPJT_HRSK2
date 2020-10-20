@@ -10,18 +10,17 @@ import {
 } from 'react-native';
 import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import { NavigationActions } from 'react-navigation';
 import {serverUrl} from '../../constants';
 import { connect } from 'react-redux';
 import { login } from '../../src/action/user';
-// import store from '../../src/store/index';
+import {store} from '../../src/store/index';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-const mapDispatchToProps = (dispatch) => ({
-  login: (user) => dispatch(login(user)),
-})
+// const mapDispatchToProps = (dispatch) => ({
+//   login: (user) => dispatch(login(user)),
+// })
 
 class Login extends Component {
   constructor(props) {
@@ -66,8 +65,7 @@ class Login extends Component {
             token: response.key,
             username: this.state.username,
           }
-          // store.dispatch(login(userData));
-          login();
+          store.dispatch(login(userData));
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
@@ -216,4 +214,4 @@ const styles = StyleSheet.create({
 });
 
 // export default Login;
-export default connect(null, mapDispatchToProps)(Login);
+export default connect()(Login);
