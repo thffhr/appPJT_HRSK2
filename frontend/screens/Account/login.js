@@ -13,7 +13,7 @@ import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
 import { connect } from 'react-redux';
 import { login } from '../../src/action/user';
-import {store} from '../../src/store/index';
+// import {store} from '../../src/store/index';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
@@ -33,7 +33,12 @@ class Login extends Component {
   };
   async componentDidMount() {
     const token = await AsyncStorage.getItem('auth-token');
+    const username = await AsyncStorage.getItem('username');
     if (token) {
+      this.props.login({
+        token: token,
+        username: username,
+      });
       this.props.navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -163,8 +168,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginRight: W * 0.03,
-    width: W * 0.165,
-    height: W * 0.165,
+    // width: W * 0.165,
+    // height: W * 0.165,
   },
   inputArea: {
     width: W * 0.7,

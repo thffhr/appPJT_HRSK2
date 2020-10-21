@@ -2,74 +2,16 @@ import React, {useState, useEffect, Component} from 'react';
 import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image} from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {serverUrl, user} from '../constants';
-import store from '../src/store/index';
+import { serverUrl } from '../constants';
+import { connect } from 'react-redux';
 
-// var user = store.getState();
-// store.subscribe(function() {
-//   user = store.getState();
-// });
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
-// export default function CustomDrawerContent(props) {
-//     // const [user, setUser] = useState('qwer');
-    
-//     // useEffect(() => {
-//     //   setUser(
-//     //     AsyncStorage.getItem("username") ? AsyncStorage.getItem("username")._U : "no"
-//     //   );
-//     // }, [user]);
-//     // const user = await AsyncStorage.getItem('username')._W;
-//     return (
-//       <SafeAreaView style={styles.container}>
-//         <DrawerContentScrollView style={styles.scrollArea}>
-//           <View>
-//             <Text>{}dsf</Text>
-//             <Image 
-//               source={{
-//                 uri: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-//               }}
-//               style={{height: 20}}
-//             />
-//           </View>
-//           <TouchableOpacity
-//             onPress={() => props.navigation.navigate('메뉴')}
-//             style={styles.linkBtn}
-//           >
-//             <Text style={styles.drawerTxt}>메뉴</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity
-//             onPress={() => props.navigation.navigate('내 정보')}
-//             style={styles.linkBtn}
-//           >
-//             <Text style={styles.drawerTxt}>내 정보</Text>
-//           </TouchableOpacity>
-//         </DrawerContentScrollView>
-  
-//         <DrawerItem 
-//           icon={({color, size}) => (
-//             <Icon 
-//               name='log-out-outline'
-//               color={color}
-//               size={size}
-//           />)}
-//           label="로그아웃"
-//           labelStyle={{fontFamily: 'BMJUA', fontSize: 20,}}
-//           onPress={() => {}}
-//         />
-//       </SafeAreaView>
-//     )
-//   }
-
-export default class CustomDrawerContent extends Component {
+class CustomDrawerContent extends Component {
   constructor(props){
     super(props);
-    
-    // this.state = {
-    //   user: store.getState(),
-    // };
-    // store.subscribe(function(){
-    //   // this.setState({user: store.getState()})
-    // }.bind(this));
     
   };
   onMenu = () => {  
@@ -79,20 +21,17 @@ export default class CustomDrawerContent extends Component {
     this.props.navigation.navigate('내 정보');
   };
   render() {
-    // console.log(user);
     return (
       <SafeAreaView style={styles.container}>
         <DrawerContentScrollView style={styles.scrollArea}>
-          <View>
-            {/* {user && (
-              <Text>{user.username}dsf</Text>
-            )} */}
+          <View style={styles.profileBox}>
             <Image 
               source={{
                 uri: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
               }}
-              style={{height: 20}}
+              style={styles.profileImg}
             />
+            <Text style={styles.profileTxt}>{this.props.user.username}</Text>
           </View>
           <TouchableOpacity
             onPress={this.onMenu}
@@ -132,6 +71,21 @@ const styles = StyleSheet.create({
   scrollArea: {
     marginLeft: 20,
   },
+  // profile
+  profileBox: {
+    flexDirection: 'row',
+    alignItems: 'center', 
+  },
+  profileImg: {
+    width: 50,
+    height: 50,
+  },
+  profileTxt: {
+    fontFamily: 'BMJUA',
+    fontSize: 25,
+    marginLeft: 20,
+  },
+  // link
   linkBtn: {
     marginTop: 20,
   },
@@ -140,3 +94,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 })
+
+export default connect(mapStateToProps)(CustomDrawerContent);
