@@ -1,6 +1,7 @@
-import React, {useState, useEffect, Component} from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, AsyncStorage, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image} from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { serverUrl } from '../constants';
 import { connect } from 'react-redux';
@@ -14,12 +15,31 @@ class CustomDrawerContent extends Component {
     super(props);
     
   };
-  onMenu = () => {  
+  onMenu = () => {
     this.props.navigation.navigate('메뉴');
   };
   onProfile = () => {
     this.props.navigation.navigate('내 정보');
   };
+  // onLogout = () => {
+  //   fetch(`${serverUrl}rest-auth/logout/`, {
+  //     method: 'POST',
+  //     header: {
+  //       Authorization: `Token ${this.props.user.token}`,
+  //     },
+  //   })
+  //     .then(() => {
+  //       console.log('로그아웃 성공');
+  //       AsyncStorage.clear();
+  //       this.props.navigation.dispatch(
+  //         CommonActions.reset({
+  //           index: 1,
+  //           routes: [{name: '로그인'}],
+  //         }),
+  //       );
+  //     })
+  //     .catch((err) => console.error(err));
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -95,4 +115,5 @@ const styles = StyleSheet.create({
   },
 })
 
+// export default CustomDrawerContent;
 export default connect(mapStateToProps)(CustomDrawerContent);

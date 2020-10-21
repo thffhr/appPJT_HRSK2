@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginRight: W * 0.03,
-    // width: W * 0.165,
-    // height: W * 0.165,
+    width: W * 0.165,
+    height: W * 0.165,
   },
   inputArea: {
     width: W * 0.7,
