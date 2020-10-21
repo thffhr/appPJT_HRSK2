@@ -5,40 +5,40 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  TextInput
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import {TextInput} from 'react-native-gesture-handler';
 import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+import { store } from '../../src/store/index';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+})
+
 class Update extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      username: this.props.route.username,
       active: this.props.route.active,
       age: '',
       sex: this.props.route.sex,
       height: '',
       weight: this.props.route.weight,
-      // weight: 60,
       bm: this.props.route.bm,
     };
   }
-  shouldComponentUpdate() {
-
-  };
-  async componentDidMount() {
+  componentDidMount() {
     // you might want to do the I18N setup here
     this.getInfo();
   };
   getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.state.username}`, {
+    fetch(`${serverUrl}accounts/profile/${this.props.user.username}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -58,27 +58,25 @@ class Update extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   onUpdateImg = () => {
     this.props.navigation.push('UpdateImg');
   };
-  onProfile = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  onProfile = () => {
     if (this.state.height && this.state.weight && this.state.age) {
       fetch(`${serverUrl}accounts/update/`, {
         method: 'PATCH',
         body: JSON.stringify(this.state),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
-        .then((response) => response.json())
         .then(() => {})
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
@@ -90,12 +88,11 @@ class Update extends Component {
       }),
     );
   };
-  onDelete = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  onDelete = () => {
     fetch(`${serverUrl}accounts/delete/${this.state.username}`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -167,7 +164,7 @@ class Update extends Component {
         <View style={styles.userInfo}>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>아이디</Text>
-            <Text style={styles.infoValue}>{this.state.username}</Text>
+            <Text style={styles.infoValue}>{this.props.user.username}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>성별</Text>
@@ -329,4 +326,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Update;
+export default connect(mapStateToProps)(Update);

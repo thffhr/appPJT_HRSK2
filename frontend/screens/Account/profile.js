@@ -160,7 +160,6 @@ class Profile extends Component {
           style={styles.logoutBtn}
           onPress={async () => {
             const token = await AsyncStorage.getItem('auth-token');
-            console.log(token);
             if (token !== null) {
               fetch(`${serverUrl}rest-auth/logout/`, {
                 method: 'POST',
