@@ -11,7 +11,6 @@ import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
 import { connect } from 'react-redux';
-import { store } from '../../src/store/index';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
@@ -89,7 +88,7 @@ class Update extends Component {
     );
   };
   onDelete = () => {
-    fetch(`${serverUrl}accounts/delete/${this.state.username}`, {
+    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
       method: 'POST',
       headers: {
         Authorization: `Token ${this.props.user.token}`,

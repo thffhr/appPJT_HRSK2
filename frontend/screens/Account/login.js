@@ -18,9 +18,9 @@ import {store} from '../../src/store/index';
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-// const mapDispatchToProps = (dispatch) => ({
-//   login: (user) => dispatch(login(user)),
-// })
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
+})
 
 class Login extends Component {
   constructor(props) {
@@ -65,7 +65,8 @@ class Login extends Component {
             token: response.key,
             username: this.state.username,
           }
-          store.dispatch(login(userData));
+          // store.dispatch(login(userData));
+          this.props.login(userData);
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
@@ -214,4 +215,4 @@ const styles = StyleSheet.create({
 });
 
 // export default Login;
-export default connect()(Login);
+export default connect(null, mapDispatchToProps)(Login);
