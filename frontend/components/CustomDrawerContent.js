@@ -21,25 +21,25 @@ class CustomDrawerContent extends Component {
   onProfile = () => {
     this.props.navigation.navigate('내 정보');
   };
-  // onLogout = () => {
-  //   fetch(`${serverUrl}rest-auth/logout/`, {
-  //     method: 'POST',
-  //     header: {
-  //       Authorization: `Token ${this.props.user.token}`,
-  //     },
-  //   })
-  //     .then(() => {
-  //       console.log('로그아웃 성공');
-  //       AsyncStorage.clear();
-  //       this.props.navigation.dispatch(
-  //         CommonActions.reset({
-  //           index: 1,
-  //           routes: [{name: '로그인'}],
-  //         }),
-  //       );
-  //     })
-  //     .catch((err) => console.error(err));
-  // };
+  onLogout = () => {
+    fetch(`${serverUrl}rest-auth/logout/`, {
+      method: 'POST',
+      header: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {
+        console.log('로그아웃 성공');
+        AsyncStorage.clear();
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '로그인'}],
+          }),
+        );
+      })
+      .catch((err) => console.error(err));
+  };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -76,7 +76,7 @@ class CustomDrawerContent extends Component {
           />)}
           label="로그아웃"
           labelStyle={{fontFamily: 'BMJUA', fontSize: 20,}}
-          onPress={() => {}}
+          onPress={this.onLogout}
         />
       </SafeAreaView>
     )
