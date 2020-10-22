@@ -35,10 +35,24 @@ class Login extends Component {
     const token = await AsyncStorage.getItem('auth-token');
     const username = await AsyncStorage.getItem('username');
     if (token) {
-      this.props.login({
+      var data = {
         token: token,
-        username: username,
-      });
+      }
+      // profile
+      await fetch(`${serverUrl}accounts/profile/${username}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          data = Object.assign(data, response)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      this.props.login(data);
       this.props.navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -62,15 +76,28 @@ class Login extends Component {
       },
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then(async(response) => {
         if (response.key) {
           AsyncStorage.setItem('auth-token', response.key);
           AsyncStorage.setItem('username', this.state.username);
-          const userData = {
+          var userData = {
             token: response.key,
-            username: this.state.username,
           }
-          // store.dispatch(login(userData));
+          // profile
+          await fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              userData = Object.assign(userData, response)
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+          // dispatch
           this.props.login(userData);
           this.props.navigation.dispatch(
             CommonActions.reset({

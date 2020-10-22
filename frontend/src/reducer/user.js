@@ -8,8 +8,9 @@ function userReducer(state=initialState, action) {
     console.log('reducer: ', action);
     switch(action.type) {
         case LOGIN:
-            console.log('reducer complete');
-            return Object.assign({}, state, {user: action.user} )
+            const newState = Object.assign({}, state, {user: action.user} );
+            console.log('유저 정보: ', newState);
+            return newState
 
         default:
             console.log('default')
