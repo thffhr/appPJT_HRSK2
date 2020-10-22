@@ -1,4 +1,13 @@
-import { createStore } from 'redux'
-// import . from './reducers'
+import { createStore, applyMiddleware } from 'redux';
+import reducers from '../reducer/index';
+import { composeWithDevTools, devToolsEnhancer } from 'redux-devtools-extension';
 
-// const store = createStore(.)
+export const store = createStore(
+    reducers,
+    devToolsEnhancer(
+        reducers
+    )
+    // composeWithDevTools(
+    //     applyMiddleware(...middleware)
+    // )
+);
