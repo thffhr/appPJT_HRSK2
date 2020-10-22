@@ -35,10 +35,24 @@ class Login extends Component {
     const token = await AsyncStorage.getItem('auth-token');
     const username = await AsyncStorage.getItem('username');
     if (token) {
-      this.props.login({
+      var data = {
         token: token,
-        username: username,
-      });
+      }
+      // profile
+      await fetch(`${serverUrl}accounts/profile/${username}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          data = Object.assign(data, response)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      this.props.login(data);
       this.props.navigation.dispatch(
         CommonActions.reset({
           index: 1,
