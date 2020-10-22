@@ -9,118 +9,42 @@ import {
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
 class Profile extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      username: '',
-      age: '',
-      sex: '',
-      height: '',
-      weight: '',
-      bm: '',
-      active: '',
-    };
-  }
-
-  async componentDidMount() {
-    // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
-    this.getInfo();
-  }
-  getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.setState({
-          age: response.age,
-          sex: response.sex,
-          height: response.height,
-          weight: response.weight,
-          bm: response.basal_metabolism,
-          profileImage: response.profileImage,
-          active: response.active,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
   goHome = () => {
     this.props.navigation.push('Home');
   };
-  onUpdate = async () => {
-    const username = await AsyncStorage.getItem('username');
-    this.props.navigation.push('Update', {
-      sex: this.state.sex,
-      bm: this.state.bm,
-      profileImage: this.state.profileImage,
-      username: username,
-      active: this.state.active,
-      weight: this.state.weight,
-    });
+  onUpdate = () => {
+    this.props.navigation.push('Update');
   };
   render() {
-    const ageCheck = this.state.age;
-    const genderCheck = this.state.sex;
-    const heightCheck = this.state.height;
-    const weightCheck = this.state.weight;
-    let age;
-    let gender;
-    let height;
-    let weight;
-
-    if (ageCheck) {
-      age = `${ageCheck}세`;
-    } else {
-      age = '정보 없음';
-    }
-    if (genderCheck == 'male') {
-      gender = '남성';
-    } else if (genderCheck == 'female') {
-      gender = '여성';
-    } else {
-      gender = '정보 없음';
-    }
-    if (heightCheck) {
-      height = `${heightCheck}cm`;
-    } else {
-      height = '정보 없음';
-    }
-    if (weightCheck) {
-      weight = `${weightCheck}kg`;
-    } else {
-      weight = '정보 없음';
-    }
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
           <Text style={styles.updateText}>수정</Text>
         </TouchableOpacity>
         <View>
-          {this.state.profileImage && (
+          {this.props.user.profileImage && (
             <Image
               style={styles.profileImg}
               source={{
-                uri: `${serverUrl}gallery` + this.state.profileImage,
+                uri: `${serverUrl}gallery` + this.props.user.profileImage,
               }}
             />
           )}
-          {!this.state.profileImage && (
+          {!this.props.user.profileImage && (
             <Image
               style={styles.profileImg}
               source={{
@@ -133,38 +57,42 @@ class Profile extends Component {
         <View style={styles.userInfo}>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>아이디</Text>
-            <Text style={styles.infoValue}>{this.state.username}</Text>
+            <Text style={styles.infoValue}>{this.props.user.username}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>성별</Text>
-            <Text style={styles.infoValue}>{gender}</Text>
+            {this.props.user.sex === 'male' && (
+              <Text style={styles.infoValue}>남</Text>
+            )}
+            {this.props.user.sex === 'female' && (
+              <Text style={styles.infoValue}>여</Text>
+            )}
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>나이</Text>
-            <Text style={styles.infoValue}>{age}</Text>
+            <Text style={styles.infoValue}>{this.props.user.age}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>키</Text>
-            <Text style={styles.infoValue}>{height}</Text>
+            <Text style={styles.infoValue}>{this.props.user.height}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>몸무게</Text>
-            <Text style={styles.infoValue}>{weight}</Text>
+            <Text style={styles.infoValue}>{this.props.user.weight}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>기초대사량</Text>
-            <Text style={styles.infoValue}>{this.state.bm} kcal</Text>
+            <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
           </View>
         </View>
         <TouchableOpacity
           style={styles.logoutBtn}
           onPress={async () => {
-            const token = await AsyncStorage.getItem('auth-token');
-            if (token !== null) {
+            if (this.props.user.token !== null) {
               fetch(`${serverUrl}rest-auth/logout/`, {
                 method: 'POST',
                 header: {
-                  Authorization: `Token ${token}`,
+                  Authorization: `Token ${this.props.user.token}`,
                 },
               })
                 .then(() => {
@@ -182,11 +110,6 @@ class Profile extends Component {
           }}>
           <Text style={styles.logoutText}>로그아웃</Text>
         </TouchableOpacity>
-        {/*  
-        <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
-          <Text style={styles.delText}>회원탈퇴</Text>
-        </TouchableOpacity>
-         */}
       </View>
     );
   }
@@ -260,18 +183,6 @@ const styles = StyleSheet.create({
     fontFamily: 'BMHANNAAir',
     fontSize: W * 0.06,
   },
-  // deleteBtn: {
-  //   marginTop: 50,
-  //   backgroundColor: 'transparent',
-  //   position: 'absolute',
-  //   bottom: 20,
-  //   alignItems: 'center',
-  // },
-  // delText: {
-  //   color: 'blue',
-  //   borderBottomColor: 'blue',
-  //   borderBottomWidth: 1,
-  // },
 });
 
-export default Profile;
+export default connect(mapStateToProps)(Profile);
