@@ -29,87 +29,97 @@ class Profile extends Component {
   onUpdate = () => {
     this.props.navigation.push('Update');
   };
+  onDelete = () => {
+    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {
+        AsyncStorage.clear();
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '로그인'}],
+          }),
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
-          <Text style={styles.updateText}>수정</Text>
-        </TouchableOpacity>
-        <View>
-          {this.props.user.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri: `${serverUrl}gallery` + this.props.user.profileImage,
-              }}
-            />
-          )}
-          {!this.props.user.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri:
-                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-              }}
-            />
-          )}
-        </View>
-        <View style={styles.userInfo}>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>아이디</Text>
-            <Text style={styles.infoValue}>{this.props.user.username}</Text>
+        <View style={styles.headerBox}>
+          <View style={styles.guideBox}>
+            <Text style={styles.mainComment}>회원정보</Text>
+            <Text style={styles.subComment}>가입 시 입력한 정보를 확인할 수 있습니다.</Text>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>성별</Text>
-            {this.props.user.sex === 'male' && (
-              <Text style={styles.infoValue}>남</Text>
+          <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
+            <Text style={styles.updateText}>수정</Text>
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.body}>
+          <View>
+            {this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri: `${serverUrl}gallery` + this.props.user.profileImage,
+                }}
+              />
             )}
-            {this.props.user.sex === 'female' && (
-              <Text style={styles.infoValue}>여</Text>
+            {!this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri:
+                    'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                }}
+              />
             )}
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>나이</Text>
-            <Text style={styles.infoValue}>{this.props.user.age}</Text>
+          <View style={styles.userInfo}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>아이디</Text>
+              <Text style={styles.infoValue}>{this.props.user.username}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>성별</Text>
+              {this.props.user.sex === 'male' && (
+                <Text style={styles.infoValue}>남</Text>
+              )}
+              {this.props.user.sex === 'female' && (
+                <Text style={styles.infoValue}>여</Text>
+              )}
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>나이</Text>
+              <Text style={styles.infoValue}>{this.props.user.age}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>키</Text>
+              <Text style={styles.infoValue}>{this.props.user.height}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>몸무게</Text>
+              <Text style={styles.infoValue}>{this.props.user.weight}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>기초대사량</Text>
+              <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text>사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.</Text>
+            </View>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>키</Text>
-            <Text style={styles.infoValue}>{this.props.user.height}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>몸무게</Text>
-            <Text style={styles.infoValue}>{this.props.user.weight}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>기초대사량</Text>
-            <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
-          </View>
+          <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
+            <Text style={styles.delText}>회원탈퇴</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.logoutBtn}
-          onPress={async () => {
-            if (this.props.user.token !== null) {
-              fetch(`${serverUrl}rest-auth/logout/`, {
-                method: 'POST',
-                header: {
-                  Authorization: `Token ${this.props.user.token}`,
-                },
-              })
-                .then(() => {
-                  console.log('로그아웃 성공');
-                  AsyncStorage.clear();
-                  this.props.navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [{name: '로그인'}],
-                    }),
-                  );
-                })
-                .catch((err) => console.error(err));
-            }
-          }}>
-          <Text style={styles.logoutText}>로그아웃</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -118,16 +128,18 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#fbfbe6',
+  },
+  // body
+  body: {
     alignItems: 'center',
   },
   profileImg: {
-    marginTop: W * 0.1,
-    width: W * 0.3,
-    height: W * 0.3,
+    marginTop: W * 0.05,
+    marginBottom: W * 0.05,
     borderRadius: W * 0.3,
-    marginBottom: W * 0.15,
+    width: W * 0.37,
+    height: W * 0.37,
   },
   userInfo: {
     borderRadius: 10,
@@ -165,24 +177,34 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'black',
   },
-  updateBtn: {
-    position: 'absolute',
-    right: W * 0.03,
-    top: W * 0.03,
+  deleteBtn: {
+    marginTop: H * 0.02,
   },
-  updateText: {
-    fontSize: W * 0.05,
-    color: '#fca652',
-    fontWeight: 'bold',
-  },
-  logoutBtn: {
-    marginTop: H * 0.05,
-  },
-  logoutText: {
+  delText: {
     color: '#fca652',
     fontFamily: 'BMHANNAAir',
     fontSize: W * 0.06,
   },
+  // header
+  headerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  guideBox: {},
+  mainComment: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+  },
+  subComment: {},
+  updateBtn: {
+  },
+  updateText: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+  },
+  
 });
 
 export default connect(mapStateToProps)(Profile);
