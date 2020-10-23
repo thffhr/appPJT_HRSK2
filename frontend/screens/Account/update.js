@@ -5,10 +5,9 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  Image,
 } from 'react-native';
-import {AsyncStorage, Image} from 'react-native';
-import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
 import { connect } from 'react-redux';
 
@@ -18,6 +17,9 @@ const W = Dimensions.get('window').width;
 
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
+});
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
 })
 
 class Update extends Component {
@@ -31,195 +33,136 @@ class Update extends Component {
       weight: this.props.route.weight,
       bm: this.props.route.bm,
     };
-  }
-  componentDidMount() {
-    // you might want to do the I18N setup here
-    this.getInfo();
-  };
-  getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.props.user.username}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.setState({
-          age: response.age,
-          sex: response.sex,
-          height: response.height,
-          weight: response.weight,
-          bm: response.basal_metabolism,
-          profileImage: response.profileImage,
-          active: response.active,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   };
   onUpdateImg = () => {
     this.props.navigation.push('UpdateImg');
   };
-  onProfile = () => {
-    if (this.state.height && this.state.weight && this.state.age) {
-      fetch(`${serverUrl}accounts/update/`, {
-        method: 'PATCH',
-        body: JSON.stringify(this.state),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${this.props.user.token}`,
-        },
-      })
-        .then(() => {})
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
-    }
-    this.props.navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [{name: 'Profile'}],
-      }),
-    );
-  };
-  onDelete = () => {
-    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${this.props.user.token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        AsyncStorage.clear();
-        this.props.navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [{name: 'Login'}],
-          }),
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // onProfile = () => {
+  //   if (this.state.height && this.state.weight && this.state.age) {
+  //     fetch(`${serverUrl}accounts/update/`, {
+  //       method: 'PATCH',
+  //       body: JSON.stringify(this.state),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Token ${this.props.user.token}`,
+  //       },
+  //     })
+  //       .then(() => {})
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   } else {
+  //     alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
+  //   }
+  //   this.props.navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 1,
+  //       routes: [{name: 'Profile'}],
+  //     }),
+  //   );
+  // };
   render() {
-    const ageCheck = this.state.age;
-    const genderCheck = this.state.sex;
-    const heightCheck = this.state.height;
-    const weightCheck = this.state.weight;
-    let age;
-    let gender;
-    let height;
-    let weight;
-    if (genderCheck == 'male') {
-      gender = '남성';
-    } else if (genderCheck == 'female') {
-      gender = '여성';
-    } else {
-      gender = '남성';
-    }
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.onProfile} style={styles.updateBtn}>
-          <Text style={styles.updateText}>수정</Text>
-        </TouchableOpacity>
-        <View>
-          {this.state.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri: `${serverUrl}gallery` + this.state.profileImage,
-              }}
-            />
-          )}
-          {!this.state.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri:
-                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-              }}
-            />
-          )}
-          <TouchableOpacity
-            onPress={this.onUpdateImg}
-            style={styles.updateImgBtn}>
-            <Image
-              style={styles.updateImg}
-              source={{
-                uri:
-                  'https://cdn4.iconfinder.com/data/icons/pictype-free-vector-icons/16/write-256.png',
-              }}
-            />
+        <View style={styles.headerBox}>
+          <View style={styles.guideBox}>
+            <Text style={styles.mainComment}>회원 정보 수정</Text>
+            <Text style={styles.subComment}>기존 회원 정보를 수정할 수 있습니다.</Text>
+          </View>
+          <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
+            <Text style={styles.updateText}>수정</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.userInfo}>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>아이디</Text>
-            <Text style={styles.infoValue}>{this.props.user.username}</Text>
+
+        <View style={styles.body}>
+          <View>
+            {this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri: `${serverUrl}gallery` + this.props.user.profileImage,
+                }}
+              />
+            )}
+            {!this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri:
+                    'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                }}
+              />
+            )}
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>성별</Text>
-            <Text style={styles.infoValue}>{gender}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>나이</Text>
-            <TextInput
-              style={styles.infoInput}
-              placeholder="나이"
-              keyboardType="number-pad"
-              value={this.state.age}
-              onChangeText={(age) => {
-                this.setState({
-                  age: age,
-                });
-              }}></TextInput>
-            {/* <Text style={styles.infoValue}>{age}</Text> */}
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>키</Text>
-            <TextInput
-              style={styles.infoInput}
-              placeholder="키"
-              keyboardType="number-pad"
-              value={this.state.height}
-              onChangeText={(height) => {
-                this.setState({
-                  height: height,
-                });
-              }}></TextInput>
-            {/* <Text style={styles.infoValue}>{height}</Text> */}
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>몸무게</Text>
-            <TextInput
-              style={styles.infoInput}
-              placeholder="몸무게"
-              keyboardType="number-pad"
-              value={this.state.weight}
-              onChangeText={(weight) => {
-                this.setState({
-                  weight: weight,
-                });
-              }}></TextInput>
-            {/* <Text style={styles.infoValue}>{weight}</Text> */}
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>기초대사량</Text>
-            <Text style={styles.infoValue}>{this.state.bm} kcal</Text>
+          <View style={styles.userInfo}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>아이디</Text>
+              <Text style={styles.infoValue}>{this.props.user.username}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>성별</Text>
+              {this.props.user.sex === 'male' && (
+                <Text style={styles.infoValue}>남</Text>
+              )}
+              {this.props.user.sex === 'female' && (
+                <Text style={styles.infoValue}>여</Text>
+              )}
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>나이</Text>
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.infoInput}
+                  keyboardType="number-pad"
+                  value={this.props.user.age}
+                  selectionColor="#e74c3c"
+                  onChangeText={(age) => {
+                    this.setState({
+                      age: age,
+                    });
+                  }}></TextInput>
+                <Text style={styles.infoValue}> 세</Text>
+              </View>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>키</Text>
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.infoInput}
+                  keyboardType="number-pad"
+                  value={this.props.user.height}
+                  onChangeText={(height) => {
+                    this.setState({
+                      height: height,
+                    });
+                  }}></TextInput>
+                  <Text style={styles.infoValue}> cm</Text>
+              </View>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>몸무게</Text>
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.infoInput}
+                  keyboardType="number-pad"
+                  value={this.props.user.weight}
+                  onChangeText={(weight) => {
+                    this.setState({
+                      weight: weight,
+                    });
+                  }}></TextInput>
+                  <Text style={styles.infoValue}> kg</Text>
+              </View>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>기초대사량</Text>
+              <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text>사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.</Text>
+            </View>
           </View>
         </View>
-        {/* <Text>{this.state.weight}</Text> */}
-        <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
-          <Text style={styles.delText}>회원탈퇴</Text>
-        </TouchableOpacity>
         
       </View>
     );
@@ -229,61 +172,48 @@ class Update extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#fbfbe6',
+  },
+  // body
+  body: {
     alignItems: 'center',
   },
   profileImg: {
-    marginTop: W * 0.1,
-    width: W * 0.3,
-    height: W * 0.3,
+    marginTop: W * 0.05,
+    marginBottom: W * 0.05,
     borderRadius: W * 0.3,
-    marginBottom: W * 0.15,
-  },
-  updateImgBtn: {
-    width: W * 0.075,
-    height: W * 0.075,
-    backgroundColor: '#F1C40F',
-    borderRadius: W * 0.075,
-    position: 'absolute',
-    right: W * 0,
-    bottom: W * 0.13,
-    zIndex: 2,
-  },
-  updateImg: {
-    width: W * 0.05,
-    height: W * 0.05,
-    margin: W * 0.015,
+    width: W * 0.37,
+    height: W * 0.37,
   },
   // infobox
   userInfo: {
     borderRadius: 10,
-    width: '70%',
+    width: '80%',
     elevation: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#e0e0e0',
   },
   infoBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: W * 0.05,
+    marginHorizontal: W * 0.1,
     marginVertical: H * 0.015,
   },
   infoTitle: {
-    fontFamily: 'BMDOHYEON',
     fontSize: W * 0.05,
+    fontWeight: 'bold',
   },
   infoValue: {
-    fontFamily: 'BMHANNAAir',
     fontSize: W * 0.05,
   },
   infoInput: {
-    fontFamily: 'BMHANNAAir',
-    fontSize: W * 0.05,
-    height: H * 0.07,
+    fontSize: W * 0.032,
+    height: H * 0.05,
     width: W * 0.15,
-    borderBottomWidth: 1,
-    borderBottomColor: 'darkgray',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    backgroundColor: '#fff',
+    borderRadius: 6,
     textAlign: 'center',
   },
 
@@ -315,14 +245,28 @@ const styles = StyleSheet.create({
     color: '#fca652',
     fontWeight: 'bold',
   },
-  deleteBtn: {
-    marginTop: H * 0.05,
+  inputBox: {
+    flexDirection: 'row',
   },
-  delText: {
-    color: '#fca652',
-    fontFamily: 'BMHANNAAir',
-    fontSize: W * 0.06,
+  // header
+  headerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  guideBox: {},
+  mainComment: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+  },
+  subComment: {},
+  updateBtn: {
+  },
+  updateText: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
   },
 });
 
-export default connect(mapStateToProps)(Update);
+export default connect(mapStateToProps, mapDispatchToProps)(Update);

@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     borderRadius: 10,
-    width: '70%',
+    width: '80%',
     elevation: 5,
     backgroundColor: '#fff',
   },
@@ -293,16 +293,14 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: W * 0.05,
+    marginHorizontal: W * 0.1,
     marginVertical: H * 0.015,
   },
   infoTitle: {
-    // fontFamily: 'BMDOHYEON',
     fontSize: W * 0.05,
     fontWeight: 'bold',
   },
   infoValue: {
-    // fontFamily: 'BMHANNAAir',
     fontSize: W * 0.05,
   },
   gohomeBtn: {
