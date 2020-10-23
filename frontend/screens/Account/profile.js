@@ -5,11 +5,15 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
+import ImagePicker from 'react-native-image-picker';
 import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
+import {login} from '../../src/action/user';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
@@ -18,10 +22,15 @@ const W = Dimensions.get('window').width;
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
 });
-
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
+})
 class Profile extends Component {
   constructor(props) {
     super(props);
+  };
+  state = {
+    modalVisible: false,
   };
   goHome = () => {
     this.props.navigation.push('Home');
@@ -46,8 +55,70 @@ class Profile extends Component {
         );
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
+  };
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  };
+  onUpdateImg = (visible) => {
+    var user = this.deepClone(this.props.user);
+    const options = {};
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.uri) {
+        var data = new FormData();
+        data.append('data', response.data);
+        data.append('type', response.type);
+        data.append('fileName', response.fileName);
+        fetch(`${serverUrl}accounts/pimg/update/`, {
+          method: 'PATCH',
+          body: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Token ${this.props.user.token}`,
+          },
+        })
+          .then((response) =>response.json())
+          .then((response) => {
+            console.log(response)
+            user.profileImage = response
+          })
+          .catch(err => console.error(err))
+        this.setState({
+          modalVisible: visible,
+        })
+      }
+    });
+    this.props.login(user);  
+  };
+  onDeleteImg = (visible) => {
+    var user = this.deepClone(this.props.user);
+    fetch(`${serverUrl}accounts/pimg/delete/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+    user.profileImage = null,
+    this.setState({
+      modalVisible: !visible,
+    })
+    this.props.login(user);
+  };
+  deepClone(obj) {
+    if(obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    const result = Array.isArray(obj) ? [] : {};
+    for(let key of Object.keys(obj)) {
+      result[key] = this.deepClone(obj[key])
+    }
+    
+    return result;
   };
   render() {
     return (
@@ -62,6 +133,40 @@ class Profile extends Component {
           </TouchableOpacity>
         </View>
         
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableHighlight
+                onPress={() => {
+                  this.onUpdateImg(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.modalText}>새 프로필 사진 등록</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={() => {
+                  this.onDeleteImg(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.modalText}>프로필 사진 삭제</Text>
+              </TouchableHighlight>
+
+              <TouchableOpacity
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <View style={styles.body}>
           <View>
             {this.props.user.profileImage && (
@@ -81,6 +186,17 @@ class Profile extends Component {
                 }}
               />
             )}
+            <TouchableOpacity
+              onPress={() => this.setModalVisible(!this.state.modalVisible)}
+              style={styles.updateImgBtn}>
+              <Image
+                style={styles.updateImg}
+                source={{
+                  uri:
+                    'https://cdn4.iconfinder.com/data/icons/pictype-free-vector-icons/16/write-256.png',
+                }}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.userInfo}>
             <View style={styles.infoBox}>
@@ -141,6 +257,21 @@ const styles = StyleSheet.create({
     width: W * 0.37,
     height: W * 0.37,
   },
+  updateImgBtn: {
+    width: W * 0.075,
+    height: W * 0.075,
+    backgroundColor: '#F1C40F',
+    borderRadius: W * 0.075,
+    position: 'absolute',
+    right: W * 0.02,
+    bottom: W * 0.05,
+    zIndex: 2,
+  },
+  updateImg: {
+    width: W * 0.05,
+    height: W * 0.05,
+    margin: W * 0.015,
+  },
   userInfo: {
     borderRadius: 10,
     width: '70%',
@@ -166,11 +297,12 @@ const styles = StyleSheet.create({
     marginVertical: H * 0.015,
   },
   infoTitle: {
-    fontFamily: 'BMDOHYEON',
+    // fontFamily: 'BMDOHYEON',
     fontSize: W * 0.05,
+    fontWeight: 'bold',
   },
   infoValue: {
-    fontFamily: 'BMHANNAAir',
+    // fontFamily: 'BMHANNAAir',
     fontSize: W * 0.05,
   },
   gohomeBtn: {
@@ -204,7 +336,43 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'BMJUA',
   },
-  
+  // modal
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
