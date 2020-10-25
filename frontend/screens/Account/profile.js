@@ -83,15 +83,15 @@ class Profile extends Component {
         Authorization: `Token ${this.props.user.token}`,
       },
     })
-      .then(() => {})
+      .then(() => {
+        user.profileImage = null,
+        this.setModalVisible(visible);
+        this.props.login(user);
+      })
       .catch((err) => {
         console.error(err);
       });
-    user.profileImage = null,
-    this.setState({
-      modalVisible: !visible,
-    })
-    this.props.login(user);
+    
   };
   deepClone(obj) {
     if(obj === null || typeof obj !== 'object') {
