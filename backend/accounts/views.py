@@ -74,8 +74,6 @@ def need_info(request):
 
     if save_data['active'] == 'high':
         basal_metabolism *= 1.1
-    elif save_data['active'] == 'normal':
-        pass
     elif save_data['active'] == 'low':
         basal_metabolism *= 0.9
 
@@ -103,11 +101,8 @@ def update_info(request):
         basal_metabolism = 655.1 + \
             (9.56 * save_data['weight']) + (1.85 *
                                             save_data['height']) - (4.68 * save_data['age'])
-
     if request.data['active'] == 'high':
         basal_metabolism *= 1.1
-    elif request.data['active'] == 'normal':
-        pass
     elif request.data['active'] == 'low':
         basal_metabolism *= 0.9
 

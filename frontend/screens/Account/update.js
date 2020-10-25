@@ -8,8 +8,10 @@ import {
   TextInput,
   Image,
 } from 'react-native';
+import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
 import { connect } from 'react-redux';
+import { login } from '../../src/action/user';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
@@ -26,41 +28,60 @@ class Update extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: this.props.route.active,
       age: '',
-      sex: this.props.route.sex,
-      height: '',
-      weight: this.props.route.weight,
-      bm: this.props.route.bm,
+      sex: '',
+      height: 0,
+      weight: 0,
+
     };
   };
   onUpdateImg = () => {
     this.props.navigation.push('UpdateImg');
   };
-  // onProfile = () => {
-  //   if (this.state.height && this.state.weight && this.state.age) {
-  //     fetch(`${serverUrl}accounts/update/`, {
-  //       method: 'PATCH',
-  //       body: JSON.stringify(this.state),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Token ${this.props.user.token}`,
-  //       },
-  //     })
-  //       .then(() => {})
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   } else {
-  //     alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
-  //   }
-  //   this.props.navigation.dispatch(
-  //     CommonActions.reset({
-  //       index: 1,
-  //       routes: [{name: 'Profile'}],
-  //     }),
-  //   );
-  // };
+  onUpdate = async () => {
+    if (this.state.height && this.state.weight && this.state.age) {
+      var user = this.deepClone(this.props.user);
+      user.age = this.state.age;
+      user.height = this.state.height;
+      user.weight = this.state.weight;
+      await fetch(`${serverUrl}accounts/update/`, {
+        method: 'PATCH',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${this.props.user.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          user.basal_metabolism = response.basal_metabolism;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      this.props.login(user);
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Profile'}],
+        }),
+      );
+    } else {
+      alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
+    }
+
+  };
+  deepClone(obj) {
+    if(obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    const result = Array.isArray(obj) ? [] : {};
+    for(let key of Object.keys(obj)) {
+      result[key] = this.deepClone(obj[key])
+    }
+    
+    return result;
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -114,7 +135,6 @@ class Update extends Component {
                 <TextInput
                   style={styles.infoInput}
                   keyboardType="number-pad"
-                  value={this.props.user.age}
                   selectionColor="#e74c3c"
                   onChangeText={(age) => {
                     this.setState({
@@ -130,7 +150,6 @@ class Update extends Component {
                 <TextInput
                   style={styles.infoInput}
                   keyboardType="number-pad"
-                  value={this.props.user.height}
                   onChangeText={(height) => {
                     this.setState({
                       height: height,
@@ -145,7 +164,6 @@ class Update extends Component {
                 <TextInput
                   style={styles.infoInput}
                   keyboardType="number-pad"
-                  value={this.props.user.weight}
                   onChangeText={(weight) => {
                     this.setState({
                       weight: weight,

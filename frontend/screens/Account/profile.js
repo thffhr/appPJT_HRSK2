@@ -61,16 +61,16 @@ class Profile extends Component {
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
-  onUpdateImg = (visible) => {
+  onUpdateImg = async (visible) => {
     var user = this.deepClone(this.props.user);
     const options = {};
-    ImagePicker.launchImageLibrary(options, (response) => {
+    await ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.uri) {
         var data = new FormData();
         data.append('data', response.data);
         data.append('type', response.type);
         data.append('fileName', response.fileName);
-        fetch(`${serverUrl}accounts/pimg/update/`, {
+        await fetch(`${serverUrl}accounts/pimg/update/`, {
           method: 'PATCH',
           body: data,
           headers: {
@@ -80,23 +80,21 @@ class Profile extends Component {
         })
           .then((response) =>response.json())
           .then((response) => {
-            console.log(response)
-            user.profileImage = response
+            user.profileImage = response.profileImage;
+          })
+          .then(() => {
+            this.props.login(user);
           })
           .catch(err => console.error(err))
-        this.setState({
-          modalVisible: visible,
-        })
       }
     });
-    this.props.login(user);  
   };
   onDeleteImg = (visible) => {
     var user = this.deepClone(this.props.user);
     fetch(`${serverUrl}accounts/pimg/delete/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then(() => {})
