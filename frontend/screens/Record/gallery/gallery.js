@@ -11,7 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Camera from '../../Camera/camera';
+import Camera from '../../Camera/Camera';
 import {serverUrl} from '../../../constants';
 
 const {width, height} = Dimensions.get('screen');
