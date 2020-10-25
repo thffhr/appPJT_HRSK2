@@ -6,14 +6,17 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert,
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
+import { TextInput } from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
@@ -24,13 +27,15 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 class Profile extends Component {
   constructor(props) {
     super(props);
   };
   state = {
     modalVisible: false,
+    secessionModal: false,
+    password: null,
   };
   goHome = () => {
     this.props.navigation.push('Home');
@@ -38,39 +43,19 @@ class Profile extends Component {
   onUpdate = () => {
     this.props.navigation.push('Update');
   };
-  onDelete = () => {
-    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${this.props.user.token}`,
-      },
-    })
-      .then(() => {
-        AsyncStorage.clear();
-        this.props.navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [{name: '로그인'}],
-          }),
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
-  onUpdateImg = async (visible) => {
+  onUpdateImg = (visible) => {
     var user = this.deepClone(this.props.user);
     const options = {};
-    await ImagePicker.launchImageLibrary(options, async (response) => {
+    ImagePicker.launchImageLibrary(options, (response) => {
       if (response.uri) {
         var data = new FormData();
         data.append('data', response.data);
         data.append('type', response.type);
         data.append('fileName', response.fileName);
-        await fetch(`${serverUrl}accounts/pimg/update/`, {
+        fetch(`${serverUrl}accounts/pimg/update/`, {
           method: 'PATCH',
           body: data,
           headers: {
@@ -119,6 +104,54 @@ class Profile extends Component {
     
     return result;
   };
+
+  // 회원 탈퇴
+  setSecessionModal = (visible) => {
+    this.setState({ secessionModal: visible });
+  };
+  onConfirm = (visible) => {
+    fetch(`${serverUrl}rest-auth/login/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        username: this.props.user.username,
+        password: this.state.password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then(response => {
+        if (response.key) {
+          this.onDelete();
+          this.setState({
+            secessionModal: visible,
+          })
+        } else {
+          alert('비밀번호가 틀렸습니다.');
+        }
+      })
+  };
+  onDelete = () => {
+    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {
+        AsyncStorage.clear();
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '로그인'}],
+          }),
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -155,13 +188,58 @@ class Profile extends Component {
               </TouchableHighlight>
 
               <TouchableOpacity
-                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                style={styles.openButton}
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}
               >
-                <Text style={styles.textStyle}>Hide Modal</Text>
+                <Text style={styles.textStyle}>닫기</Text>
               </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.secessionModal}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.secessionCenteredView}>
+            <View style={styles.secessionModalView}>
+              <View style={styles.secessionModalHeader}>
+                <Text style={styles.secessionTitle}>비밀번호 확인</Text>
+                <Icon 
+                  name="close" 
+                  style={styles.secessionIcon} 
+                  onPress={() => {
+                    this.setSecessionModal(!this.state.secessionModal);
+                  }}
+                />
+              </View>
+              <View style={styles.secessionModalBody}>
+                <TextInput 
+                  autoFocus={true}
+                  placeholder="비밀번호 확인"
+                  secureTextEntry={true}
+                  style={styles.passwordInput}
+                  onChangeText={(text) => {
+                    this.setState({
+                      password: text,
+                    })
+                  }}
+                />
+                <TouchableOpacity
+                  style={styles.secessionOpenButton}
+                  onPress={() => {
+                    this.onConfirm(!this.state.secessionModal);
+                  }}
+                >
+                  <Text style={styles.secessionTextStyle}>확인</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -231,8 +309,8 @@ class Profile extends Component {
               <Text>사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
-            <Text style={styles.delText}>회원탈퇴</Text>
+          <TouchableOpacity onPress={() => this.setSecessionModal(!this.state.secessionModal)} style={styles.deleteBtn}>
+            <Text style={styles.delText}>회원 탈퇴</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -306,7 +384,7 @@ const styles = StyleSheet.create({
     marginTop: H * 0.02,
   },
   delText: {
-    color: '#fca652',
+    color: '#34495E',
     fontFamily: 'BMHANNAAir',
     fontSize: W * 0.06,
   },
@@ -329,12 +407,13 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'BMJUA',
   },
-  // modal
+  // image modal
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    paddingTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     // margin: 20,
@@ -352,9 +431,10 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
+    backgroundColor: "#34495E",
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     elevation: 2
   },
   textStyle: {
@@ -364,7 +444,72 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
+    textAlign: "center",
+    fontSize: 20,
+  },
+
+  // secession modal
+  secessionCenteredView: {
+    flex: 1,
+    paddingHorizontal: W * 0.2,
+    paddingTop: H * 0.3,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  secessionModalView: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  secessionOpenButton: {
+    backgroundColor: "#34495E",
+    borderRadius: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    elevation: 2
+  },
+  secessionTextStyle: {
+    color: "white",
+    fontWeight: "bold",
     textAlign: "center"
+  },
+  secessionModalText: {
+    marginBottom: 25,
+    textAlign: "center"
+  },
+  passwordInput: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 10,
+    width: '80%',
+    marginVertical: 20,
+  },
+  secessionModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+    
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 1,
+  },
+  secessionTitle: {
+    fontSize: 20,
+    marginHorizontal: 10,
+  },
+  secessionIcon: {
+    fontSize: 30,
+    marginHorizontal: 10,
+  },
+  secessionModalBody: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   }
 });
 

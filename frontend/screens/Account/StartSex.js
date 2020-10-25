@@ -10,11 +10,17 @@ import {
   Dimensions,
 } from 'react-native';
 import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-class Startsex extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class StartSex extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,15 +29,14 @@ class Startsex extends Component {
       femalecolor: 'transparent',
     };
   }
-  infoNext = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  infoNext = () => {
     if (this.state.need.sex) {
       fetch(`${serverUrl}accounts/need/`, {
         method: 'PATCH',
         body: JSON.stringify(this.state.need),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
@@ -188,4 +193,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Startsex;
+// export default StartSex;
+export default connect(mapStateToProps)(StartSex);

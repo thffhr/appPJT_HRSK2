@@ -19,8 +19,8 @@ import Login from './screens/Account/Login';
 import Signup from './screens/Account/Signup';
 import Profile from './screens/Account/Profile';
 import Update from './screens/Account/Update';
-import Startsex from './screens/Account/StartSex';
-import Startinfo from './screens/Account/StartInfo';
+import StartSex from './screens/Account/StartSex';
+import StartInfo from './screens/Account/StartInfo';
 
 import Gallery from './screens/Record/Gallery/Gallery';
 import Record from './screens/Record/Record/Record';
@@ -172,12 +172,12 @@ function AcccountStack() {
       />
       <Stack.Screen
         name="Startsex"
-        component={Startsex}
+        component={StartSex}
         options={{title: '성별입력'}}
       />
       <Stack.Screen
         name="Startinfo"
-        component={Startinfo}
+        component={StartInfo}
         options={{title: '정보입력'}}
       />
     </Stack.Navigator>
