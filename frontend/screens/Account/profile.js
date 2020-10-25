@@ -5,188 +5,236 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
+import ImagePicker from 'react-native-image-picker';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
+import {login} from '../../src/action/user';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
+})
 class Profile extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      username: '',
-      age: '',
-      sex: '',
-      height: '',
-      weight: '',
-      bm: '',
-      active: '',
-    };
-  }
-
-  async componentDidMount() {
-    // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
-    this.getInfo();
-  }
-  getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        this.setState({
-          age: response.age,
-          sex: response.sex,
-          height: response.height,
-          weight: response.weight,
-          bm: response.basal_metabolism,
-          profileImage: response.profileImage,
-          active: response.active,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  };
+  state = {
+    modalVisible: false,
   };
   goHome = () => {
     this.props.navigation.push('Home');
   };
-  onUpdate = async () => {
-    const username = await AsyncStorage.getItem('username');
-    this.props.navigation.push('Update', {
-      sex: this.state.sex,
-      bm: this.state.bm,
-      profileImage: this.state.profileImage,
-      username: username,
-      active: this.state.active,
-      weight: this.state.weight,
+  onUpdate = () => {
+    this.props.navigation.push('Update');
+  };
+  onDelete = () => {
+    fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {
+        AsyncStorage.clear();
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: '로그인'}],
+          }),
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  };
+  onUpdateImg = async (visible) => {
+    var user = this.deepClone(this.props.user);
+    const options = {};
+    await ImagePicker.launchImageLibrary(options, async (response) => {
+      if (response.uri) {
+        var data = new FormData();
+        data.append('data', response.data);
+        data.append('type', response.type);
+        data.append('fileName', response.fileName);
+        await fetch(`${serverUrl}accounts/pimg/update/`, {
+          method: 'PATCH',
+          body: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Token ${this.props.user.token}`,
+          },
+        })
+          .then((response) =>response.json())
+          .then((response) => {
+            user.profileImage = response.profileImage;
+            this.setModalVisible(visible);
+          })
+          .then(() => {
+            this.props.login(user);
+          })
+          .catch(err => console.error(err))
+      }
     });
   };
+  onDeleteImg = (visible) => {
+    var user = this.deepClone(this.props.user);
+    fetch(`${serverUrl}accounts/pimg/delete/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+    user.profileImage = null,
+    this.setState({
+      modalVisible: !visible,
+    })
+    this.props.login(user);
+  };
+  deepClone(obj) {
+    if(obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    const result = Array.isArray(obj) ? [] : {};
+    for(let key of Object.keys(obj)) {
+      result[key] = this.deepClone(obj[key])
+    }
+    
+    return result;
+  };
   render() {
-    const ageCheck = this.state.age;
-    const genderCheck = this.state.sex;
-    const heightCheck = this.state.height;
-    const weightCheck = this.state.weight;
-    let age;
-    let gender;
-    let height;
-    let weight;
-
-    if (ageCheck) {
-      age = `${ageCheck}세`;
-    } else {
-      age = '정보 없음';
-    }
-    if (genderCheck == 'male') {
-      gender = '남성';
-    } else if (genderCheck == 'female') {
-      gender = '여성';
-    } else {
-      gender = '정보 없음';
-    }
-    if (heightCheck) {
-      height = `${heightCheck}cm`;
-    } else {
-      height = '정보 없음';
-    }
-    if (weightCheck) {
-      weight = `${weightCheck}kg`;
-    } else {
-      weight = '정보 없음';
-    }
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
-          <Text style={styles.updateText}>수정</Text>
-        </TouchableOpacity>
-        <View>
-          {this.state.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri: `${serverUrl}gallery` + this.state.profileImage,
-              }}
-            />
-          )}
-          {!this.state.profileImage && (
-            <Image
-              style={styles.profileImg}
-              source={{
-                uri:
-                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-              }}
-            />
-          )}
+        <View style={styles.headerBox}>
+          <View style={styles.guideBox}>
+            <Text style={styles.mainComment}>회원정보</Text>
+            <Text style={styles.subComment}>가입 시 입력한 정보를 확인할 수 있습니다.</Text>
+          </View>
+          <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
+            <Text style={styles.updateText}>수정</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.userInfo}>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>아이디</Text>
-            <Text style={styles.infoValue}>{this.state.username}</Text>
+        
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableHighlight
+                onPress={() => {
+                  this.onUpdateImg(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.modalText}>새 프로필 사진 등록</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={() => {
+                  this.onDeleteImg(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.modalText}>프로필 사진 삭제</Text>
+              </TouchableHighlight>
+
+              <TouchableOpacity
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>성별</Text>
-            <Text style={styles.infoValue}>{gender}</Text>
+        </Modal>
+
+        <View style={styles.body}>
+          <View>
+            {this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri: `${serverUrl}gallery` + this.props.user.profileImage,
+                }}
+              />
+            )}
+            {!this.props.user.profileImage && (
+              <Image
+                style={styles.profileImg}
+                source={{
+                  uri:
+                    'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
+                }}
+              />
+            )}
+            <TouchableOpacity
+              onPress={() => this.setModalVisible(!this.state.modalVisible)}
+              style={styles.updateImgBtn}>
+              <Image
+                style={styles.updateImg}
+                source={{
+                  uri:
+                    'https://cdn4.iconfinder.com/data/icons/pictype-free-vector-icons/16/write-256.png',
+                }}
+              />
+            </TouchableOpacity>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>나이</Text>
-            <Text style={styles.infoValue}>{age}</Text>
+          <View style={styles.userInfo}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>아이디</Text>
+              <Text style={styles.infoValue}>{this.props.user.username}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>성별</Text>
+              {this.props.user.sex === 'male' && (
+                <Text style={styles.infoValue}>남</Text>
+              )}
+              {this.props.user.sex === 'female' && (
+                <Text style={styles.infoValue}>여</Text>
+              )}
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>나이</Text>
+              <Text style={styles.infoValue}>{this.props.user.age}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>키</Text>
+              <Text style={styles.infoValue}>{this.props.user.height}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>몸무게</Text>
+              <Text style={styles.infoValue}>{this.props.user.weight}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>기초대사량</Text>
+              <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text>사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.</Text>
+            </View>
           </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>키</Text>
-            <Text style={styles.infoValue}>{height}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>몸무게</Text>
-            <Text style={styles.infoValue}>{weight}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>기초대사량</Text>
-            <Text style={styles.infoValue}>{this.state.bm} kcal</Text>
-          </View>
+          <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
+            <Text style={styles.delText}>회원탈퇴</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.logoutBtn}
-          onPress={async () => {
-            const token = await AsyncStorage.getItem('auth-token');
-            if (token !== null) {
-              fetch(`${serverUrl}rest-auth/logout/`, {
-                method: 'POST',
-                header: {
-                  Authorization: `Token ${token}`,
-                },
-              })
-                .then(() => {
-                  console.log('로그아웃 성공');
-                  AsyncStorage.clear();
-                  this.props.navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [{name: '로그인'}],
-                    }),
-                  );
-                })
-                .catch((err) => console.error(err));
-            }
-          }}>
-          <Text style={styles.logoutText}>로그아웃</Text>
-        </TouchableOpacity>
-        {/*  
-        <TouchableOpacity onPress={this.onDelete} style={styles.deleteBtn}>
-          <Text style={styles.delText}>회원탈퇴</Text>
-        </TouchableOpacity>
-         */}
       </View>
     );
   }
@@ -195,20 +243,37 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#fbfbe6',
+  },
+  // body
+  body: {
     alignItems: 'center',
   },
   profileImg: {
-    marginTop: W * 0.1,
-    width: W * 0.3,
-    height: W * 0.3,
+    marginTop: W * 0.05,
+    marginBottom: W * 0.05,
     borderRadius: W * 0.3,
-    marginBottom: W * 0.15,
+    width: W * 0.37,
+    height: W * 0.37,
+  },
+  updateImgBtn: {
+    width: W * 0.075,
+    height: W * 0.075,
+    backgroundColor: '#F1C40F',
+    borderRadius: W * 0.075,
+    position: 'absolute',
+    right: W * 0.02,
+    bottom: W * 0.05,
+    zIndex: 2,
+  },
+  updateImg: {
+    width: W * 0.05,
+    height: W * 0.05,
+    margin: W * 0.015,
   },
   userInfo: {
     borderRadius: 10,
-    width: '70%',
+    width: '80%',
     elevation: 5,
     backgroundColor: '#fff',
   },
@@ -227,51 +292,80 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: W * 0.05,
+    marginHorizontal: W * 0.1,
     marginVertical: H * 0.015,
   },
   infoTitle: {
-    fontFamily: 'BMDOHYEON',
     fontSize: W * 0.05,
-  },
-  infoValue: {
-    fontFamily: 'BMHANNAAir',
-    fontSize: W * 0.05,
-  },
-  gohomeBtn: {
-    backgroundColor: 'transparent',
-    color: 'black',
-  },
-  updateBtn: {
-    position: 'absolute',
-    right: W * 0.03,
-    top: W * 0.03,
-  },
-  updateText: {
-    fontSize: W * 0.05,
-    color: '#fca652',
     fontWeight: 'bold',
   },
-  logoutBtn: {
-    marginTop: H * 0.05,
+  infoValue: {
+    fontSize: W * 0.05,
   },
-  logoutText: {
+  deleteBtn: {
+    marginTop: H * 0.02,
+  },
+  delText: {
     color: '#fca652',
     fontFamily: 'BMHANNAAir',
     fontSize: W * 0.06,
   },
-  // deleteBtn: {
-  //   marginTop: 50,
-  //   backgroundColor: 'transparent',
-  //   position: 'absolute',
-  //   bottom: 20,
-  //   alignItems: 'center',
-  // },
-  // delText: {
-  //   color: 'blue',
-  //   borderBottomColor: 'blue',
-  //   borderBottomWidth: 1,
-  // },
+  // header
+  headerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  guideBox: {},
+  mainComment: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+  },
+  subComment: {},
+  updateBtn: {
+  },
+  updateText: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+  },
+  // modal
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 
-export default Profile;
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

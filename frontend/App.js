@@ -309,14 +309,6 @@ export default class App extends Component {
   };
   render() {
     return (
-      // <NavigationContainer>
-      //   <Stack.Navigator initialRouteName="로그인" screenOptions={{
-      //     headerShown: false,
-      //   }}>
-      //     <stackApp.Screen name="로그인" component={AcccountStack} />
-      //     <stackApp.Screen name="drawer" component={DrawerStack} />
-      //   </Stack.Navigator>
-      // </NavigationContainer>
       <Provider store={store} >
         <NavigationContainer>
           <Stack.Navigator initialRouteName="로그인" screenOptions={{
