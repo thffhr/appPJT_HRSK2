@@ -15,28 +15,30 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import SplashScreen from 'react-native-splash-screen';
 
-import Login from './screens/Account/login';
-import Signup from './screens/Account/signup';
-import Profile from './screens/Account/profile';
-import Update from './screens/Account/update';
-import Startsex from './screens/Account/start_sex';
-import Startinfo from './screens/Account/start_info';
+import Login from './screens/Account/Login';
+import Signup from './screens/Account/Signup';
+import Profile from './screens/Account/Profile';
+import Update from './screens/Account/Update';
+import StartSex from './screens/Account/StartSex';
+import StartInfo from './screens/Account/StartInfo';
 
-import Gallery from './screens/Record/gallery/gallery';
-import Record from './screens/Record/record/record';
-import Calendar from './screens/Record/calendar/calendar';
-import DetailImage from './screens/Record/gallery/detail_image';
-import MyDatePicker from './screens/Record/gallery/date_picker';
+import Gallery from './screens/Record/Gallery/Gallery';
+import Record from './screens/Record/Record/Record';
+import Calendar from './screens/Record/Calendar/Calendar';
+import DetailImage from './screens/Record/Gallery/DetailImage';
+import MyDatePicker from './screens/Record/Gallery/DatePicker';
 
-import BestArticle from './screens/Rank/best_article';
-import BestUser from './screens/Rank/best_user';
+import BestArticle from './screens/Rank/BestArticle';
+import BestUser from './screens/Rank/BestUser';
 
-import Community from './screens/Community/community';
-import Comment from './screens/Community/comment';
-import CreateSelect from './screens/Community/create_select';
-import CreateArticle from './screens/Community/create_article';
-import MyFeed from './screens/Community/my_feed';
-import UserFeed from './screens/Community/user_feed';
+import Community from './screens/Community/Community';
+import Comment from './screens/Community/Comment';
+import CreateSelect from './screens/Community/CreateSelect';
+import CreateArticle from './screens/Community/CreateArticle';
+import MyFeed from './screens/Community/MyFeed';
+import UserFeed from './screens/Community/UserFeed';
+
+import Analysis from './screens/Analysis/Analysis';
 
 // component
 import CustomDrawerContent from './components/CustomDrawerContent';
@@ -170,12 +172,12 @@ function AcccountStack() {
       />
       <Stack.Screen
         name="Startsex"
-        component={Startsex}
+        component={StartSex}
         options={{title: '성별입력'}}
       />
       <Stack.Screen
         name="Startinfo"
-        component={Startinfo}
+        component={StartInfo}
         options={{title: '정보입력'}}
       />
     </Stack.Navigator>
@@ -201,6 +203,20 @@ function ProfileScreen() {
   );
 }
 
+function AnalysisScreen() {
+  return (
+    <Stack.Navigator initialRouteName="Analysis" screenOptions={{
+      headerShown: false,
+    }}>
+      <Stack.Screen 
+        name="Analysis"
+        component={Analysis}
+        options={{title: '내 분석'}}
+      />
+    </Stack.Navigator>
+  )
+}
+
 // Tab
 function TapNavigator() {
   return (
@@ -216,6 +232,8 @@ function TapNavigator() {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === '랭킹') {
             iconName = focused ? 'medal' : 'medal-outline';
+          } else {
+            iconName = focused ? 'analytics' : 'analytics-outline';
           }
 
           // You can return any component that you like here!
@@ -223,13 +241,18 @@ function TapNavigator() {
         },
       })}
       tabBarOptions={{
-        activeTintColor: '#fca652',
-        inactiveTintColor: 'gray',
+        activeTintColor: '#fff',
+        inactiveTintColor: '#969696',
+        style: {
+          backgroundColor: '#fca652',
+        },
+        
       }}
     >
       <Tab.Screen name="기록" component={RecordStack} />
       <Tab.Screen name="커뮤니티" component={CommunityStack} />
       <Tab.Screen name="랭킹" component={RankStack} />
+      <Tab.Screen name="분석" component={AnalysisScreen} />
     </Tab.Navigator>
   )
 }

@@ -13,36 +13,47 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import { NavigationActions } from 'react-navigation';
 import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  login: (user) => dispatch(login(user)),
+})
 
 class Startinfo extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      height: null,
-      weight: null,
-      age: null,
-      active: 'normal',
-    };
-  }
-  infoNext = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  };
+  state = {
+    height: null,
+    weight: null,
+    age: null,
+    active: 'normal',
+  };
+  infoNext = () => {
     if (this.state.height && this.state.weight && this.state.age) {
       fetch(`${serverUrl}accounts/need/info/`, {
         method: 'PATCH',
         body: JSON.stringify(this.state),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
-        .then((response) => {})
+        .then((response) => {
+          this.props.login(response);
+        })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       alert('모든 정보가 입력되지 않아 저장되지 않았습니다.');
@@ -188,4 +199,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Startinfo;
+export default connect(mapStateToProps,mapDispatchToProps)(Startinfo);

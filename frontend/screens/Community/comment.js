@@ -10,7 +10,6 @@ import {
   Button,
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
-import {TouchableHighlight} from 'react-native-gesture-handler';
 import {serverUrl} from '../../constants';
 
 const {width, height} = Dimensions.get('screen');

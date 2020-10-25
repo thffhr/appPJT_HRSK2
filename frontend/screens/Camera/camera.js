@@ -11,11 +11,9 @@ export default class Camera extends Component {
       avatarSource: '',
     }
   };
-  onCamera = async () => {
-    const token = await AsyncStorage.getItem('auth-token')
+  onCamera = () => {
     const options = {
       title: 'Select Avatar',
-      // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -32,9 +30,6 @@ export default class Camera extends Component {
         console.log('ImagePicker Error: ', response.error);
       } else {
         const source = {uri: response.uri};
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        
         this.setState({
           avatarSource: source,
         });
