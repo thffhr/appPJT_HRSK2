@@ -38,6 +38,8 @@ import CreateArticle from './screens/Community/CreateArticle';
 import MyFeed from './screens/Community/MyFeed';
 import UserFeed from './screens/Community/UserFeed';
 
+import Analysis from './screens/Analysis/Analysis';
+
 // component
 import CustomDrawerContent from './components/CustomDrawerContent';
 
@@ -201,6 +203,20 @@ function ProfileScreen() {
   );
 }
 
+function AnalysisScreen() {
+  return (
+    <Stack.Navigator initialRouteName="Analysis" screenOptions={{
+      headerShown: false,
+    }}>
+      <Stack.Screen 
+        name="Analysis"
+        component={Analysis}
+        options={{title: '내 분석'}}
+      />
+    </Stack.Navigator>
+  )
+}
+
 // Tab
 function TapNavigator() {
   return (
@@ -216,6 +232,8 @@ function TapNavigator() {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === '랭킹') {
             iconName = focused ? 'medal' : 'medal-outline';
+          } else {
+            iconName = focused ? 'analytics' : 'analytics-outline';
           }
 
           // You can return any component that you like here!
@@ -234,6 +252,7 @@ function TapNavigator() {
       <Tab.Screen name="기록" component={RecordStack} />
       <Tab.Screen name="커뮤니티" component={CommunityStack} />
       <Tab.Screen name="랭킹" component={RankStack} />
+      <Tab.Screen name="분석" component={AnalysisScreen} />
     </Tab.Navigator>
   )
 }
