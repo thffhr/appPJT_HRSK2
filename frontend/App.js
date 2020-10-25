@@ -19,7 +19,6 @@ import Login from './screens/Account/login';
 import Signup from './screens/Account/signup';
 import Profile from './screens/Account/profile';
 import Update from './screens/Account/update';
-import UpdateImg from './screens/Account/updateImg';
 import Startsex from './screens/Account/start_sex';
 import Startinfo from './screens/Account/start_info';
 
@@ -192,11 +191,6 @@ function ProfileScreen() {
         name="Profile"
         component={Profile}
         options={{title: '프로필'}}
-      />
-      <Stack.Screen
-        name="UpdateImg"
-        component={UpdateImg}
-        options={{title: '프로필이미지변경'}}
       />
       <Stack.Screen
         name="Update"
