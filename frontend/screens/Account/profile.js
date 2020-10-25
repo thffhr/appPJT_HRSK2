@@ -81,6 +81,7 @@ class Profile extends Component {
           .then((response) =>response.json())
           .then((response) => {
             user.profileImage = response.profileImage;
+            this.setModalVisible(visible);
           })
           .then(() => {
             this.props.login(user);
@@ -300,10 +301,6 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: W * 0.05,
-  },
-  gohomeBtn: {
-    backgroundColor: 'transparent',
-    color: 'black',
   },
   deleteBtn: {
     marginTop: H * 0.02,
