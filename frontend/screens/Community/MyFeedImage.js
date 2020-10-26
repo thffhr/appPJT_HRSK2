@@ -50,14 +50,11 @@ const styles = StyleSheet.create({
   pictureBox: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    borderTopWidth: 1,
-    borderTopColor: '#232323',
-    marginVertical: 20,
-    paddingVertical: 20,
+    marginVertical: 5,
   },
   imgBtn: {
-    width: '25%',
-    height: 100,
+    width: '33.3%',
+    height: 130,
     borderColor: 'white',
     borderWidth: 2,
   },

@@ -19,6 +19,10 @@ class MyFeed extends Component {
     myArticles: [],
     modalData: '',
     modalVisible: false,
+    active: 'btn1',
+    btn1Color: '#F39C12',
+    btn2Color: '#FFFBE6',
+    btn3Color: '#FFFBE6',
   };
   componentDidMount() {
     this.getMyArticles();
@@ -48,6 +52,30 @@ class MyFeed extends Component {
       .catch((err) => {
         console.error(err);
       });
+  };
+  onBtn1 = () => {
+    this.setState({
+      btn1Color: '#F39C12',
+      btn2Color: '#FFFBE6',
+      btn3Color: '#FFFBE6',
+      active: 'btn1',
+    })
+  };
+  onBtn2 = () => {
+    this.setState({
+      btn1Color: '#FFFBE6',
+      btn2Color: '#F39C12',
+      btn3Color: '#FFFBE6',
+      active: 'btn2',
+    })
+  };
+  onBtn3 = () => {
+    this.setState({
+      btn1Color: '#FFFBE6',
+      btn2Color: '#FFFBE6',
+      btn3Color: '#F39C12',
+      active: 'btn3',
+    })
   };
   render() {
     return (
@@ -101,8 +129,29 @@ class MyFeed extends Component {
               </Text>
             </View>
           </View>
-
-          <MyFeedImage articles={this.state.myArticles} navigation={this.props.navigation}/>
+          <View style={styles.btnGroup}>
+              <TouchableHighlight
+                style={[styles.btnBtn, {borderBottomColor: this.state.btn1Color}]}
+                onPress={this.onBtn1}
+              >
+                <Icon name="grid" style={styles.btnIcon}/>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={[styles.btnBtn, {borderBottomColor: this.state.btn2Color}]}
+                onPress={this.onBtn2}
+              >
+                <Icon name="heart"  style={styles.btnIcon}/>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={[styles.btnBtn, {borderBottomColor: this.state.btn3Color}]}
+                onPress={this.onBtn3}
+              >
+                <Icon name="bookmarks"  style={styles.btnIcon}/>
+              </TouchableHighlight>
+          </View>
+          {this.state.active === 'btn1' && (
+            <MyFeedImage articles={this.state.myArticles} navigation={this.props.navigation}/>
+          )}
         </ScrollView>
       </SafeAreaView>
     )
@@ -132,6 +181,25 @@ const styles = StyleSheet.create({
   cntContent: {
     textAlign: 'center',
     fontSize: 20,
+  },
+  // btn
+  btnGroup: {
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+  },
+  btnBtn: {
+    flexDirection: 'row',
+    width: '33.3%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 6,
+  },
+  btnIcon: {
+    fontSize: 30,
   },
 });
 
