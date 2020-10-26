@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, ScrollView, View, Image, Text, TouchableOpaci
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { serverUrl } from '../../constants';
+import MyFeedImage from './MyFeedImage';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -15,7 +16,6 @@ class MyFeed extends Component {
     super(props);
   };
   state = {
-    selected: {id: null, image: null},
     myArticles: [],
     modalData: '',
     modalVisible: false,
@@ -52,54 +52,6 @@ class MyFeed extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}>
-          <View
-            style={{
-              width: '100%',
-              height: height,
-              backgroundColor: 'black',
-              opacity: 0.5,
-            }}></View>
-        </Modal>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
-              </TouchableHighlight>
-              </View>
-              <View style={{margin:10, alignContent: 'center'}}>
-              {this.state.modalData
-                .split('|')
-                .filter((word) => word)
-                .map((line, i) => {
-                  return (
-                    <View style={{flexDirection: 'row', marginVertical: 3}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
-                    <Text style={{fontSize: 17}}>
-                      {line}
-                    </Text>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-          </View>
-        </Modal>
         <ScrollView>
           <View style={styles.profileBox}>
             <View style={styles.imgBox}>
@@ -149,39 +101,14 @@ class MyFeed extends Component {
               </Text>
             </View>
           </View>
-          <View style={styles.pictureBox}>
-            {this.state.myArticles.map((article) => {
-              const borderColor =
-                article.id === this.state.selected.id
-                  ? '#FCA652'
-                  : 'transparent';
-              return (
-                <TouchableOpacity
-                  style={[styles.imgBtn, {borderColor: borderColor}]}
-                  key={article.id}
-                  onPress={() => {
-                    this.setState({
-                      selected: {id: article.id, image: article.image},
-                    });
-                    this.props.navigation.push('MyFeedDetail', {
-                      article: article,
-                    });
-                  }}>
-                  <Image
-                    style={styles.picture}
-                    source={{
-                      uri: `${serverUrl}gallery` + article.image,
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+
+          <MyFeedImage articles={this.state.myArticles} navigation={this.props.navigation}/>
         </ScrollView>
       </SafeAreaView>
     )
   }
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -205,75 +132,6 @@ const styles = StyleSheet.create({
   cntContent: {
     textAlign: 'center',
     fontSize: 20,
-  },
-  imgBtn: {
-    width: '25%',
-    height: 100,
-    borderColor: 'white',
-    borderWidth: 2,
-  },
-  picture: {
-    width: '100%',
-    height: '100%',
-  },
-  // my articles
-  pictureBox: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    borderTopWidth: 1,
-    borderTopColor: '#232323',
-    marginVertical: 20,
-    paddingVertical: 20,
-  },
-  imgBtn: {
-    width: '25%',
-    height: 100,
-    borderColor: 'white',
-    borderWidth: 2,
-  },
-  picture: {
-    width: '100%',
-    height: '100%',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    width: '60%',
-    margin: 20,
-    backgroundColor: '#FFFBE6',
-    borderRadius: 5,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  openButton: {
-    width: 100,
-    backgroundColor: '#FCA652',
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    elevation: 2,
-    alignContent: 'center',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  articleContent: {
-    marginBottom: 30,
-    fontSize: 20,
-    fontFamily: 'HANNAAir',
   },
 });
 

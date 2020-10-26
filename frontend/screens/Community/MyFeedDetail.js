@@ -33,10 +33,6 @@ export default class MyFeedDetail extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
-
         <Modal
           animationType="fade"
           transparent={true}
@@ -270,21 +266,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fca652',
-    elevation: 5,
-  },
-  haru: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    fontFamily: 'BMJUA',
-    marginLeft: 15,
-  },
-
   article: {
     flexDirection: 'column',
     width: '100%',
