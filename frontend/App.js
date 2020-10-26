@@ -36,6 +36,7 @@ import Comment from './screens/Community/Comment';
 import CreateSelect from './screens/Community/CreateSelect';
 import CreateArticle from './screens/Community/CreateArticle';
 import MyFeed from './screens/Community/MyFeed';
+import MyFeedDetail from './screens/Community/MyFeedDetail';
 import UserFeed from './screens/Community/UserFeed';
 
 import Analysis from './screens/Analysis/Analysis';
@@ -79,8 +80,8 @@ function CommunityStack() {
         options={{title: '커뮤니티'}}
       />
       <Stack.Screen
-        name="MyFeed"
-        component={MyFeed}
+        name="MyFeedDetail"
+        component={MyFeedDetail}
         options={{title: '내 피드 디테일 사진'}}
       />
       <Stack.Screen
@@ -270,6 +271,24 @@ function RankTabs() {
   );
 }
 
+function FeedScreen() {
+  return (
+    <Stack.Navigator initialRouteName="MyFeed" screenOptions={{
+      headerShown: false,
+    }}>
+      <Stack.Screen 
+        name="MyFeed"
+        component={MyFeed}
+        options={{title: '내 피드'}}
+      />
+      <Stack.Screen 
+        name="MyFeedDetail"
+        component={MyFeedDetail}
+        options={{title: '내 피드 디테일'}}
+      />
+    </Stack.Navigator>
+  )
+}
 
 function RecordTaps() {
   return (
@@ -307,6 +326,7 @@ class DrawerStack extends Component {
         >
           <Drawer.Screen name="메뉴" component={TapNavigator} />
           <Drawer.Screen name="내 정보" component={ProfileScreen}/>
+          <Drawer.Screen name="내 피드" component={FeedScreen} />
           {/* <Drawer.Screen name="커스텀" component={CustomDrawerContent} /> */}
         </Drawer.Navigator>
       </>
