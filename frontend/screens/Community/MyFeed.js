@@ -1,42 +1,57 @@
-import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  AsyncStorage,
-  Dimensions,
-  Modal,
-  TouchableHighlight,
-} from 'react-native';
+import React, { Component } from 'react';
+import { SafeAreaView, StyleSheet, ScrollView, View, Image, Text, TouchableOpacity, Modal, Dimensions, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+import { serverUrl } from '../../constants';
 
 const {width, height} = Dimensions.get('screen');
 
-export default class MyFeed extends Component {
-  constructor(props) {
-    super(props);
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
-    this.state = {
-      article: this.props.route.params.article,
-      profileImage: null,
-      modalData: '',
-      modalVisible: false,
-    };
-  }
-  onBack = () => {
-    this.props.navigation.navigate('Community');
+class MyFeed extends Component {
+  constructor(props){
+    super(props);
+  };
+  state = {
+    selected: {id: null, image: null},
+    myArticles: [],
+    modalData: '',
+    modalVisible: false,
+  };
+  componentDidMount() {
+    this.getMyArticles();
+  };
+  setModalVisible = (visible, recipe) => {
+    if (visible) {
+      this.setState({
+        modalData: recipe,
+      });
+    } else {
+      this.setState({
+        modalData: '',
+      });
+    }
+    this.setState({modalVisible: visible});
+  };
+  getMyArticles = () => {
+    fetch(`${serverUrl}articles/read/${this.props.user.username}/`, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          myArticles: response,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
-
+      <SafeAreaView style={styles.container}>
         <Modal
           animationType="fade"
           transparent={true}
@@ -58,44 +73,49 @@ export default class MyFeed extends Component {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={{marginBottom: 10}}>레시피 내용</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
+              </TouchableHighlight>
+              </View>
+              <View style={{margin:10, alignContent: 'center'}}>
               {this.state.modalData
                 .split('|')
                 .filter((word) => word)
                 .map((line, i) => {
                   return (
-                    <Text>
-                      {i + 1}. {line}
+                    <View style={{flexDirection: 'row', marginVertical: 3}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
+                    <Text style={{fontSize: 17}}>
+                      {line}
                     </Text>
+                    </View>
                   );
                 })}
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </TouchableHighlight>
+              </View>
             </View>
           </View>
         </Modal>
-
         <ScrollView>
-          <View style={styles.article}>
-            <View style={styles.writer}>
-              {this.state.article.user.profileImage && (
+          <View style={styles.profileBox}>
+            <View style={styles.imgBox}>
+              {this.props.user.profileImage && (
                 <Image
-                  style={styles.writerImg}
+                  style={styles.profileImg}
                   source={{
                     uri:
                       `${serverUrl}gallery` +
-                      this.state.article.user.profileImage,
+                      this.props.user.profileImage,
                   }}
                 />
               )}
-              {!this.state.article.user.profileImage && (
+              {!this.props.user.profileImage && (
                 <Image
-                  style={styles.writerImg}
+                  style={styles.profileImg}
                   source={{
                     uri:
                       'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
@@ -104,234 +124,129 @@ export default class MyFeed extends Component {
               )}
               <Text
                 style={{
-                  marginLeft: 10,
                   fontSize: 20,
-                  fontWeight: 'bold',
+                  marginLeft: 5,
                 }}>
-                {this.state.article.user.username}
+                {this.props.user.username}
               </Text>
             </View>
-
-            <Image
-              style={styles.articleImg}
-              source={{
-                uri: `${serverUrl}gallery` + this.state.article.image,
-              }}
-            />
-            <View style={styles.articleBelow}>
-              <View style={styles.articleBtns}>
-                <TouchableOpacity
-                  style={{marginRight: 10}}
-                  onPress={async () => {
-                    const token = await AsyncStorage.getItem('auth-token');
-                    fetch(`${serverUrl}articles/articleLikeBtn/`, {
-                      method: 'POST',
-                      body: JSON.stringify({articleId: this.state.article.id}),
-                      headers: {
-                        Authorization: `Token ${token}`,
-                        'Content-Type': 'application/json',
-                      },
-                    })
-                      .then((response) => response.json())
-                      .then((response) => {
-                        console.log(response);
-                        const isliked = this.state.article.isliked;
-                        const num_of_like = this.state.article.num_of_like;
-                        if (response === 'like') {
-                          this.setState({
-                            article: {
-                              ...this.state.article,
-                              isliked: !isliked,
-                              num_of_like: num_of_like + 1,
-                            },
-                          });
-                        } else if (response === 'dislike') {
-                          this.setState({
-                            article: {
-                              ...this.state.article,
-                              isliked: !isliked,
-                              num_of_like: num_of_like - 1,
-                            },
-                          });
-                        }
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                  }}>
-                  {this.state.article.isliked && (
-                    <Icon name="heart" style={{fontSize: 40, color: 'red'}} />
-                  )}
-                  {!this.state.article.isliked && (
-                    <Icon name="heart-outline" style={{fontSize: 40}} />
-                  )}
-                </TouchableOpacity>
-                {this.state.article.canComment && (
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => {
-                      this.props.navigation.push('Comment', {
-                        articleId: this.state.article.id,
-                      });
-                    }}>
-                    <Icon
-                      name="chatbubble-ellipses-outline"
-                      style={{fontSize: 40}}
-                    />
-                  </TouchableOpacity>
-                )}
-                {this.state.article.recipe !== '' && (
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => {
-                      this.setModalVisible(true, this.state.article.recipe);
-                    }}>
-                    <Icon name="list-circle" style={{fontSize: 40}} />
-                  </TouchableOpacity>
-                )}
-                {!this.state.article.recipe && (
-                  <TouchableOpacity
-                    style={{marginRight: 10}}
-                    onPress={() => {
-                      alert('레시피가 없습니다');
-                    }}>
-                    <Icon name="list-circle-outline" style={{fontSize: 40}} />
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {this.state.article.num_of_like > 0 && (
-                  <Icon
-                    name="heart"
-                    style={{
-                      fontSize: 20,
-                      color: 'red',
-                      marginRight: 5,
-                    }}
-                  />
-                )}
-                {this.state.article.num_of_like === 0 && (
-                  <Icon
-                    name="heart-outline"
-                    style={{fontSize: 20, marginRight: 5}}
-                  />
-                )}
-                {this.state.article.num_of_like > 2 && (
-                  <Text style={styles.likeText}>
-                    {article.user_1.username}외 {article.num_of_like - 1}
-                    명이 좋아합니다.
-                  </Text>
-                )}
-                {this.state.article.num_of_like === 2 &&
-                  this.state.article.isliked && (
-                    <Text style={styles.likeText}>
-                      {this.state.article.user_1.username}님과 회원님이
-                      좋아합니다.
-                    </Text>
-                  )}
-                {this.state.article.num_of_like === 2 &&
-                  !this.state.article.isliked && (
-                    <Text style={styles.likeText}>
-                      {this.state.article.user_1.username}님과{' '}
-                      {this.state.article.user_2.username}님이 좋아합니다.
-                    </Text>
-                  )}
-                {this.state.article.num_of_like === 1 &&
-                  this.state.article.isliked && (
-                    <Text style={styles.likeText}>회원님이 좋아합니다.</Text>
-                  )}
-                {this.state.article.num_of_like === 1 &&
-                  !this.state.article.isliked && (
-                    <Text style={styles.likeText}>
-                      {this.state.article.user_1.username}님이 좋아합니다.
-                    </Text>
-                  )}
-                {this.state.article.num_of_like === 0 && (
-                  <Text style={styles.likeText}>
-                    이 게시물에 첫 좋아요를 눌러주세요!
-                  </Text>
-                )}
-              </View>
-              <Text style={styles.articleContent}>
-                {this.state.article.content}
+            <View style={styles.cntBox}>
+              <Text style={styles.cntContent}>게시글</Text>
+              <Text style={styles.cntContent}>
+                {this.state.myArticles.length}
+              </Text>
+            </View>
+            <View style={styles.cntBox}>
+              <Text style={styles.cntContent}>팔로워</Text>
+              <Text style={styles.cntContent}>
+                {this.props.user.num_of_followers}
+              </Text>
+            </View>
+            <View style={styles.cntBox}>
+              <Text style={styles.cntContent}>팔로잉</Text>
+              <Text style={styles.cntContent}>
+                {this.props.user.num_of_followings}
               </Text>
             </View>
           </View>
+          <View style={styles.pictureBox}>
+            {this.state.myArticles.map((article) => {
+              const borderColor =
+                article.id === this.state.selected.id
+                  ? '#FCA652'
+                  : 'transparent';
+              return (
+                <TouchableOpacity
+                  style={[styles.imgBtn, {borderColor: borderColor}]}
+                  key={article.id}
+                  onPress={() => {
+                    this.setState({
+                      selected: {id: article.id, image: article.image},
+                    });
+                    this.props.navigation.push('MyFeedDetail', {
+                      article: article,
+                    });
+                  }}>
+                  <Image
+                    style={styles.picture}
+                    source={{
+                      uri: `${serverUrl}gallery` + article.image,
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </ScrollView>
-      </View>
-    );
+      </SafeAreaView>
+    )
   }
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fffbe6',
-    width: '100%',
+    backgroundColor: '#FFFBE6',
     flex: 1,
   },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fca652',
-    elevation: 5,
-  },
-  haru: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    fontFamily: 'BMJUA',
-    marginLeft: 15,
-  },
-
-  article: {
-    flexDirection: 'column',
-    width: '100%',
-    marginVertical: 10,
-  },
-  writer: {
-    marginLeft: '5%',
-    marginBottom: 10,
-    width: '100%',
+  // profileBox
+  profileBox: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    margin: 20,
   },
-  writerImg: {
+  imgBox: {},
+  profileImg: {
     borderRadius: 50,
     width: 50,
     height: 50,
   },
-  articleImg: {
-    width: '100%',
-    height: 400,
-    marginBottom: 10,
-  },
-  articleBelow: {
-    marginLeft: '5%',
-  },
-  articleBtns: {
-    width: '100%',
-    flexDirection: 'row',
-    marginBottom: 10,
-  },
-  likeText: {
-    marginBottom: 10,
-    fontSize: 20,
+  cntBox: {},
+  cntContent: {
     textAlign: 'center',
-  },
-  articleContent: {
     fontSize: 20,
-    fontFamily: 'BMEULJROTTF',
   },
-
-  // modal
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
+  imgBtn: {
+    width: '25%',
+    height: 100,
+    borderColor: 'white',
+    borderWidth: 2,
+  },
+  picture: {
+    width: '100%',
+    height: '100%',
+  },
+  // my articles
+  pictureBox: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    borderTopWidth: 1,
+    borderTopColor: '#232323',
+    marginVertical: 20,
+    paddingVertical: 20,
+  },
+  imgBtn: {
+    width: '25%',
+    height: 100,
+    borderColor: 'white',
+    borderWidth: 2,
+  },
+  picture: {
+    width: '100%',
+    height: '100%',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    width: '60%',
+    margin: 20,
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    padding: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -342,14 +257,24 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
+    width: 100,
+    backgroundColor: '#FCA652',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     elevation: 2,
+    alignContent: 'center',
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  articleContent: {
+    marginBottom: 30,
+    fontSize: 20,
+    fontFamily: 'HANNAAir',
+  },
 });
+
+export default connect(mapStateToProps)(MyFeed); 

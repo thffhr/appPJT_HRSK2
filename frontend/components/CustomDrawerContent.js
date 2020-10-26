@@ -21,6 +21,9 @@ class CustomDrawerContent extends Component {
   onProfile = () => {
     this.props.navigation.navigate('내 정보');
   };
+  onMyFeed = () => {
+    this.props.navigation.navigate('내 피드');
+  };
   onLogout = () => {
     fetch(`${serverUrl}rest-auth/logout/`, {
       method: 'POST',
@@ -64,6 +67,12 @@ class CustomDrawerContent extends Component {
             style={styles.linkBtn}
           >
             <Text style={styles.drawerTxt}>내 정보</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.onMyFeed}
+            style={styles.linkBtn}
+          >
+            <Text style={styles.drawerTxt}>내 피드</Text>
           </TouchableOpacity>
         </DrawerContentScrollView>
   
