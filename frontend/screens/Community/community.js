@@ -363,26 +363,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#fca652',
-    elevation: 5,
-    flexDirection: 'row',
-  },
-  haru: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    fontFamily: 'BMJUA',
-    marginLeft: 15,
-  },
-  menuBtn: {
-    fontSize: 30,
-    color: '#fff',
-    marginRight: 15,
-  },
   articles: {
     width: '100%',
     flexDirection: 'column',
