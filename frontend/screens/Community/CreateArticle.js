@@ -5,7 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  AsyncStorage,
+  SafeAreaView,
   Switch,
   Image,
   ScrollView,
@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
-})
+});
 
 class CreateArticle extends Component {
   constructor(props) {
@@ -37,39 +37,15 @@ class CreateArticle extends Component {
       },
       count: 1,
     };
-  }
-
-  async componentDidMount() {
-    // you might want to do the I18N setup here
-    this.getInfo();
-  }
-
-  getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.props.user.username}/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({
-          profileImage: response.profileImage,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   };
-
-  createArticle = () => {
+  createArticle = async() => {
     var myRecipe = '';
     Object.values(this.state.articleInfo.recipe).map((value) => {
       if (value) {
         myRecipe = myRecipe + value + '|';
       }
     });
-    this.setState({
+    await this.setState({
       articleInfo: {
         ...this.state.articleInfo,
         recipe: myRecipe,
@@ -83,8 +59,7 @@ class CreateArticle extends Component {
         Authorization: `Token ${this.props.user.token}`,
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
+      .then(() => {
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 1,
@@ -96,7 +71,6 @@ class CreateArticle extends Component {
         console.error(err);
       });
   };
-
   CtoggleSwitch = () => {
     if (this.state.CswitchValue) {
       this.setState({
@@ -147,22 +121,19 @@ class CreateArticle extends Component {
       });
     }
   };
-
   addRecipe = () => {
     this.state.articleInfo.recipe[`sentence${this.state.count}`] = '';
     this.setState({
       count: this.state.count + 1,
     });
   };
-
   delRecipe = (key) => {
     delete this.state.articleInfo.recipe[key];
     this.setState({});
   };
-
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.createArticle}>
           <Text style={{fontSize: 20, fontWeight: 'bold', color: 'orange'}}>
             공유
@@ -173,15 +144,15 @@ class CreateArticle extends Component {
         </View>
         <View style={styles.block}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {this.state.profileImage && (
+            {this.props.user.profileImage && (
               <Image
                 style={styles.profileImg}
                 source={{
-                  uri: `${serverUrl}gallery` + this.state.profileImage,
+                  uri: `${serverUrl}gallery` + this.props.user.profileImage,
                 }}
               />
             )}
-            {!this.state.profileImage && (
+            {!this.props.user.profileImage && (
               <Image
                 style={styles.profileImg}
                 source={{
@@ -280,7 +251,7 @@ class CreateArticle extends Component {
           <Text>레시피 추가</Text>
           <Icon name="add-circle-outline"></Icon>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 }
