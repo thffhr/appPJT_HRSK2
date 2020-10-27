@@ -231,7 +231,7 @@ function TapNavigator() {
             iconName = focused ? 'earth' : 'earth-outline';
           } else if (route.name === '기록') {
             iconName = focused ? 'calendar' : 'calendar-outline';
-          } else if (route.name === '랭킹') {
+          } else if (route.name === '추천') {
             iconName = focused ? 'medal' : 'medal-outline';
           } else {
             iconName = focused ? 'analytics' : 'analytics-outline';
@@ -243,16 +243,15 @@ function TapNavigator() {
       })}
       tabBarOptions={{
         activeTintColor: '#fff',
-        inactiveTintColor: '#969696',
+        inactiveTintColor: '#fad499',
         style: {
           backgroundColor: '#fca652',
         },
-        
       }}
     >
       <Tab.Screen name="기록" component={RecordStack} />
       <Tab.Screen name="커뮤니티" component={CommunityStack} />
-      <Tab.Screen name="랭킹" component={RankStack} />
+      <Tab.Screen name="추천" component={RankStack} />
       <Tab.Screen name="분석" component={AnalysisScreen} />
     </Tab.Navigator>
   )

@@ -13,6 +13,11 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+})
 
 class CreateArticle extends Component {
   constructor(props) {
@@ -36,14 +41,11 @@ class CreateArticle extends Component {
 
   async componentDidMount() {
     // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
     this.getInfo();
   }
 
   getInfo = () => {
-    fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
+    fetch(`${serverUrl}accounts/profile/${this.props.user.username}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -51,47 +53,47 @@ class CreateArticle extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           profileImage: response.profileImage,
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
-  createArticle = async () => {
+  createArticle = () => {
     var myRecipe = '';
     Object.values(this.state.articleInfo.recipe).map((value) => {
       if (value) {
         myRecipe = myRecipe + value + '|';
       }
     });
-    this.state.articleInfo.recipe = myRecipe;
-
-    const token = await AsyncStorage.getItem('auth-token');
+    this.setState({
+      articleInfo: {
+        ...this.state.articleInfo,
+        recipe: myRecipe,
+      }
+    });
     fetch(`${serverUrl}articles/create/`, {
       method: 'POST',
       body: JSON.stringify(this.state.articleInfo),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 1,
             routes: [{name: 'Community'}],
           }),
         );
-        // this.props.navigation.push('Community');
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -285,7 +287,7 @@ class CreateArticle extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#fffbe6',
     width: '100%',
     flex: 1,
     alignItems: 'center',
@@ -339,4 +341,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateArticle;
+export default connect(mapStateToProps)(CreateArticle);
