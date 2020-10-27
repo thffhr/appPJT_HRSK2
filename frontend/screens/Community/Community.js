@@ -422,8 +422,6 @@ const styles = StyleSheet.create({
     height: 65,
     borderRadius: 100,
     elevation: 5,
-    // borderWidth: 3,
-    // borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fca652',
