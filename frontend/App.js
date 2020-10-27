@@ -245,7 +245,7 @@ function TapNavigator() {
         activeTintColor: '#fff',
         inactiveTintColor: '#fad499',
         style: {
-          backgroundColor: '#fca652',
+          backgroundColor: '#f39c12',
         },
       }}
     >

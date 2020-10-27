@@ -127,11 +127,11 @@ class CreateSelect extends Component {
           style={[
             styles.description,
             this.state.isDividerClicked
-              ? {backgroundColor: '#fca652'}
-              : {backgroundColor: '#ffb46b'},
+              ? {backgroundColor: '#f39c12'}
+              : {backgroundColor: '#fffbe6'},
           ]}
           {...this._panResponder.panHandlers}>
-          <Text style={{color: '#fff'}}>사진에서 선택</Text>
+          <Text style={this.state.isDividerClicked ? {color: '#fff'} : {color: '#f39c12'}}>사진에서 선택</Text>
         </View>
         <Animated.View
           style={[
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // borderBottomColor: 'gray',
     // borderBottomWidth: 2,
-    backgroundColor: '#fca652',
+    backgroundColor: '#f39c12',
   },
   title: {
     fontSize: 30,
