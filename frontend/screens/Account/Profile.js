@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableHighlight,
   Alert,
+  TextInput,
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
@@ -16,7 +17,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
-import { TextInput } from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
