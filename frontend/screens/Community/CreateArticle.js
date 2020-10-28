@@ -25,12 +25,17 @@ class CreateArticle extends Component {
 
     this.state = {
       tags: ['칼국수', '닭가슴살'],
+      tagInput: '',
       content: '',
       CswitchValue: true,
       SswitchValue: true,
       RswitchValue: false,
       articleInfo: {
         content: '',
+        // foods: {
+        //   food: null,
+        //   recipe: []
+        // },
         recipe: {},
         image: this.props.route.params.selected.image,
         canComment: true,
@@ -39,18 +44,27 @@ class CreateArticle extends Component {
       count: 1,
     };
   };
-  createArticle = async() => {
+  createArticle = async(food) => {
     var myRecipe = '';
     Object.values(this.state.articleInfo.recipe).map((value) => {
       if (value) {
         myRecipe = myRecipe + value + '|';
       }
     });
+    // this.state.articleInfo.foods.recipe.map((value) => {
+    //   if (value) {
+    //     myRecipe = myRecipe + value + '|';
+    //   }
+    // });
     await this.setState({
       articleInfo: {
         ...this.state.articleInfo,
         recipe: myRecipe,
       }
+      // foods: {
+      //   ...this.state.articleInfo.foods,
+      //   recipe: myRecipe,
+      // }
     });
     fetch(`${serverUrl}articles/create/`, {
       method: 'POST',
@@ -165,33 +179,73 @@ class CreateArticle extends Component {
               }}
             />
           </View>
-          <View style={styles.block}>
-            <TextInput
-                placeholder="태그를 입력하세요"
-                onChangeText={(text) => {
-                  this.setState({
-                    tags: text,
-                  });
-                }}
-                style={[styles.fs1, {flexShrink: 1, maxWidth: '100%'}]}
-                multiline={true}
-              />
-          </View>
-          <View style={styles.block}>
+          <View style={styles.tagBlock}>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10,}}>
+              <Text style={{fontSize: 20}}>태그 추가</Text>
+              <Text style={{color: 'gray', marginLeft: 15}}>태그를 추가해보세요.</Text>
+            </View>
+            <View style={styles.tagArea}>
+              {this.state.tags.map((value, idx) => {
+                return (
+                  <View key={idx} style={styles.tagBox}>
+                    <Text style={{color: '#fff', fontSize: 18}}>#</Text>
+                    <Text  style={{color: '#fff', fontSize: 18, paddingHorizontal: 5,}}>{value}</Text>
+                    <Icon 
+                      name="close" 
+                      style={{color: '#fff', fontSize: 20}} 
+                      onPress={() => {
+                        const tags = this.state.tags.filter((v,i) => i !== idx)
+                        this.setState({
+                          tags: tags,
+                        });
+                      }}
+                    ></Icon>
+                  </View>
+                )
+              })}
+              <View style={styles.tagBox}>
+                <Text style={{color: '#fff', fontSize: 20, paddingHorizontal: 3}}>#</Text>
+                <TextInput
+                    placeholder="태그"
+                    value={this.state.tagInput}
+                    maxLength={10}
+                    onChangeText={(text) => {
+                      this.setState({
+                        tagInput: text,
+                      });
+                    }}
+                    style={styles.tagInput}
+                    multiline={true}
+                  />
+                <Icon 
+                  name="add" 
+                  size={20}
+                  style={{color: '#fff'}}
+                  onPress={() => {
+                    const tags = this.state.tags.concat(this.state.tagInput)
+                    this.setState({
+                      tags: tags,
+                      tagInput: '',
+                    });
+                  }}></Icon>
+                </View>
+              </View>
+            </View>
+          <View style={styles.switchBlock}>
             <Text style={styles.fs1}>댓글 허용</Text>
             <Switch
               onValueChange={() => this.CtoggleSwitch(!this.state.CswitchValue)}
               value={this.state.CswitchValue}
             />
           </View>
-          <View style={styles.block}>
+          <View style={styles.switchBlock}>
             <Text style={styles.fs1}>검색 허용</Text>
             <Switch
               onValueChange={() => this.StoggleSwitch(!this.state.SswitchValue)}
               value={this.state.SswitchValue}
             />
           </View>
-          <View style={styles.block}>
+          <View style={styles.switchBlock}>
             <View>
               <Text style={styles.fs1}>레시피 추가</Text>
               <Text >하단에 레시피 입력창이 생성됩니다.</Text>
@@ -202,6 +256,45 @@ class CreateArticle extends Component {
             />
           </View>
           {this.state.RswitchValue && (
+            // <View>
+            //   {Object.entries(this.state.articleInfo.foods).map(([key, value], i) => {
+            //     retrun (
+            //       <View key={i} style={styles.recipeArea}>
+            //         <View style={styles.foodBox}>
+            //           {Object.entries(value).map(([key,value], idx) => {
+            //             return (
+            //               <Text key={idx}>{value}</Text>
+            //             )
+            //           })}
+            //           <View><Icon name="add-outline" size={30}></Icon></View>
+            //         </View>
+            //         <View style={styles.recipeBox}>
+            //           {value.recipe.map((value, idx) => {
+            //             return (
+            //               <>
+            //                 <Text>{idx + 1}. </Text>
+            //                 <TextInput
+            //                   placeholder="레시피를 입력해주세요"
+            //                   value={value}
+            //                   onChangeText={(text) => {
+            //                     // this.state.articleInfo.recipe[key] = text;
+            //                     // console.log(this.state.articleInfo.recipe);
+            //                     // this.setState({});
+            //                   }}
+            //                   style={styles.recipeText}
+            //                 />
+            //                 <Icon
+            //                   name="trash-outline"
+            //                   style={{fontSize: 30}}
+            //                   onPress={() => this.delRecipe(key)}></Icon>
+            //               </>
+            //             )
+            //           })}
+            //         </View>
+            //       </View>
+            //     )
+            //   })}
+            // </View>
             <View>
               {Object.entries(this.state.articleInfo.recipe).map(
                 ([key, value], i) => {
@@ -219,7 +312,7 @@ class CreateArticle extends Component {
                         style={styles.recipeText}
                       />
                       <Icon
-                        name="remove-circle-outline"
+                        name="trash-outline"
                         style={{fontSize: 30}}
                         onPress={() => this.delRecipe(key)}></Icon>
                     </View>
@@ -272,6 +365,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 30,
   },
+  switchBlock: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
   profileImg: {
     width: 40,
     height: 40,
@@ -303,7 +405,34 @@ const styles = StyleSheet.create({
   recipeText: {
     width: '80%',
   },
-  
+  // tag
+  tagArea: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  tagBlock:{
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+  },
+  tagBox: {
+    backgroundColor: 'gray',
+    borderRadius: 30,
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    margin: 10,
+  },
+  tagInput: {
+    backgroundColor: '#fff',
+    height: 40,
+    minWidth: 40,
+    maxWidth: 100,
+
+  },
 });
 
 export default connect(mapStateToProps)(CreateArticle);
