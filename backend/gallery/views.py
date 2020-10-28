@@ -358,6 +358,8 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        location = list(map(int, menu2food.location[1:-1].split(', ')))
-        lst.append([serializer.data, value, location])
+        # location = list(map(int, menu2food.location[1:-1].split(', ')))
+        location = menu2food.location
+        lst.append([serializer.data, value, location, menu2food.id])
+    print(lst)
     return Response(lst)
