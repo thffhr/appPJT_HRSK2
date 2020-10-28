@@ -10,7 +10,8 @@ class Menu(models.Model):
                              on_delete=models.CASCADE)
     image = models.FileField(upload_to="image", null=True)
     mealTime = models.CharField(max_length=2, blank=True)  # 아침/점심/저녁/간식/야식
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    # created_at = models.DateTimeField(auto_now_add=True, null=True)
+    created_at = models.CharField(max_length=10, blank=True)
 
 
 class Menu2food(models.Model):
