@@ -4,7 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-
+  Text,
   Dimensions,
   Image,
   AsyncStorage,
@@ -29,6 +29,8 @@ export default class Gallery extends Component {
       pictures: [],
       selected: {id: null, image: null},
       pictureTime: {},
+      // 뱃지
+      badgeColors: ['#2ECC71', '#3498DB', '#8E44AD', '#F1C40F', '#F312A4'],
     };
   }
   componentDidMount() {
@@ -69,6 +71,22 @@ export default class Gallery extends Component {
       image: image,
 
     })
+  };
+  // 뱃지
+  getBadgeStyle(mealTime) {
+    console.log('함수가 돌아가긴 했니?')
+    console.log(mealTime)
+    if (mealTime==='아침'){
+      return {backgroundColor: this.state.badgeColors[0]}
+    }else if(mealTime==='점심'){
+      return {backgroundColor: this.state.badgeColors[1]}
+    }else if(mealTime==='저녁'){
+      return {backgroundColor: this.state.badgeColors[2]}
+    }else if(mealTime==='간식'){
+      return {backgroundColor: this.state.badgeColors[3]}
+    }else{
+      return {backgroundColor: this.state.badgeColors[4]}
+    }
   };
   render() {
     return (
@@ -112,6 +130,11 @@ export default class Gallery extends Component {
                       uri: `${serverUrl}gallery` + picture.image,
                     }}
                   />
+                  {/* 뱃지 */}
+                  <View style={[styles.badge, this.getBadgeStyle(picture.mealTime)]}>
+                    {/* 폰트 크기는 사진에 맞게 바꿀 예정 */}
+                    <Text style={{color: '#fff', fontSize: 10}}>{picture.mealTime}</Text>
+                  </View>
                 </TouchableOpacity>
               );
             })}
@@ -144,5 +167,15 @@ const styles = StyleSheet.create({
   picture: {
     width: '100%',
     height: '100%',
+  },
+  // 뱃지
+  badge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    borderRadius: 50,
+    zIndex: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 2
   },
 });
