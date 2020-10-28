@@ -215,10 +215,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   imgBtn: {
-    width: '25%',
-    height: 100,
+    width: '33.3%',
+    height: 130,
     borderColor: 'white',
-    borderWidth: 2,
+    borderWidth: 3,
   },
   picture: {
     width: '100%',
