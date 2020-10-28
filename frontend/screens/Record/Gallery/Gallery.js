@@ -103,6 +103,7 @@ export default class Gallery extends Component {
                       image: picture.image,
                       picture: picture,
                       pictureDate: pictureDate,
+                      mealTime: picture.mealTime,
                     });
                   }}>
                   <Image
