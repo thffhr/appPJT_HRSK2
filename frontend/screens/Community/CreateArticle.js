@@ -194,7 +194,7 @@ class CreateArticle extends Component {
                       name="close" 
                       style={{color: '#fff', fontSize: 20}} 
                       onPress={() => {
-                        const tags = this.state.tags.filter((v,i) => i !== idx)
+                        const tags = this.state.tags.filter((v,i) => i !== idx);
                         this.setState({
                           tags: tags,
                         });
