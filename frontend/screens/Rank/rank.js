@@ -15,8 +15,8 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // const serverUrl = 'http://localhost:8080/';
-// const serverUrl = 'http://10.0.2.2:8080/';
-const serverUrl = 'http://j3a410.p.ssafy.io/api/';
+const serverUrl = 'http://10.0.2.2:8080/';
+// const serverUrl = 'http://j3a410.p.ssafy.io/api/';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
@@ -49,8 +49,29 @@ class Rank extends Component {
       active: 'btn1',
       modalData: '',
       modalVisible: false,
+      isFollow: false,
+      myName: null,
     };
   }
+  setModalVisible = (arr) => {
+    console.log(arr)
+    if (arr[1]) {
+      this.setState({ 
+        modalData: {
+          ...this.state.modalData,
+          modalVisible: arr[1]
+        },
+      });
+    } else {
+      this.setState({ 
+        modalData: {
+          ...this.state.modalData,
+          mealTime: arr[0],
+          modalVisible: arr[1],
+        },
+      });
+    }
+  };
   onBtn1 = () => {
     this.setState({
       btn1_color: '#fca652',
@@ -85,7 +106,8 @@ class Rank extends Component {
         console.log(err);
       });
   };
-  getDatas = () => {
+  getDatas = async () => {
+    const Token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -102,6 +124,31 @@ class Rank extends Component {
       .catch((err) => {
         console.log(err);
       });
+      fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
+        method: 'GET',
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            userData: response,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Token ${Token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.setState({
+            isFollow: response,
+          });
+        })
+        .catch((err) => console.error(err));
   };
   setModalVisible = (visible, recipe) => {
     if (visible) {
@@ -118,6 +165,38 @@ class Rank extends Component {
   componentDidMount() {
     this.getArticles();
     this.getDatas();
+  };
+  onFollow = async () => {
+    const Token = await AsyncStorage.getItem('auth-token');
+    fetch(
+      `${serverUrl}accounts/profile/${this.state.userData.username}/follow/`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Token ${Token}`,
+        },
+      },
+    )
+      .then(() => {
+        if (!this.state.isFollow) {
+          this.setState({
+            isFollow: !this.state.isFollow,
+            userData: {
+              ...this.state.userData,
+              num_of_followers: this.state.userData.num_of_followers + 1,
+            },
+          });
+        } else {
+          this.setState({
+            isFollow: !this.state.isFollow,
+            userData: {
+              ...this.state.userData,
+              num_of_followers: this.state.userData.num_of_followers - 1,
+            },
+          });
+        }
+      })
+      .catch((err) => console.error(err));
   };
   render() {
     return (
@@ -435,9 +514,14 @@ class Rank extends Component {
           )}
           {this.state.active == 'btn2' && (
             <View style={styles.Box}>
+              <Text style={styles.miniTitle}>추천친구 <Text style={{marginLeft:10 ,color: "gray", fontSize: 15}}>친구를 팔로우 해보세요!</Text></Text>
+                <View style={styles.Box2}>
+                  <Text>돼지</Text>
+                </View>
+              <Text style={styles.miniTitle}>주간 랭킹</Text>
               {this.state.BestUser.map((user, i) => {
                 return (
-                  <View style={styles.follow} key={user.id}>
+                  <View key={user.id}>
                     <TouchableOpacity
                     style={styles.userBtn}
                       onPress={() => {
@@ -446,7 +530,7 @@ class Rank extends Component {
                         })
                       }}
                     >
-                    <Text style={styles.ranking}>{i + 1}</Text>
+                    {/* <Text style={styles.ranking}>{i + 1}</Text> */}
                       {this.state.profileImage && (
                         <Image
                           style={styles.profileImg}
@@ -465,9 +549,29 @@ class Rank extends Component {
                         />
                       )}
                       <Text style={styles.followUser}>{user.username}</Text>
-                      <Text style={styles.followUser}>
-                        {user.num_of_followers} 명
+                      <Text style={styles.followUserCnt}>
+                        {user.num_of_followers}
                       </Text>
+                      <Text style={styles.followUser}>
+                        {this.state.myName !== this.state.username && (
+                          <View style={styles.followBtn}>
+                            {!this.state.isFollow && (
+                              <TouchableOpacity style={styles.follow} onPress={this.onFollow}>
+                                <Text style={styles.followTxt}>팔로우</Text>
+                              </TouchableOpacity>
+                            )}
+                            {this.state.isFollow && (
+                              <TouchableOpacity
+                                style={styles.following}
+                                onPress={this.onFollow}>
+                                <Text style={styles.followingTxt}>
+                                  팔로잉
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          </View>
+                        )}
+                        </Text>
                     </TouchableOpacity>
 
                   </View>
@@ -592,7 +696,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 10,
   },
+  followTxt: {
+    color: '#fff',
+    fontSize: 20,
+    fontFamily: 'BMJUA',
+    textAlign: 'center',
+  },
   follow: {
+    width: '20%',
+    backgroundColor: '#fca652',
+    borderRadius: 10,
+    // marginVertical: 10,
+    padding: 10,
+    borderColor: '#fca652',
+    borderWidth: 1,
+  },
+  followingTxt: {
+    color: '#fca652',
+    fontSize: 20,
+    fontFamily: 'BMJUA',
+    textAlign: 'center',
+  },
+  following: {
+    width: '20%',
+    backgroundColor: '#fffbe6',
+    borderColor: '#fca652',
+    borderWidth: 1,
+    borderRadius: 10,
+    // marginVertical: 10,
+    padding: 10,
   },
   userBtn: {
     flexDirection: 'row',
@@ -606,11 +738,26 @@ const styles = StyleSheet.create({
     fontFamily: 'BMJUA',
     width: W * 0.07,
   },
-  followUser: {
-    marginRight: '5%',
+  miniTitle: {
     fontSize: W * 0.06,
     fontFamily: 'BMJUA',
-    width: W * 0.35,
+    margin: 20,
+  },
+  followUser: {
+    // marginRight: '5%',
+    fontSize: W * 0.06,
+    fontFamily: 'BMJUA',
+    width: W * 0.3,
+  },
+  followUserCnt: {
+    // marginRight: '5%',
+    fontSize: W * 0.06,
+    fontFamily: 'BMJUA',
+    width: W * 0.1,
+  },
+  followUserBtn: {
+    // marginRight: '5%',
+    width: W * 0.2,
   },
   profileImg: {
     borderRadius: W * 0.15,
@@ -619,6 +766,14 @@ const styles = StyleSheet.create({
     marginRight: '5%',
   },
   Box: {
+    alignSelf: 'center',
+    width: '90%',
+    // borderRadius: 10,
+    // elevation: 5,
+    // backgroundColor: '#fff',
+    paddingBottom: W * 0.1,
+  },
+  Box2: {
     alignSelf: 'center',
     width: '90%',
     borderRadius: 10,
@@ -696,6 +851,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  followBtn: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    marginHorizontal: 20,
+    paddingVertical: 10,
+    // borderRadius: 10,
+    // backgroundColor: '#000000',
+    // flexDirection: 'row',
+  },
+
 });
 
 export default Rank;
