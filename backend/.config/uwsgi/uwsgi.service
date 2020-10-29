@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
 
 [Service]
-ExecStart=/home/ubuntu/myvenv/bin/uwsgi -i /home/ubuntu/s03p31a307/backend/.config/uwsgi/backend.ini
+ExecStart=/home/ubuntu/myvenv/bin/uwsgi -i /home/ubuntu/s03p23a410/backend/.config/uwsgi/backend.ini
 
 Restart=always
 KillSignal=SIGNOUT
