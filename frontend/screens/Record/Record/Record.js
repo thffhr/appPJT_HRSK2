@@ -14,12 +14,13 @@ import {
   AsyncStorage,
   SafeAreaView,
 } from 'react-native';
-import Pie from 'react-native-pie';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   LocaleConfig,
 } from 'react-native-calendars';
 import {serverUrl} from '../../../constants';
+
+import MyCarousel from './MyCarousel';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -215,53 +216,53 @@ export default class Record extends Component {
       .catch((err) => console.error(err));
   };
 
-  touchCalbox = (key, tf) => {
-    var calboxObj = this.state.dayMenus;
-    calboxObj[key]['flag'] = tf;
-    this.setState({
-      dayMenus: calboxObj,
-    });
-  };
+  // touchCalbox = (key, tf) => {
+  //   var calboxObj = this.state.dayMenus;
+  //   calboxObj[key]['flag'] = tf;
+  //   this.setState({
+  //     dayMenus: calboxObj,
+  //   });
+  // };
 
-  minusCnt = (year, month, date, day, cnt, menu2food_id) => {
-    if (cnt <= 1) {
-      this.setModalVisible(true, year, month, date, menu2food_id);
-    } else {
-      var form = new FormData();
-      form.append('menu2food_id', menu2food_id);
-      fetch(`${serverUrl}gallery/minusCnt/`, {
-        method: 'POST',
-        body: form,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Token ${this.state.token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          this.onFetch(year, month, date, day);
-        })
-        .catch((err) => console.error(err));
-    }
-  };
+  // minusCnt = (year, month, date, day, cnt, menu2food_id) => {
+  //   if (cnt <= 1) {
+  //     this.setModalVisible(true, year, month, date, menu2food_id);
+  //   } else {
+  //     var form = new FormData();
+  //     form.append('menu2food_id', menu2food_id);
+  //     fetch(`${serverUrl}gallery/minusCnt/`, {
+  //       method: 'POST',
+  //       body: form,
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Token ${this.state.token}`,
+  //       },
+  //     })
+  //       .then((response) => response.json())
+  //       .then((response) => {
+  //         this.onFetch(year, month, date, day);
+  //       })
+  //       .catch((err) => console.error(err));
+  //   }
+  // };
 
-  plusCnt = (year, month, date, day, menu2food_id) => {
-    var form = new FormData();
-    form.append('menu2food_id', menu2food_id);
-    fetch(`${serverUrl}gallery/plusCnt/`, {
-      method: 'POST',
-      body: form,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        this.onFetch(year, month, date, day);
-      })
-      .catch((err) => console.error(err));
-  };
+  // plusCnt = (year, month, date, day, menu2food_id) => {
+  //   var form = new FormData();
+  //   form.append('menu2food_id', menu2food_id);
+  //   fetch(`${serverUrl}gallery/plusCnt/`, {
+  //     method: 'POST',
+  //     body: form,
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Token ${this.state.token}`,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       this.onFetch(year, month, date, day);
+  //     })
+  //     .catch((err) => console.error(err));
+  // };
 
   setModalVisible = (visible, year, month, date, menu2food_id) => {
     this.setState({
@@ -456,155 +457,30 @@ export default class Record extends Component {
                 marginTop: 50,
                 alignItems: 'center',
               }}>
-              {Object.entries(this.state.dayMenus).map(([k, v], idx) => {
-                if (Object.keys(v).length !== 0) {
+              {Object.entries(this.state.dayMenus).map(([MenuKey, MenuVal], idx) => {
+                if (Object.keys(MenuVal).length !== 0) {
                   return (
                     <>
-                      {/* <Text key={idx}>{k}</Text> */}
                       <View style={styles.calbox} key={idx}>
                         <View style={styles.calboxTitle}>
                           <Icon
                             name="restaurant-outline"
                             style={{fontSize: 20, marginTop: 2}}></Icon>
                           <Text style={{fontSize: 20, marginLeft: 5}}>
-                            {k}
+                            {MenuKey}
                           </Text>
                         </View>
-                        {!v.flag && (
-                          <>
-                            <TouchableOpacity
-                              style={{
-                                position: 'relative',
-                                bottom: 25,
-                                left: 325,
-                              }}>
-                              <Icon name='create-outline' style={{fontSize: 20}}></Icon>
-                            </TouchableOpacity>
-                            {v['meal'].map((m, i) => {
-                              return (
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    // borderBottomWidth: 1,
-                                    marginBottom: 10,
-                                  }}
-                                  key={i}>
-                                  <Text
-                                    style={{fontSize: 18, marginLeft: 10}}>
-                                    {m[0]}
-                                  </Text>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                    }}>
-                                    <Text style={{fontSize: 18}}>
-                                      {m[1]}kcal
-                                    </Text>
-                                    <Icon
-                                      name="remove-circle-outline"
-                                      style={{
-                                        fontSize: 20,
-                                        marginTop: 2,
-                                        marginLeft: 20,
-                                        marginRight: 10,
-                                      }}
-                                      onPress={() =>
-                                        this.minusCnt(
-                                          this.state.dateTime.year,
-                                          this.state.dateTime.month,
-                                          this.state.dateTime.date,
-                                          this.state.dateTime.day,
-                                          m[3],
-                                          m[2],
-                                        )
-                                      }></Icon>
-                                    <Text style={{fontSize: 18}}>{m[3]}</Text>
-                                    <Icon
-                                      name="add-circle-outline"
-                                      style={{
-                                        fontSize: 20,
-                                        marginTop: 2,
-                                        marginHorizontal: 10,
-                                      }}
-                                      onPress={() =>
-                                        this.plusCnt(
-                                          this.state.dateTime.year,
-                                          this.state.dateTime.month,
-                                          this.state.dateTime.date,
-                                          this.state.dateTime.day,
-                                          m[2],
-                                        )
-                                      }></Icon>
-                                  </View>
-                                </View>
-                              );
-                            })}
-                            <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 5}}>
-                              <Icon name="ellipse" style={{fontSize: 15, marginRight: 5, color: '#F39C12'}}></Icon>
-                              <TouchableOpacity
-                                onPress={() => this.touchCalbox(k, true)}>
-                                <Icon name="ellipse" style={{fontSize: 15, color: '#E0E0E0'}}></Icon>
-                              </TouchableOpacity>
-                            </View>
-                          </>
-                        )}
-                        {v.flag && (
-                          <View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignSelf: 'center',
-                              marginTop: 10
-                            }}>
-                            <Pie
-                              radius={65}
-                              sections={[
-                                {
-                                  percentage: v['nutrient'][0], //탄수화물
-                                  color: '#FBC02D',
-                                },
-                                {
-                                  percentage: v['nutrient'][1], //단백질
-                                  color: '#FFEB3B',
-                                },
-                                {
-                                  percentage: v['nutrient'][2], //지방
-                                  color: '#FFF59D',
-                                },
-                              ]}
-                              strokeCap={'butt'}
-                            />
-                            <View style={{marginTop: 20, marginLeft: 20}}>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FBC02D'}}></Icon>
-                                탄수화물 {v['nutrient'][0].toFixed(1)}%
-                              </Text>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FFEB3B'}}></Icon>
-                                단백질 {v['nutrient'][1].toFixed(1)}%
-                              </Text>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FFF59D'}}></Icon>
-                                지방 {v['nutrient'][2].toFixed(1)}%
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 20}}>
-                          <TouchableOpacity
-                             onPress={() => this.touchCalbox(k, false)}>
-                             <Icon name="ellipse" style={{fontSize: 15, color: '#E0E0E0'}}></Icon>
-                           </TouchableOpacity>
-                           <Icon name="ellipse" style={{fontSize: 15, marginRight: 5, color: '#F39C12'}}></Icon>
-                          </View>
-                          </View>
-                        )}
+                        <TouchableOpacity
+                          style={{
+                            position: 'relative',
+                            bottom: 25,
+                            left: 325,
+                          }}>
+                          <Icon name='create-outline' style={{fontSize: 20}}></Icon>
+                        </TouchableOpacity>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                          <MyCarousel Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime]} key={idx}/>
+                        </View>
                       </View>
                     </>
                   );
