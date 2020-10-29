@@ -8,6 +8,7 @@ class Tag(models.Model):
     tagName = models.CharField(max_length=100)
 
 
+
 class Article(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='article_user')
@@ -18,7 +19,7 @@ class Article(models.Model):
     recipe = models.TextField(default='', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.TextField(null=True)
+    # image = models.TextField(null=True)
     canComment = models.BooleanField(default=True)
     canSearch = models.BooleanField(default=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
@@ -29,6 +30,11 @@ class Article(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_1', null=True)
     user_2 = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_2', null=True)
+
+
+class ArticleImage(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    image = models.TextField(null=True)
 
 
 class Comment(models.Model):
