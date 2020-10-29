@@ -275,44 +275,73 @@ class CreateArticle extends Component {
             <>
               <View style={styles.recipeArea}>
                 {this.state.tempArticleInfo.foods && Object.entries(this.state.tempArticleInfo.foods).map(([key, value], i) => {
+                  const btnColor = this.state.activeRecipe === key ? '#f39c12' : 'transparent';
                   return (
-                    <View key={i} style={styles.foodBox}>
+                    <TouchableOpacity
+                      key={i} 
+                      style={[styles.foodBox, {borderColor: btnColor, borderWidth:2}]}
+                      onPress={() => {
+                        this.setState({
+                          activeRecipe: key,
+                        });
+                      }}>
                       <Text>{key}</Text>
-                    </View>
+                    </TouchableOpacity>
                   )
                 })}
               </View>
-              <View>
+              <View style={styles.recipeArea}>
                 {this.state.tempArticleInfo.foods && Object.entries(this.state.tempArticleInfo.foods).map(([key, value], i) => {
                   return (
                     <>
                     {key === this.state.activeRecipe && (  
-                      <View key={i}>
-                        <Text>{key}의 레시피를 입력하세요.</Text>
+                      <View key={i} style={{width: '100%'}}>
+                        <Text style={{fontSize: 15, color: 'gray'}}>{key}의 레시피를 입력하세요.</Text>
                         {this.state.tempArticleInfo.foods[key].map((v, idx) => {
                           return (
-                            <View key={idx}>
-                              <Text>{idx+1}. {v}</Text>
+                            <View key={idx} style={{flexDirection: 'row', justifyContent: 'space-between', margin: 10, alignItems: 'center'}}>
+                              <View style={{flexDirection: 'row'}}>
+                                <Text style={{fontSize: 20}}>{idx+1}. </Text>
+                                <Text style={{fontSize: 20, maxWidth: '85%'}}>{v}</Text>
+                              </View>
+                              <Icon 
+                                name="trash-outline"
+                                style={{fontSize: 30,}}
+                                onPress={() => {
+                                  const newArray = this.state.tempArticleInfo.foods[key].filter((v,index) => index !== idx);
+                                  this.setState({
+                                    tempArticleInfo: {
+                                      ...this.state.tempArticleInfo,
+                                      foods: {
+                                        ...this.state.tempArticleInfo.foods,
+                                        [key]: newArray, 
+                                      },
+                                    },
+                                    recipeInput: '',
+                                  });
+                                }}  
+                              ></Icon>
                             </View>
                           )
                         })}
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                          
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin:10,}}>
+                          <Text style={{fontSize: 20, textAlign: 'center'}}>{this.state.tempArticleInfo.foods[key].length + 1}. </Text>
                           <TextInput 
                             placeholder="레시피를 입력하세요"
                             value={this.state.recipeInput}
+                            maxLength={50}
                             onChangeText={(text) => {
                               this.setState({
                                 recipeInput: text,
                               });
                             }}
+                            style={styles.recipeInput}
                           />
                           <Icon 
-                            name="add" 
-                            style={{fontSize: 20}}
+                            name="checkbox-outline" 
+                            style={{fontSize: 40, color: 'gray'}}
                             onPress={()=> {
                               const recipeArray = value.concat(this.state.recipeInput);
-                              console.log('recipeArray: ', recipeArray);
                               this.setState({
                                 tempArticleInfo: {
                                   ...this.state.tempArticleInfo,
@@ -323,7 +352,6 @@ class CreateArticle extends Component {
                                 },
                                 recipeInput: '',
                               });
-                              console.log(this.state.tempArticleInfo.foods);
                             }}  
                           ></Icon>
                         </View>
@@ -333,92 +361,7 @@ class CreateArticle extends Component {
                   )
                 })}
               </View>
-              {/* <View style={styles.recipeArea}>
-                {this.state.tempArticleInfo.foods.map((value,i) => {
-                  return (
-                    <View key={i}>
-                      {i === this.state.activeRecipe && Object.entries(value).map(([key,value], idx) => {
-                        return (
-                          <>
-                            {key === 'food' && (
-                              <Text>{value}의 레시피를 추가해보세요.</Text>
-                            )}
-                            {key === 'recipe' && value !== '' && this.state.tempArticleInfo.foods.recipe.map((value,index) => {
-                              return (
-                                <View key={index} style={{flexDirection: 'row'}}>
-                                  <Text>{index + 1}. {value}</Text>
-                                </View>
-                              )
-                            })}
-                            {key === 'recipe' && (
-                              <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-
-                                <TextInput 
-                                  placeholder="레시피를 입력하세요"
-                                  onChangeText={(text) => {
-                                    this.setState({
-                                      recipeInput: text,
-                                    });
-                                  }}
-                                />
-                                <Icon 
-                                  name="add" 
-                                  style={{fontSize: 20}}
-                                  onPress={()=> {
-                                    const recipeArray = value.concat(this.state.recipeInput);
-                                    this.setState({
-                                      recipe: {
-                                        ...this.state.tempArticleInfo.foods[i].recipe,
-                                        recipe: 
-                                      }
-                                      recipeInput: '',
-                                    });
-                                  }}  
-                                ></Icon>
-                              </View>
-                            )}
-                          </>
-                        )
-                      })}
-                    </View>
-                  )
-                })}
-              </View> */}
             </>
-            // <View>
-            //   {Object.entries(this.state.articleInfo.recipe).map(
-            //     ([key, value], i) => {
-            //       return (
-            //         <View key={i} style={styles.recipeBox}>
-            //           <Text>{i + 1}. </Text>
-            //           <TextInput
-            //             placeholder="레시피를 입력해주세요"
-            //             value={value}
-            //             onChangeText={(text) => {
-            //               this.state.articleInfo.recipe[key] = text;
-            //               console.log(this.state.articleInfo.recipe);
-            //               this.setState({});
-            //             }}
-            //             style={styles.recipeText}
-            //           />
-            //           <Icon
-            //             name="trash-outline"
-            //             style={{fontSize: 30}}
-            //             onPress={() => this.delRecipe(key)}></Icon>
-            //         </View>
-            //       );
-            //     },
-            //   )}
-            //   <TouchableOpacity
-            //     style={{
-            //       flexDirection: 'row',
-            //       marginBottom: 20,
-            //     }}
-            //     onPress={this.addRecipe}>
-            //     <Text>레시피 추가</Text>
-            //     <Icon name="add-circle-outline"></Icon>
-            //   </TouchableOpacity>
-            // </View>
           )}
         </ScrollView>
       </SafeAreaView>
@@ -490,11 +433,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', 
     // height: 50, 
     flexDirection: 'row',
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 10,
+    padding: 10,
   },
   foodBox: {
     backgroundColor: '#e0e0e0',
+    borderRadius: 100,
     padding: 15,
-    margin: 10,
+    marginHorizontal: 10,
   },
   recipeBox: {
     flexDirection: 'row',
@@ -504,6 +453,15 @@ const styles = StyleSheet.create({
   },
   recipeText: {
     width: '80%',
+  },
+  recipeInput: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 10,
+    height: 40,
+    width: '77%',
+    maxWidth: '77%',
   },
   // tag
   tagArea: {
