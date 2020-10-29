@@ -476,10 +476,9 @@ export default class Record extends Component {
                               style={{
                                 position: 'relative',
                                 bottom: 25,
-                                left: 290,
-                              }}
-                              onPress={() => this.touchCalbox(k, true)}>
-                              <Text>차트보기</Text>
+                                left: 325,
+                              }}>
+                              <Icon name='create-outline' style={{fontSize: 20}}></Icon>
                             </TouchableOpacity>
                             {v['meal'].map((m, i) => {
                               return (
@@ -488,7 +487,7 @@ export default class Record extends Component {
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     // borderBottomWidth: 1,
-                                    marginTop: 10,
+                                    marginBottom: 10,
                                   }}
                                   key={i}>
                                   <Text
@@ -541,23 +540,23 @@ export default class Record extends Component {
                                 </View>
                               );
                             })}
+                            <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 5}}>
+                              <Icon name="ellipse" style={{fontSize: 15, marginRight: 5, color: '#F39C12'}}></Icon>
+                              <TouchableOpacity
+                                onPress={() => this.touchCalbox(k, true)}>
+                                <Icon name="ellipse" style={{fontSize: 15, color: '#E0E0E0'}}></Icon>
+                              </TouchableOpacity>
+                            </View>
                           </>
                         )}
                         {v.flag && (
+                          <View>
                           <View
                             style={{
                               flexDirection: 'row',
-                              alignContent: 'center',
+                              alignSelf: 'center',
+                              marginTop: 10
                             }}>
-                            <TouchableOpacity
-                              style={{
-                                position: 'relative',
-                                bottom: 25,
-                                left: 287,
-                              }}
-                              onPress={() => this.touchCalbox(k, false)}>
-                              <Text>수량 보기</Text>
-                            </TouchableOpacity>
                             <Pie
                               radius={65}
                               sections={[
@@ -596,6 +595,14 @@ export default class Record extends Component {
                                 지방 {v['nutrient'][2].toFixed(1)}%
                               </Text>
                             </View>
+                          </View>
+                          <View style={{flexDirection: 'row', alignSelf: 'center', marginTop: 20}}>
+                          <TouchableOpacity
+                             onPress={() => this.touchCalbox(k, false)}>
+                             <Icon name="ellipse" style={{fontSize: 15, color: '#E0E0E0'}}></Icon>
+                           </TouchableOpacity>
+                           <Icon name="ellipse" style={{fontSize: 15, marginRight: 5, color: '#F39C12'}}></Icon>
+                          </View>
                           </View>
                         )}
                       </View>
