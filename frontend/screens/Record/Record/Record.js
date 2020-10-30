@@ -21,6 +21,8 @@ import {
 import {serverUrl} from '../../../constants';
 
 import MyCarousel from './MyCarousel';
+import { connect } from 'react-redux';
+import { updateMenu } from '../../../src/action/record';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -68,12 +70,23 @@ LocaleConfig.locales['fr'] = {
 LocaleConfig.defaultLocale = 'fr';
 
 let today = new Date();
-let year = today.getFullYear(); // 년도
+let year = today.getFullYear(); // 년도s
 let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
 let day = today.getDay(); // 요일
 
-export default class Record extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+  menu: state.recordReducer.menu,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  // js에서 함수 호출을 위한 변수명: (보낼 데이터) => dispatch(action에서 실행할 함수))
+  // this.props.updatemenu로 호출 
+  updateMenu: (menu) => dispatch(updateMenu(menu))
+});
+
+class Record extends Component {
   constructor(props) {
     super(props);
 
@@ -213,6 +226,11 @@ export default class Record extends Component {
           TotalCal: response['TotalCal'],
         });
       })
+      .then(() => {
+        console.log('1')
+        console.log(typeof this.state.dayMenus);
+        this.props.updateMenu(this.state.dayMenus);
+      })
       .catch((err) => console.error(err));
   };
 
@@ -315,6 +333,7 @@ export default class Record extends Component {
       .catch((error) => console.log(error));
   };
   render() {
+    console.log(this.props.menu)
     return (
       <SafeAreaView style={styles.container}>
         <Modal
@@ -479,7 +498,7 @@ export default class Record extends Component {
                           <Icon name='create-outline' style={{fontSize: 20}}></Icon>
                         </TouchableOpacity>
                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                          <MyCarousel Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime]} key={idx}/>
+                          <MyCarousel Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime, width]} key={idx}/>
                         </View>
                       </View>
                     </>
@@ -585,3 +604,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default connect(mapStateToProps,mapDispatchToProps)(Record);

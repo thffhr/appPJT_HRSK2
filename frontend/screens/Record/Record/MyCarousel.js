@@ -3,20 +3,31 @@ import {
   Text, 
   View,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Pie from 'react-native-pie';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { connect } from 'react-redux';
 
-export default class MyCarousel extends Component {
+const mapStateToProps = (state) => ({
+    menu: state.recordReducer.menu,
+});
 
- 
+const mapDispatchToProps = (dispatch) => ({
+    // js에서 함수 호출을 위한 변수명: (보낼 데이터) => dispatch(action에서 실행할 함수))
+    // this.props.updatemenu로 호출 
+    updateMenu: (menu) => dispatch(updateMenu(menu))
+});
+
+class MyCarousel extends Component {
     constructor(props){
         super(props);
         this.state = {
             activeIndex:0,
             carouselItems: this.props.Send[0],
             dateTime: this.props.Send[1],
+            W: this.props.Send[2]
         }
     }
     // 캐러셀 내용
@@ -67,6 +78,7 @@ export default class MyCarousel extends Component {
         return (
         <>
             {index === 0 && (
+                <ScrollView>
                 <>
                     {item.map((food, i) => {
                         return(
@@ -118,12 +130,12 @@ export default class MyCarousel extends Component {
                         )
                     })}                
                 </>
+                </ScrollView>
             )}
             {index === 1 && (
                 <View style={{
                     flexDirection: 'row',
                     alignSelf: 'center',
-                    marginTop: 10
                   }}>
                     <Pie
                         radius={65}
@@ -180,11 +192,12 @@ export default class MyCarousel extends Component {
                   width: 10,
                   height: 10,
                   borderRadius: 5,
-                  marginHorizontal: 8,
-                //   backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                  marginHorizontal: 3,
+                  backgroundColor: '#F39C12'
               }}
               inactiveDotStyle={{
                   // Define styles for inactive dots here
+                  backgroundColor: '#BEBEBE'
               }}
               inactiveDotOpacity={0.4}
               inactiveDotScale={0.6}
@@ -199,8 +212,8 @@ export default class MyCarousel extends Component {
                 layout={"default"}
                 ref={ref => this.carousel = ref}
                 data={this.state.carouselItems}
-                sliderWidth={300}
-                itemWidth={300}
+                sliderWidth={this.state.W * 0.8}
+                itemWidth={this.state.W * 0.8}
                 renderItem={this._renderItem}
                 onSnapToItem = { index => this.setState({activeIndex:index}) } />
             { this.pagination }
@@ -209,4 +222,5 @@ export default class MyCarousel extends Component {
         );
     }
 }
-
+export default MyCarousel;
+// export default connect(mapStateToProps,mapDispatchToProps)(MyCarousel);
