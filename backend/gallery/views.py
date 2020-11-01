@@ -257,7 +257,7 @@ def getImage(request, uri):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getChart(request, date):
-    Menus = Menu.objects.filter(user=request.user, created_at__contains=date)
+    Menus = Menu.objects.filter(user=request.user, created_at=date)
     Send = {'TotalCal': 0, 'Menus': {
         '아침': {}, '점심': {}, '저녁': {}, '간식': {}, '야식': {}, }}
     # Send = {'TotalCal' : 0, }
@@ -281,9 +281,10 @@ def getChart(request, date):
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
                     Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
-                total = T+D+G
-                Send['Menus'][t]['nutrient'] = [
-                    (T/total)*100, (D/total)*100, (G/total)*100]
+                if T > 0 and D > 0 and G > 0:
+                    total = T+D+G
+                    Send['Menus'][t]['nutrient'] = [
+                        (T/total)*100, (D/total)*100, (G/total)*100]
     return Response(Send)
 
 
