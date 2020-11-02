@@ -156,13 +156,11 @@ def articleLikeBtn(request):
         article.save()
         return Response("like")
 
-
 @api_view(['GET'])
 def details(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id)
     article_details = serializers.ArticleSerializer(article)
     return Response(article_details.data)
-
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -317,3 +315,25 @@ def getBestArticles(request):
                 articles_All.append(serializer.data)
 
     return Response(articles_All)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def bookmarkbtn(request, article_id):
+    user = request.user
+    article = get_object_or_404(models.Article, id=article_id)
+    if article.bookmark_users.filter(id=user.id).exists():
+        article.bookmark_users.remove(user)
+    else:
+        article.bookmark_users.add(user)
+    article.save()
+    return Response("북마크 갱신 성공")
+
+
+@api_view(['GET'])
+def bookmarkAll(request):
+    bookamrks = models.Article.objects.bookmark_users.filter(id=user.id)
+    bookmarks_All = []
+    for bookmark in bookmarks:
+        bookmarks_All.append(bookmarks)
+    return Response(bookmarks_All)
