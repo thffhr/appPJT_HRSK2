@@ -23,6 +23,8 @@ class Article(models.Model):
     canSearch = models.BooleanField(default=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                         related_name='like_articles')
+    bookmark_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        related_name='bookmark_article')                                      
     num_of_like = models.IntegerField(default=0)
     isliked = models.BooleanField(default=False)
     user_1 = models.ForeignKey(

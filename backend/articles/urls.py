@@ -25,5 +25,6 @@ urlpatterns = [
          views.update_reply, name='update_reply'),
     path('<int:reply_id>/del_reply/', views.del_reply, name='del_reply'),
     path('articleLikeBtn/', views.articleLikeBtn, name='articleLikeBtn'),
-    path('getbest/', views.getBestArticles, name='getBestArticles')
+    path('<int:article_id>/bookmarkbtn/', views.bookmarkbtn, name='bookmarkbtn'),
+    path('bookmarkAll/', views.bookmarkAll, name='bookmarkAll'),
 ]
