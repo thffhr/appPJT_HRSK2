@@ -11,7 +11,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Camera from '../../Camera/Camera';
 import {serverUrl} from '../../../constants';
 
 const {width, height} = Dimensions.get('screen');
@@ -61,17 +60,28 @@ export default class Gallery extends Component {
       ? n
       : new Array(width - n.length + 1).join('0') + n;
   };
-  onDate = (image) => {
+  onDate = () => {
     var newYear = this.pad(`${year}`, 4);
     var newMonth = this.pad(`${month}`, 2);
     var newDate = this.pad(`${date}`, 2);
     var sendDate = `${newYear}-${newMonth}-${newDate}`;
     this.props.navigation.navigate('MyDatePicker', {
       date: sendDate,
-      image: image,
+      // image: image,
 
     })
   };
+  // onDate = (image) => {
+  //   var newYear = this.pad(`${year}`, 4);
+  //   var newMonth = this.pad(`${month}`, 2);
+  //   var newDate = this.pad(`${date}`, 2);
+  //   var sendDate = `${newYear}-${newMonth}-${newDate}`;
+  //   this.props.navigation.navigate('MyDatePicker', {
+  //     date: sendDate,
+  //     image: image,
+
+  //   })
+  // };
   // 뱃지
   getBadgeStyle(mealTime) {
     console.log('함수가 돌아가긴 했니?')
@@ -140,7 +150,9 @@ export default class Gallery extends Component {
             })}
           </View>
         </ScrollView>
-        <Camera onCamera={(image) => this.onDate(image)} />
+        <TouchableOpacity style={styles.btnBox} onPress={this.onDate}>
+        <Icon name="camera" style={styles.cameraLogo}></Icon>
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -177,5 +189,19 @@ const styles = StyleSheet.create({
     zIndex: 2,
     paddingHorizontal: 5,
     paddingVertical: 2
+  },
+  // 카메라버튼
+  btnBox: {
+    backgroundColor: '#fca652',
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+    borderRadius: 100,
+    padding: 15,
+    elevation: 5,
+  },
+  cameraLogo: {
+    fontSize: 40,
+    color: '#fff',
   },
 });

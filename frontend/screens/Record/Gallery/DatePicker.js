@@ -7,6 +7,8 @@ import {serverUrl} from '../../../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FoodInput from '../FoodInput/FoodInput';
 
+import Camera from '../../Camera/Camera';
+
 const {width, height} = Dimensions.get('window');
 
 export default class MyDatePicker extends Component {
@@ -14,7 +16,7 @@ export default class MyDatePicker extends Component {
     super(props)
     this.state = {
       date: this.props.route.params.date,
-      image: this.props.route.params.image,
+      image: null,
       mealTimeData: {
         mealTime: '아침',
         modalVisible: false
@@ -34,10 +36,12 @@ export default class MyDatePicker extends Component {
     this.setState({
       token: token,
     });
-    this.getMenuInfo();
   };
   // ML에서 예측한 정보 가져오기
-  getMenuInfo() {
+  getMenuInfo(image) {
+    this.setState({
+      image: image,
+    })
     var data = new FormData();
     data.append('data', this.state.image.data);
     fetch(`${serverUrl}gallery/getMenuInfo/`, {
@@ -351,7 +355,11 @@ export default class MyDatePicker extends Component {
             
           </View>
           <ScrollView style={styles.imageBody}>
-            <View>
+            {this.state.image === null && (
+              <Camera onCamera={(image) => this.getMenuInfo(image)} />
+            )}
+            {this.state.image !== null && (
+              <View>
               {/* 음식사진 */}
               <Image
                 style={styles.image}
@@ -396,6 +404,7 @@ export default class MyDatePicker extends Component {
                   );
                 })}
             </View>
+            )}
             {/* food 보기 */}
             <View
             style={{

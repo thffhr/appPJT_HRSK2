@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {SafeAreaView, View, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
+import {SafeAreaView, View, Text, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 
@@ -40,8 +40,16 @@ export default class Camera extends Component {
   };
   render() {
     return (
-      <TouchableOpacity style={styles.btnBox} onPress={this.onCamera}>
-        <Icon name="camera" style={styles.cameraLogo}></Icon>
+      <TouchableOpacity style={{
+        width: '100%',
+        height: 300,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        borderColor: '#E0E0E0',
+        justifyContent: 'center', 
+        alignItems: 'center',}}
+        onPress={this.onCamera}>
+          <Text>사진을 추가해보세요.</Text>
       </TouchableOpacity>
     )
   }
