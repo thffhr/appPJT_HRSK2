@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fca652',
+    backgroundColor: '#f39c12',
   },
   menuList: {
     flexDirection: 'row',
