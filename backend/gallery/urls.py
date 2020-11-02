@@ -13,5 +13,6 @@ urlpatterns = [
     path('plusCnt/', views.plusCnt, name='plusCnt'),
     path('minusCnt/', views.minusCnt, name='minusCnt'),
     path('deleteMenu/', views.deleteMenu, name='deleteMenu'),
-    path('getFood/<int:menu_id>/', views.getFood, name='getFood')
+    path('getFood/<int:menu_id>/', views.getFood, name='getFood'),
+    path('getMenuInfo/', views.getMenuInfo, name='getMenuInfo')
 ]
