@@ -30,10 +30,10 @@ class Result():
 
 
 @api_view(['GET'])
-def profile(request, username):
+def profile(request, email):
     # user = get_object_or_404(User, uid=user_id)
     # articles = Article.objects.filter(user=user.id)
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(User, email=email)
     serializer = UserSerializer(user)
 
     return Response(serializer.data)

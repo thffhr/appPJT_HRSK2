@@ -4,7 +4,7 @@ from .models import User
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'height')
+    list_display = ('id', 'email', 'nickname')
 
 
 # 어드민 사이트에 등록해줘

@@ -18,5 +18,5 @@ urlpatterns = [
     path('pimg/delete/', views.del_profile, name='delProfile'),
     # path('recommend/<str:username>/', views.recommend, name='recommend'),
     path('getbasal/', views.get_basal, name='getbasal'),
-    path('bestusers/', views.getBestUsers, name='getBestUsers')
+    path('bestusers/', views.getBestUsers, name='getBestUsers'),
 ]

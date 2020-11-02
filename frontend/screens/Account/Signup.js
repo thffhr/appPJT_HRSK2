@@ -11,15 +11,15 @@ import {
 import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
-import { login } from '../../src/action/user';
-import { connect } from 'react-redux';
+import {login} from '../../src/action/user';
+import {connect} from 'react-redux';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
 class Signup extends Component {
   constructor(props) {
@@ -27,8 +27,8 @@ class Signup extends Component {
 
     this.state = {
       signupData: {
-        username: '',
         email: '',
+        nickname: '',
         password1: '',
         password2: '',
       },
@@ -44,24 +44,18 @@ class Signup extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.key) {
-          AsyncStorage.setItem('auth-token', response.key);
-          AsyncStorage.setItem('username', this.state.signupData.username);
-          const userData = {
-            token: response.key,
-            username: this.state.signupData.username,
-          }
-          this.props.login(userData);
+        if (response.detail) {
           this.props.navigation.dispatch(
             CommonActions.reset({
               index: 1,
-              routes: [{name: 'Startsex'}],
+              routes: [{name: 'Login'}],
             }),
           );
-        } else if (response.username) {
-          alert(response.username);
+          alert('이메일이 발송되었습니다.');
         } else if (response.email) {
           alert(response.email);
+          // } else if (response.nickname) {
+          //   alert(response.nickname);
         } else if (response.password1) {
           alert(response.password1);
         } else if (response.password2) {
@@ -82,21 +76,11 @@ class Signup extends Component {
           style={styles.image}
         />
         <View style={styles.guide}>
-          <Text style={styles.guideTxt}>생성할 아이디와 비밀번호를 입력해주세요.</Text>
+          <Text style={styles.guideTxt}>
+            생성할 계정의 이메일과 닉네임, 비밀번호를 입력해주세요.
+          </Text>
         </View>
         <View>
-          <TextInput
-            style={styles.inputArea}
-            placeholder="아이디"
-            onChangeText={(text) => {
-              this.setState({
-                signupData: {
-                  ...this.state.signupData,
-                  username: text,
-                },
-              });
-            }}
-          />
           <TextInput
             style={styles.inputArea}
             placeholder="이메일"
@@ -105,6 +89,18 @@ class Signup extends Component {
                 signupData: {
                   ...this.state.signupData,
                   email: text,
+                },
+              });
+            }}
+          />
+          <TextInput
+            style={styles.inputArea}
+            placeholder="닉네임"
+            onChangeText={(text) => {
+              this.setState({
+                signupData: {
+                  ...this.state.signupData,
+                  nickname: text,
                 },
               });
             }}

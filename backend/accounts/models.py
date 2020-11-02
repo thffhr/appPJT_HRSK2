@@ -1,10 +1,20 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
+from .managers import CustomUserManager
 
 # Create your models here.
+
+
 class User(AbstractUser):
+    objects = CustomUserManager()
+
+    username = None
+    email = models.EmailField(unique=True)
+    nickname = models.CharField(max_length=12, blank=False, unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nickname']
+
     height = models.IntegerField(null=True)
     weight = models.IntegerField(null=True)
     age = models.IntegerField(null=True)

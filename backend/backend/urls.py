@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
+from allauth.account.views import confirm_email
 
 
 from django.conf import settings
@@ -51,7 +53,11 @@ urlpatterns = [
     # 로그인 & 로그아웃
     path('rest-auth/', include('rest_auth.urls')),
     path('gallery/', include('gallery.urls')),
-    path('food/', include('food.urls'))
+    path('food/', include('food.urls')),
+    url(r'^account/', include('allauth.urls')),
+    url(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$',
+        confirm_email, name='account_confirm_email'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,8 +11,8 @@ import {
 import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
-import { login } from '../../src/action/user';
+import {connect} from 'react-redux';
+import {login} from '../../src/action/user';
 // import {store} from '../../src/store/index';
 
 const H = Dimensions.get('window').height;
@@ -20,26 +20,26 @@ const W = Dimensions.get('window').width;
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
 class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: '',
+      email: '',
       password: '',
     };
-  };
+  }
   async componentDidMount() {
     const token = await AsyncStorage.getItem('auth-token');
-    const username = await AsyncStorage.getItem('username');
+    const email = await AsyncStorage.getItem('email');
     if (token) {
       var data = {
         token: token,
-      }
+      };
       // profile
-      await fetch(`${serverUrl}accounts/profile/${username}/`, {
+      await fetch(`${serverUrl}accounts/profile/${email}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ class Login extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          data = Object.assign(data, response)
+          data = Object.assign(data, response);
         })
         .catch((err) => {
           console.error(err);
@@ -60,9 +60,9 @@ class Login extends Component {
         }),
       );
     }
-  };
+  }
   handleEmail = (text) => {
-    this.setState({username: text});
+    this.setState({email: text});
   };
   handlePassword = (text) => {
     this.setState({password: text});
@@ -76,15 +76,15 @@ class Login extends Component {
       },
     })
       .then((response) => response.json())
-      .then(async(response) => {
+      .then(async (response) => {
         if (response.key) {
           AsyncStorage.setItem('auth-token', response.key);
-          AsyncStorage.setItem('username', this.state.username);
+          AsyncStorage.setItem('email', this.state.email);
           var userData = {
             token: response.key,
-          }
+          };
           // profile
-          await fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
+          await fetch(`${serverUrl}accounts/profile/${this.state.email}/`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ class Login extends Component {
           })
             .then((response) => response.json())
             .then((response) => {
-              userData = Object.assign(userData, response)
+              userData = Object.assign(userData, response);
             })
             .catch((err) => {
               console.error(err);
