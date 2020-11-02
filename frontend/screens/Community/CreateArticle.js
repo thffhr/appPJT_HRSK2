@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 6,
     elevation: 3,
-    width: 280,
+    width: 230,
     minHeight: 100,
   },
   next: {

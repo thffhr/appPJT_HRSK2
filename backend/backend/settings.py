@@ -172,3 +172,4 @@ MEDIA_URL = '/media/'  # 항상 / 로 끝나도록 설정
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # FORCE_SCRIPT_NAME = '/api'
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20242880
