@@ -24,7 +24,7 @@ class Article(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                         related_name='like_articles')
     bookmark_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                        related_name='bookmark_article')                                      
+                                        related_name='bookmark_article', blank=True)                                      
     num_of_like = models.IntegerField(default=0)
     isliked = models.BooleanField(default=False)
     user_1 = models.ForeignKey(

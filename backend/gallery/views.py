@@ -21,11 +21,17 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
+import copy
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def saveMenu(request):
-    def predict_img(uri):
+def getMenuInfo(request):
+    def predict_img(bs64_data):
+        # 이미지 변환해서 가져오기
+        decoded_data = base64.b64decode(bs64_data)
+        np_data = np.fromstring(decoded_data,np.uint8)
+        img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
+
         net = cv2.dnn.readNet("yolov2-food100.weights", "yolo-food100.cfg")
         classes = []
         with open("food100.names", "r") as f:
@@ -35,8 +41,8 @@ def saveMenu(request):
                          for i in net.getUnconnectedOutLayers()]
         colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-        img_path = uri
-        img = cv2.imread(img_path)
+        # img_path = uri
+        # img = cv2.imread(img_path)
         height, width, channels = img.shape
 
         blob = cv2.dnn.blobFromImage(
@@ -88,20 +94,9 @@ def saveMenu(request):
                             cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         # 리스트 형식으로 반환
         # 사진은 반환 어케?
-        return det_foods, img  # 여기서 img는 사용자에게 뿌릴 이미지
+        return det_foods  # 여기서 img는 사용자에게 뿌릴 이미지
 
-    new_menu = Menu()
-    new_menu.user = request.user
-    # type, fileName, data << 각각 프론트에서 보낼 수 있는 데이터
-    decoded_data = base64.b64decode(request.data['data'])
-    new_menu.image = ContentFile(
-        decoded_data, name=f"{request.data['fileName']}")  # url
-    print(type(new_menu.image))
-    # predict_img(new_menu.image)
-    new_menu.save()  # insert
-
-    foodlist, img = predict_img('media/' + str(new_menu.image))
-    print(foodlist)
+    foodlist = predict_img(request.data['data'])
     my_dict = {'rice': '쌀밥 한 공기',
                'eels-on-rice': '장어덮밥',
                'pilaf': '한우소고기필라프',
@@ -204,25 +199,59 @@ def saveMenu(request):
                'goya-chanpuru': '두부전'
                }
     # menu2food에 값넣기
+    Foods_lst = []
     for i in range(len(foodlist)):
         idx = foodlist[i].find("[")
-        new_food = Menu2food()
+        food_obj = {}
         fname = foodlist[i][0:idx].strip()
         kfoodName = my_dict[fname]
-        # input_menu = get_object_or_404(Menu, id=new_menu.id)
         try:
             foods = get_object_or_404(Food, DESC_KOR=kfoodName)
         except:
             foods = Food.objects.filter(DESC_KOR=kfoodName)[0]
+        food_obj['location'] = foodlist[i][idx:]  # 좌표값
+        food_obj['DESC_KOR'] = foods.DESC_KOR
+        food_obj['SERVING_SIZE'] = foods.SERVING_SIZE
+        food_obj['NUTR_CONT1'] = foods.NUTR_CONT1
+        food_obj['NUTR_CONT2'] = foods.NUTR_CONT2
+        food_obj['NUTR_CONT3'] = foods.NUTR_CONT3
+        food_obj['NUTR_CONT4'] = foods.NUTR_CONT4
+        food_obj['value'] = 1
+        Foods_lst.append(food_obj)
+    return Response(Foods_lst)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def saveMenu(request):
+    # Menu에 값넣기
+    new_menu = Menu()
+    new_menu.user = request.user
+    new_menu.mealTime = request.data['mealTime']
+    new_menu.created_at = request.data['date']
+    # type, fileName, data << 각각 프론트에서 보낼 수 있는 데이터
+    decoded_data = base64.b64decode(request.data['data'])
+    new_menu.image = ContentFile(
+        decoded_data, name=f"{request.data['fileName']}")  # url
+    new_menu.save()  # insert
+    foodName = request.data['foodName'][:-1].split(',')
+    foodVal = request.data['foodVal'][:-1].split(',')
+    foodLo = []
+    for lo in request.data['foodLo'][:-1].split('/'):
+        foodLo.append(list(map(int, lo[:-1].split(','))))
+    # menu2food에 값넣기
+    for i in range(len(foodName)):
+        new_food = Menu2food()
+        try:
+            foods = get_object_or_404(Food, DESC_KOR=foodName[i])
+        except:
+            foods = Food.objects.filter(DESC_KOR=foodName[i])[0]
         # new_food.food 는 같은 이름 찾아서 넣어야댐
-        new_food.location = foodlist[i][idx:]  # 좌표값
+        new_food.location = foodLo[i]  # 좌표값
         new_food.image = new_menu
         new_food.food = foods
+        new_food.value = int(foodVal[i])
         new_food.save()
-    # predict = predict_img('media/' + str(new_menu.image)) #db 저장 위치
     return Response("파일을 저장했습니다.")
-    # response = FileResponse(open(f"media/image/{request.data['fileName']}", 'rb'))
-    # return response
 
 
 @ api_view(['POST'])
@@ -237,6 +266,7 @@ def delImg(request, image_id):
 # 일단 내 사진 목록에서 보여줄 용도로 하나 만들어보겠음
 
 
+
 @ api_view(['POST'])
 @ permission_classes([IsAuthenticated])
 def myImgs(request):
@@ -245,6 +275,7 @@ def myImgs(request):
     for image in images:
         my_imgs.append(MenuSerializer(image).data)
     return Response(my_imgs)
+
 
 
 def getImage(request, uri):
@@ -257,7 +288,7 @@ def getImage(request, uri):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getChart(request, date):
-    Menus = Menu.objects.filter(user=request.user, created_at__contains=date)
+    Menus = Menu.objects.filter(user=request.user, created_at=date)
     Send = {'TotalCal': 0, 'Menus': {
         '아침': {}, '점심': {}, '저녁': {}, '간식': {}, '야식': {}, }}
     # Send = {'TotalCal' : 0, }
@@ -281,9 +312,10 @@ def getChart(request, date):
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
                     Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
-                total = T+D+G
-                Send['Menus'][t]['nutrient'] = [
-                    (T/total)*100, (D/total)*100, (G/total)*100]
+                if T > 0 and D > 0 and G > 0:
+                    total = T+D+G
+                    Send['Menus'][t]['nutrient'] = [
+                        (T/total)*100, (D/total)*100, (G/total)*100]
     return Response(Send)
 
 
@@ -325,8 +357,7 @@ def getCalendar(request):
     Menus = Menu.objects.filter(user=request.user)
     MenusDict = {}
     for menu in Menus:
-        created_at = str(menu.created_at)
-        target = created_at.split()[0]
+        target = str(menu.created_at)
         if target not in MenusDict.keys():
             # 아침, 점심, 저녁, 간식, 야식, 총칼로리
             MenusDict[target] = [0, 0, 0, 0, 0, 0]
@@ -358,6 +389,7 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        location = list(map(int, menu2food.location[1:-1].split(', ')))
-        lst.append([serializer.data, value, location])
+        # location = list(map(int, menu2food.location[1:-1].split(', ')))
+        location = menu2food.location
+        lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)

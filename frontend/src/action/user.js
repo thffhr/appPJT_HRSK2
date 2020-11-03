@@ -12,6 +12,7 @@ export function login(user) {
     }
 };
 
+
 // export function profileRequest(user) {
 //     return (dispatch) => {
 //         return fetch(`${serverUrl}rest-auth/login/`, {

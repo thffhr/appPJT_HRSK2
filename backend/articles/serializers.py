@@ -11,6 +11,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         format="%Y-%m-%d %H:%M:%S", required=False)
     user_1 = UserSerializer(required=False)
     user_2 = UserSerializer(required=False)
+    # bookmark_users = UserSerializer(required=False)
 
     class Meta:
         model = models.Article

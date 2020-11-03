@@ -62,7 +62,7 @@ def searchFood(request):
 
     lst.sort(key=lambda x: (x[0], x[1]))
     response = []  # (찾은 위치, 음식 이름, 음식 객체)
-    for idx, name, food in lst[:30]:
+    for idx, name, food in lst[:10]:
         print(food.DESC_KOR)
         serializer = serializers.FoodSerializer(food)
         response.append(serializer.data)
