@@ -34,7 +34,7 @@ class CreateArticle extends Component {
         content: '',
         foods: {
         },
-        recipe: {},
+        recipes: {},
         image: this.props.route.params.selected.image,
         canComment: true,
         canSearch: true,
@@ -60,13 +60,13 @@ class CreateArticle extends Component {
       count: 1,
     };
   };
-  createArticle = async(food) => {
+  createArticle = async() => {
     var myRecipe = '';
-    Object.values(this.state.articleInfo.recipe).map((value) => {
-      if (value) {
-        myRecipe = myRecipe + value + '|';
-      }
-    });
+    // Object.values(this.state.tempArticleInfo.foods[food]).map((value) => {
+    //   if (value) {
+    //     myRecipe = myRecipe + value + '|';
+    //   }
+    // });
     // this.state.articleInfo.foods.recipe.map((value) => {
     //   if (value) {
     //     myRecipe = myRecipe + value + '|';
@@ -75,7 +75,7 @@ class CreateArticle extends Component {
     await this.setState({
       articleInfo: {
         ...this.state.articleInfo,
-        recipe: myRecipe,
+        recipes: this.state.tempArticleInfo.foods,
       }
       // foods: {
       //   ...this.state.articleInfo.foods,

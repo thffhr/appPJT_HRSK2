@@ -14,7 +14,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Article
-        exclude = ['tag', 'like_users']
+        exclude = ['tag', 'like_users','bookmark_users']
         # fields = '__all__'
         # fields = ['user', 'tag', 'content', 'recipe']
         # read_only_fields = ('id', 'user', 'created_at', 'updated_at')
