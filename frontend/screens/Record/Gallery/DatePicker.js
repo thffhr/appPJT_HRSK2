@@ -17,10 +17,17 @@ export default class MyDatePicker extends Component {
     this.state = {
       date: this.props.route.params.date,
       image: null,
-      mealTimeData: {
-        mealTime: '아침',
-        modalVisible: false
-      },
+      mealTimeDrop: [{
+        value: '아침',
+      }, {
+        value: '점심',
+      }, {
+        value: '저녁',
+      }, {
+        value: '간식',
+      }, {
+        value: '야식',
+      }],
       foodInputData:{
         modalVisible: false,
       },
@@ -33,8 +40,10 @@ export default class MyDatePicker extends Component {
   }
   componentDidMount = async () => {
     const token = await AsyncStorage.getItem('auth-token');
+    const dropVal = this.state.mealTimeDrop[0].value;
     this.setState({
       token: token,
+      dropVal: dropVal,
     });
   };
   // ML에서 예측한 정보 가져오기
@@ -85,38 +94,19 @@ export default class MyDatePicker extends Component {
       .catch((error) => console.error(error));
   }
   // mealTime
-  setmealTModalVisible = (arr) => {
-    console.log(arr)
-    if (arr[1]) {
-      this.setState({ 
-        mealTimeData: {
-          ...this.state.mealTimeData,
-          modalVisible: arr[1]
-        },
-      });
-    } else {
-      this.setState({ 
-        mealTimeData: {
-          ...this.state.mealTimeData,
-          mealTime: arr[0],
-          modalVisible: arr[1],
-        },
-      });
-    }
-  };
-  getBadgeStyle() {
-    if (this.state.mealTimeData.mealTime==='아침'){
-      return {backgroundColor: this.state.badgeColors[0]}
-    }else if(this.state.mealTimeData.mealTime==='점심'){
-      return {backgroundColor: this.state.badgeColors[1]}
-    }else if(this.state.mealTimeData.mealTime==='저녁'){
-      return {backgroundColor: this.state.badgeColors[2]}
-    }else if(this.state.mealTimeData.mealTime==='간식'){
-      return {backgroundColor: this.state.badgeColors[3]}
-    }else{
-      return {backgroundColor: this.state.badgeColors[4]}
-    }
-  };
+  // getBadgeStyle() {
+  //   if (this.state.mealTimeData.mealTime==='아침'){
+  //     return {backgroundColor: this.state.badgeColors[0]}
+  //   }else if(this.state.mealTimeData.mealTime==='점심'){
+  //     return {backgroundColor: this.state.badgeColors[1]}
+  //   }else if(this.state.mealTimeData.mealTime==='저녁'){
+  //     return {backgroundColor: this.state.badgeColors[2]}
+  //   }else if(this.state.mealTimeData.mealTime==='간식'){
+  //     return {backgroundColor: this.state.badgeColors[3]}
+  //   }else{
+  //     return {backgroundColor: this.state.badgeColors[4]}
+  //   }
+  // };
   // delete modal
   setdelModalVisible = (tf, idx) => {
     if (idx > -1) {
@@ -183,7 +173,7 @@ export default class MyDatePicker extends Component {
     data.append('type', this.state.image.type);
     data.append('fileName', this.state.image.fileName);
     data.append('date', this.state.date);
-    data.append('mealTime', this.state.mealTimeData.mealTime);
+    data.append('mealTime', this.state.dropVal);
     fetch(`${serverUrl}gallery/saveMenu/`, {
       method: 'POST',
       body: data,
@@ -203,17 +193,6 @@ export default class MyDatePicker extends Component {
       .catch((error) => console.error(error));
   };
   render(){
-    let mealTimeDrop = [{
-      value: '아침',
-    }, {
-      value: '점심',
-    }, {
-      value: '저녁',
-    }, {
-      value: '간식',
-    }, {
-      value: '야식',
-    }];
     return (
       <SafeAreaView style={styles.container}>
         {/* del modal */}
@@ -307,42 +286,9 @@ export default class MyDatePicker extends Component {
               marginRight: 20}}>확인</Text>
           </TouchableOpacity>
         </View>
-        {/* mealTime 뱃지 => 드롭다운으로 수정 예정 */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.mealTimeData.modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.mealTmodalView}>
-              <TouchableHighlight style={[styles.innerBtn, {backgroundColor: this.state.badgeColors[0]}]} onPress={() => this.setmealTModalVisible(['아침', !this.state.mealTimeData.modalVisible])}>
-                <Text style={styles.textStyle}>아침</Text>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.innerBtn, {backgroundColor: this.state.badgeColors[1]}]} onPress={() => this.setmealTModalVisible(['점심', !this.state.mealTimeData.modalVisible])}>
-                <Text style={styles.textStyle}>점심</Text>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.innerBtn, {backgroundColor: this.state.badgeColors[2]}]}  onPress={() => this.setmealTModalVisible(['저녁', !this.state.mealTimeData.modalVisible])}>
-                <Text style={styles.textStyle}>저녁</Text>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.innerBtn, {backgroundColor: this.state.badgeColors[3]}]}  onPress={() => this.setmealTModalVisible(['간식', !this.state.mealTimeData.modalVisible])}>
-                <Text style={styles.textStyle}>간식</Text>
-              </TouchableHighlight>
-              <TouchableHighlight style={[styles.innerBtn, {backgroundColor: this.state.badgeColors[4]}]}  onPress={() => this.setmealTModalVisible(['야식', !this.state.mealTimeData.modalVisible])}>
-                <Text style={styles.textStyle}>야식</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-        {/* datepicker */}
         <View style={styles.detailArea}>
-          <Dropdown
-            label={this.state.mealTimeData.mealTime}
-            data={mealTimeDrop}
-            />
           <View style={styles.detailHeader}>
+            {/* datepicker */}
             <DatePicker
               style={{width: 120, backgroundColor: '#fff'}}
               date={this.state.date}
@@ -359,15 +305,16 @@ export default class MyDatePicker extends Component {
               }}
               onDateChange={(date) => {this.setState({date: date})}}
             />
-            {/* <TouchableHighlight
-              style={[styles.openButton, this.getBadgeStyle()]}
-              onPress={() => {
-                this.setmealTModalVisible(['', true]);
-              }}
-            >
-              <Text style={styles.textStyle}>{this.state.mealTimeData.mealTime}</Text>
-            </TouchableHighlight> */}
-            
+            {/* mealTime => 커스텀 해야됌(getBadgeStyle()...) */}
+            <Dropdown
+              // label='시간을 선택하세요.'
+              data={this.state.mealTimeDrop}
+              value={this.state.dropVal}
+              containerStyle = {styles.dropdown}
+              pickerStyle = {styles.dropdownPicker}
+              dropdownOffset={{ 'top': 10 }}
+              onChangeText={(value)=> {this.setState({value});}}    
+              />
           </View>
           <ScrollView style={styles.imageBody}>
             {this.state.image === null && (
@@ -651,22 +598,22 @@ const styles = StyleSheet.create({
     right: -10,
     marginTop: 22
   },
-  mealTmodalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
+  // mealTmodalView: {
+  //   margin: 20,
+  //   backgroundColor: "white",
+  //   borderRadius: 20,
+  //   paddingHorizontal: 20,
+  //   paddingVertical: 15,
+  //   alignItems: "center",
+  //   shadowColor: "#000",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 3.84,
+  //   elevation: 5
+  // },
   openButton: {
     borderRadius: 20,
     paddingVertical: 10,
@@ -726,6 +673,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 100,
     marginHorizontal: 20,
+  },
+  //dropdown(mealTime)
+  dropdown: {
+    width: '30%',
+  },
+  dropdownPicker: {
+    width: '30%',
+    position: 'absolute',
+    left: '68%',
+    top: '19%',
+    // right: 0,
   },
   // modalText: {
   //   marginBottom: 15,
