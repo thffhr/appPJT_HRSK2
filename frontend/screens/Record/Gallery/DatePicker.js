@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, Dimensions, Modal, TouchableHighlight, AsyncStorage } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, Dimensions, Modal, TouchableHighlight, TouchableOpacity, AsyncStorage } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions, TabRouter} from '@react-navigation/native';
 import {serverUrl} from '../../../constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import FoodInput from '../FoodInput/FoodInput';
 
 import Camera from '../../Camera/Camera';
@@ -269,7 +268,7 @@ export default class MyDatePicker extends Component {
           }}>
           {/* <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 20,}}> */}
           <View style={styles.FImodalView}>
-            <FoodInput image={this.state.image}/>
+            <FoodInput image={this.state.image === null ? null:this.state.image}/>
             <View style={{flexDirection:'row'}}>
               <TouchableHighlight
                 style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}>

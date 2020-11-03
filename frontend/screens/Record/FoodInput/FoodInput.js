@@ -64,17 +64,23 @@ export default class Camera extends Component {
   render() {
     return (
         <View>
-          {/* <Text style={{marginBottom: 20}}>여기서 음식정보를 입력해줄거야</Text> */}
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>영역선택</Text>
-            <TouchableOpacity onPress={this.cropImg}>
-              <Image
-                style={{height: 100, width: 100}}
-                source={{
-                  uri: `data:image/jpeg;base64,${this.props.image.data}`,
-                }}
-              />
-            </TouchableOpacity>
+            {this.props.image !== null && (
+              <TouchableOpacity onPress={this.cropImg}>
+                <Image
+                  style={{height: 100, width: 100}}
+                  source={{
+                    uri: `data:image/jpeg;base64,${this.props.image.data}`,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+            {this.props.image === null && (
+              <View style={{height: 100, width: 100, backgroundColor: '#fff', borderRadius: 5, justifyContent: 'center', alignItems: 'center', padding: 20}}>
+                <Text style={{color: '#BEBEBE'}}>사진없음</Text>
+              </View>
+            )}
           </View>
           <View>
             <Text>음식이름</Text>
