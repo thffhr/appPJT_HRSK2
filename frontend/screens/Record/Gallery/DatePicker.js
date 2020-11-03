@@ -3,6 +3,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View, Text, Image, Dimensions, Mo
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions, TabRouter} from '@react-navigation/native';
+import { Dropdown } from 'react-native-material-dropdown';
 import {serverUrl} from '../../../constants';
 import FoodInput from '../FoodInput/FoodInput';
 
@@ -202,6 +203,17 @@ export default class MyDatePicker extends Component {
       .catch((error) => console.error(error));
   };
   render(){
+    let mealTimeDrop = [{
+      value: '아침',
+    }, {
+      value: '점심',
+    }, {
+      value: '저녁',
+    }, {
+      value: '간식',
+    }, {
+      value: '야식',
+    }];
     return (
       <SafeAreaView style={styles.container}>
         {/* del modal */}
@@ -326,6 +338,10 @@ export default class MyDatePicker extends Component {
         </Modal>
         {/* datepicker */}
         <View style={styles.detailArea}>
+          <Dropdown
+            label={this.state.mealTimeData.mealTime}
+            data={mealTimeDrop}
+            />
           <View style={styles.detailHeader}>
             <DatePicker
               style={{width: 120, backgroundColor: '#fff'}}
@@ -343,14 +359,14 @@ export default class MyDatePicker extends Component {
               }}
               onDateChange={(date) => {this.setState({date: date})}}
             />
-            <TouchableHighlight
+            {/* <TouchableHighlight
               style={[styles.openButton, this.getBadgeStyle()]}
               onPress={() => {
                 this.setmealTModalVisible(['', true]);
               }}
             >
               <Text style={styles.textStyle}>{this.state.mealTimeData.mealTime}</Text>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
             
           </View>
           <ScrollView style={styles.imageBody}>
