@@ -171,10 +171,7 @@ export default class UserFeed extends Component {
               {!this.state.userData.profileImage && (
                 <Image
                   style={styles.profileImg}
-                  source={{
-                    uri:
-                      'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                  }}
+                  source={require('../../assets/images/default-profile.png')}
                 />
               )}
               <Text
@@ -237,7 +234,7 @@ export default class UserFeed extends Component {
                     this.setState({
                       selected: {id: article.id, image: article.image},
                     });
-                    this.props.navigation.push('MyFeed', {
+                    this.props.navigation.push('MyFeedDetail', {
                       article: article,
                     });
                   }}>

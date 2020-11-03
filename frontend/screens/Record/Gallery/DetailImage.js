@@ -43,13 +43,11 @@ export default class DetatilImage extends Component {
     });
   }
   getFood = () => {
-    console.log(typeof this.state.imageId);
     fetch(`${serverUrl}gallery/getFood/${this.state.imageId}/`, {
       method: 'POST',
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(this.state.mealTime);
         this.setState({
           foods: response,
         });
@@ -189,9 +187,7 @@ export default class DetatilImage extends Component {
             </View>
           </View>
         </Modal>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
+
         <View style={styles.detailArea}>
           <View style={styles.detailHeader}>
             {/* <Icon
@@ -396,20 +392,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     backgroundColor: '#fbfbe6',
-  },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
-    backgroundColor: '#fca652',
-  },
-  haru: {
-    fontSize: 30,
-    fontFamily: 'BMJUA',
-    color: '#fff',
   },
   detailArea: {
     margin: 1,

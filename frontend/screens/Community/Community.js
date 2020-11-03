@@ -193,10 +193,7 @@ class Community extends Component {
                           {!article.user.profileImage && (
                             <Image
                               style={styles.writerImg}
-                              source={{
-                                uri:
-                                  'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                              }}
+                              source={require('../../assets/images/default-profile.png')}
                             />
                           )}
                           
