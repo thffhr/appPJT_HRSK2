@@ -282,20 +282,6 @@ export default class MyDatePicker extends Component {
               saveFoodInfo={(foodInfo) => this.addFoodInfo(foodInfo)}
               close={(tf) => this.setFIModalVisible(tf)}
               />
-            {/* <View style={{flexDirection:'row', marginTop: 10}}>
-              <TouchableHighlight
-                style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}>
-                <Text>저장</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
-                onPress={() => {
-                  this.setFIModalVisible(!this.state.foodInputData.modalVisible);
-                }}
-                >
-                <Text>취소</Text>
-              </TouchableHighlight>
-            </View> */}
           </View>
           </View>
         </Modal>
@@ -423,8 +409,10 @@ export default class MyDatePicker extends Component {
               {this.state.foodsLst &&
                 this.state.foodsLst.map((foodData, i) => {
                   return (
+                  <View>
                     <TouchableOpacity style={{
-                      marginHorizontal: 10,
+                      marginLeft: 10,
+                      marginTop: 5,
                       alignSelf: 'center',
                       justifyContent: 'center',
                       width: 60,
@@ -435,8 +423,22 @@ export default class MyDatePicker extends Component {
                       borderColor: this.state.colors[i]}}
                       key={i}
                       onPress={() => this.changeView(foodData['DESC_KOR'])}>
-                        <Text style={{fontSize: 15, alignSelf: 'center'}}>{foodData['DESC_KOR']}</Text>
+                        {/* <Text style={{fontSize: 15, alignSelf: 'center'}}>{foodData['DESC_KOR'].slice(0, 3)}..</Text> */}
+                        <>
+                        {foodData['DESC_KOR'].length <= 3 && (
+                          <Text style={{fontSize: 15, alignSelf: 'center'}}>{foodData['DESC_KOR']}</Text>
+                        )}
+                        {foodData['DESC_KOR'].length > 3 && (
+                          <Text style={{fontSize: 15, alignSelf: 'center'}}>{foodData['DESC_KOR'].slice(0, 3)}..</Text>
+                        )}
+                        </>
                     </TouchableOpacity>
+                    {/* <TouchableOpacity
+                    onPress={this.setdelModalVisible(true, i)}
+                    style={{position: 'absolute', right: 2, top: 5,}}>
+                      <Icon name='remove-circle' style={{fontSize: 20}}></Icon>
+                    </TouchableOpacity> */}
+                  </View>
                 );
               })}
               </ScrollView>

@@ -12,7 +12,7 @@ export default class Camera extends Component {
     super(props);
 
     this.state = {
-      // recommendLst: [],
+      // foodInfo: this.props.existingInfo
     }
   };
   componentDidMount = async () => {
@@ -40,7 +40,7 @@ export default class Camera extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        if(response) {
+        if(response.length > 0) {
           this.setState({
             showRecommend: true,
             recommendLst: response,
@@ -51,22 +51,24 @@ export default class Camera extends Component {
       .catch((error) => console.error(error));
   };
   chooseFood(idx) {
+    var selectedFood = this.state.recommendLst[idx]
+    if (!selectedFood['SERVING_SIZE']) {
+      selectedFood['SERVING_SIZE'] = 0
+    } else if (!selectedFood['NUTR_CONT1']) {
+      selectedFood['NUTR_CONT1'] = 0
+    } else if (!selectedFood['NUTR_CONT2']) {
+      selectedFood['NUTR_CONT2'] = 0
+    } else if (!selectedFood['NUTR_CONT3']) {
+      selectedFood['NUTR_CONT3'] = 0
+    } else if (!selectedFood['NUTR_CONT4']) {
+      selectedFood['NUTR_CONT4'] = 0
+    }
     this.setState({
       showRecommend: false,
-      foodInfo: this.state.recommendLst[idx]
+      foodInfo: selectedFood,
     })
   };
   saveFoodInfo() {
-    // let foodInfo = {}
-    // foodInfo['location'] = []
-    // foodInfo['DESC_KOR'] = this.state.foodInfo.DESC_KOR
-    // foodInfo['SERVING_SIZE'] = this.state.foodInfo.SERVING_SIZE
-    // foodInfo['NUTR_CONT1'] = this.state.foodInfo.NUTR_CONT1
-    // foodInfo['NUTR_CONT2'] = this.state.foodInfo.NUTR_CONT2
-    // foodInfo['NUTR_CONT3'] = this.state.foodInfo.NUTR_CONT3
-    // foodInfo['NUTR_CONT4'] = this.state.foodInfo.NUTR_CONT4
-    // foodInfo['value'] = 1
-    // this.props.saveFoodInfo(foodInfo);
     this.props.saveFoodInfo(this.state.foodInfo);
   };
   close(tf) {
