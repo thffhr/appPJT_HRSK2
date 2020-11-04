@@ -23,6 +23,7 @@ export default class Camera extends Component {
     });
   };
   recommend = (text) => {
+    // dkdkdkkd
     this.setState({
       foodInfo: {
         DESC_KOR: text
