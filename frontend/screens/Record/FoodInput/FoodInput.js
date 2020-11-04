@@ -165,7 +165,7 @@ export default class Camera extends Component {
               </View>
             </View>
           </View>
-          <View style={{flexDirection:'row', marginTop: 10}}>
+          <View style={{flexDirection:'row', marginTop: 10, justifyContent: 'center'}}>
             <TouchableHighlight
               style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
               onPress={() => {
