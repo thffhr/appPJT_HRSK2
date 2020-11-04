@@ -12,7 +12,7 @@ export default class Camera extends Component {
     super(props);
 
     this.state = {
-      // recommendLst: [],
+      // foodInfo: this.props.existingInfo
     }
   };
   componentDidMount = async () => {
@@ -23,7 +23,11 @@ export default class Camera extends Component {
     });
   };
   recommend = (text) => {
-    // this.setState({username: text});
+    this.setState({
+      foodInfo: {
+        DESC_KOR: text
+      },
+    });
     var data = new FormData();
     data.append('search', text);
     fetch(`${serverUrl}food/search/`, {
@@ -36,7 +40,7 @@ export default class Camera extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        if(response) {
+        if(response.length > 0) {
           this.setState({
             showRecommend: true,
             recommendLst: response,
@@ -47,10 +51,28 @@ export default class Camera extends Component {
       .catch((error) => console.error(error));
   };
   chooseFood(idx) {
+    var selectedFood = this.state.recommendLst[idx]
+    if (!selectedFood['SERVING_SIZE']) {
+      selectedFood['SERVING_SIZE'] = 0
+    } else if (!selectedFood['NUTR_CONT1']) {
+      selectedFood['NUTR_CONT1'] = 0
+    } else if (!selectedFood['NUTR_CONT2']) {
+      selectedFood['NUTR_CONT2'] = 0
+    } else if (!selectedFood['NUTR_CONT3']) {
+      selectedFood['NUTR_CONT3'] = 0
+    } else if (!selectedFood['NUTR_CONT4']) {
+      selectedFood['NUTR_CONT4'] = 0
+    }
     this.setState({
       showRecommend: false,
-      foodInfo: this.state.recommendLst[idx]
+      foodInfo: selectedFood,
     })
+  };
+  saveFoodInfo() {
+    this.props.saveFoodInfo(this.state.foodInfo);
+  };
+  close(tf) {
+    this.props.close(tf);
   };
   // cropImg() {
   //   ImagePicker.openPicker({
@@ -88,7 +110,7 @@ export default class Camera extends Component {
               style={[styles.inputArea, {width: W * 0.7,}]}
               placeholder="음식이름을 입력하세요."
               onChangeText={this.recommend}
-              // value={this.state.foodInfo? this.state.foodInfo.DESC_KOR:}
+              value={this.state.foodInfo? this.state.foodInfo.DESC_KOR:''}
             />
             {/* 여기에 추천 검색어가 뜨도록 */}
             {this.state.recommendLst && this.state.showRecommend &&(
@@ -103,42 +125,65 @@ export default class Camera extends Component {
               </View>
             )}
           </View>
-          <View style={styles.inputline}>
-            <Text style={styles.labeltxt}>칼로리</Text>
-            <TextInput
-              style={[styles.inputArea, {width: W * 0.4,}]}
-              value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT1:''}
-              placeholder="칼로리"
-            />
-            <Text style={styles.labeltxt}>kcal</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{marginRight: 10}}>
+              <Text style={styles.labeltxt}>칼로리</Text>
+              <Text style={styles.labeltxt}>탄수화물</Text>
+              <Text style={styles.labeltxt}>단백질</Text>
+              <Text style={styles.labeltxt}>지방</Text>
+            </View>
+            <View>
+              <View style={styles.inputline}>
+                <TextInput
+                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT1:'0'}
+                  placeholder="칼로리"
+                />
+                <Text style={styles.labeltxt}>kcal</Text>
+              </View>
+              <View style={styles.inputline}>
+                <TextInput
+                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  placeholder="탄수화물"
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT2:'0'}
+                />
+                <Text style={styles.labeltxt}>g</Text>
+              </View>
+              <View style={styles.inputline}>
+                <TextInput
+                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  placeholder="단백질"
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT3:'0'}
+                />
+                <Text style={styles.labeltxt}>g</Text>
+              </View>
+              <View style={styles.inputline}>
+                <TextInput
+                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  placeholder="지방"
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT4:'0'}
+                />
+                <Text style={styles.labeltxt}>g</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.inputline}>
-            <Text style={styles.labeltxt}>탄수화물</Text>
-            <TextInput
-              style={[styles.inputArea, {width: W * 0.4,}]}
-              placeholder="탄수화물"
-              value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT2:''}
-            />
-            <Text style={styles.labeltxt}>g</Text>
-          </View>
-          <View style={styles.inputline}>
-            <Text style={styles.labeltxt}>단백질</Text>
-            <TextInput
-              style={[styles.inputArea, {width: W * 0.4,}]}
-              placeholder="단백질"
-              value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT3:''}
-            />
-            <Text style={styles.labeltxt}>g</Text>
-          </View>
-          <View style={styles.inputline}>
-            <Text style={styles.labeltxt}>지방</Text>
-            <TextInput
-              style={[styles.inputArea, {width: W * 0.4,}]}
-              placeholder="지방"
-              value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT4:''}
-            />
-            <Text style={styles.labeltxt}>g</Text>
-          </View>
+          <View style={{flexDirection:'row', marginTop: 10, justifyContent: 'center'}}>
+            <TouchableHighlight
+              style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
+              onPress={() => {
+                this.saveFoodInfo();
+              }}>
+              <Text>저장</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
+              onPress={() => {
+                this.close(false);
+              }}
+              >
+              <Text>취소</Text>
+            </TouchableHighlight>
+            </View>
         </View>
     )
   }
@@ -158,12 +203,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: '#fff',
-    marginTop: H * 0.01,
-    marginBottom: H * 0.01,
+    marginVertical: H * 0.01,
+    marginRight: 5,
     padding: W * 0.02,
   },
   labeltxt: {
-    marginVertical: H * 0.01,
-    marginHorizontal: H * 0.01,
+    marginVertical: H * 0.03,
+    marginRight: 10
+  },
+  FImodalButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 100,
+    marginHorizontal: 20,
   },
 })
