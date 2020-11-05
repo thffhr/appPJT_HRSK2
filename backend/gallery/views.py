@@ -87,7 +87,7 @@ def getMenuInfo(request):
                 # print(confidences[i]) #검출된 확률
                 color = colors[i]
                 # 사각형 테두리 그리기 및 텍스트 쓰기
-                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                cv2.rectangle(img, (x/width, y/height), ((x + w)/width, (y + h)/height), color, 2)
                 cv2.rectangle(img, (x - 1, y),
                               (x + len(class_name) * 13, y - 12), color, -1)
                 cv2.putText(img, class_name, (x, y - 4),
