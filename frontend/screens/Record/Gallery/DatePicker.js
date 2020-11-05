@@ -65,32 +65,13 @@ export default class MyDatePicker extends Component {
       .then((response) => response.json())
       .then((response) => {
         // 여기서 this.setState 한번만 더 할게요
-        // this.setState({
-        //   foodsLst: this.state.foodsLst.concat(response),
-        //   nowView: response[0]['DESC_KOR'],
-        // });
-        let testData = [{
-          location: [0, 100, 100, 100],
-          DESC_KOR: '즉석쌀국수',
-          SERVING_SIZE: 300,
-          NUTR_CONT1: 350,
-          NUTR_CONT2: 75,
-          NUTR_CONT3: 6.2,
-          NUTR_CONT4: 3.5,
-          value: 1
-        },{
-          location: [100, 100, 100, 100],
-          DESC_KOR: '새우볶음밥',
-          SERVING_SIZE: 500,
-          NUTR_CONT1: 480,
-          NUTR_CONT2: 89,
-          NUTR_CONT3: 5.3,
-          NUTR_CONT4: 2.6,
-          value: 1
-        },]
+        var temp = this.state.foodsLst
+        for (var idx = 0; idx < response.length; idx++) {
+          temp.push(response[idx]);
+        }
         this.setState({
-          foodsLst: this.state.foodsLst.concat(testData),
-          nowView: '즉석쌀국수'
+          foodsLst: temp,
+          nowView: response[0]['DESC_KOR'],
         });
       })
       .catch((error) => console.error(error));
@@ -130,14 +111,14 @@ export default class MyDatePicker extends Component {
     
   };
   delMenu () {   
-    console.log(this.state.delData.idx);
+    // console.log(this.state.delData.idx);
     if (this.state.delData.idx > -1) {
       this.state.foodsLst.splice(this.state.delData.idx, 1)}
     this.setdelModalVisible(false, -1)
   };
   // food 추가
   addFoodInfo(foodInfo) {
-    let newFoodInfo = {}
+    var newFoodInfo = {}
     newFoodInfo['location'] = []
     newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR
     newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE
@@ -146,8 +127,11 @@ export default class MyDatePicker extends Component {
     newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3
     newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4
     newFoodInfo['value'] = 1
+    // console.log(newFoodInfo)
+    const temp = this.state.foodsLst.concat(newFoodInfo)
+    // console.log(temp)
     this.setState({
-      foodsLst: this.state.foodsLst.concat(newFoodInfo),
+      foodsLst: temp,
       nowView: newFoodInfo['DESC_KOR'],
     })
     this.setFIModalVisible(false)
@@ -341,10 +325,14 @@ export default class MyDatePicker extends Component {
               {/* 로컬리제이션 박스 표시 */}
               {this.state.foodsLst &&
                 this.state.foodsLst.map((foodData, i) => {
-                  const k = 0.8;
+                  // 이미지 크기 = 화면 폭
+                  const k = width;
                   const color = this.state.colors[i % 5];
+                  // console.log('여기야 여기!!!!',foodData['location'])
                   return (
-                    <View
+                    <>
+                    {foodData['location'].length > 0 && (
+                      <View
                       style={{
                         position: 'absolute',
                         left: foodData['location'][0] * k,
@@ -372,6 +360,8 @@ export default class MyDatePicker extends Component {
                         </Text>
                       </View>
                     </View>
+                    )}
+                    </>
                   );
                 })}
             </View>
@@ -409,7 +399,7 @@ export default class MyDatePicker extends Component {
               {this.state.foodsLst &&
                 this.state.foodsLst.map((foodData, i) => {
                   return (
-                  <View>
+                  <View key={i}>
                     <TouchableOpacity style={{
                       marginLeft: 10,
                       marginTop: 5,
@@ -421,7 +411,6 @@ export default class MyDatePicker extends Component {
                       borderRadius: 100,
                       borderWidth: 3,
                       borderColor: this.state.colors[i]}}
-                      key={i}
                       onPress={() => this.changeView(foodData['DESC_KOR'])}>
                         {/* <Text style={{fontSize: 15, alignSelf: 'center'}}>{foodData['DESC_KOR'].slice(0, 3)}..</Text> */}
                         <>

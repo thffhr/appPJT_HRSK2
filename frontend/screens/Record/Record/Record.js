@@ -242,45 +242,45 @@ class Record extends Component {
   //   });
   // };
 
-  // minusCnt = (year, month, date, day, cnt, menu2food_id) => {
-  //   if (cnt <= 1) {
-  //     this.setModalVisible(true, year, month, date, menu2food_id);
-  //   } else {
-  //     var form = new FormData();
-  //     form.append('menu2food_id', menu2food_id);
-  //     fetch(`${serverUrl}gallery/minusCnt/`, {
-  //       method: 'POST',
-  //       body: form,
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Token ${this.state.token}`,
-  //       },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((response) => {
-  //         this.onFetch(year, month, date, day);
-  //       })
-  //       .catch((err) => console.error(err));
-  //   }
-  // };
+  minusCnt = (year, month, date, day, cnt, menu2food_id) => {
+    if (cnt <= 1) {
+      this.setModalVisible(true, year, month, date, menu2food_id);
+    } else {
+      var form = new FormData();
+      form.append('menu2food_id', menu2food_id);
+      fetch(`${serverUrl}gallery/minusCnt/`, {
+        method: 'POST',
+        body: form,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.onFetch(year, month, date, day);
+        })
+        .catch((err) => console.error(err));
+    }
+  };
 
-  // plusCnt = (year, month, date, day, menu2food_id) => {
-  //   var form = new FormData();
-  //   form.append('menu2food_id', menu2food_id);
-  //   fetch(`${serverUrl}gallery/plusCnt/`, {
-  //     method: 'POST',
-  //     body: form,
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //       Authorization: `Token ${this.state.token}`,
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       this.onFetch(year, month, date, day);
-  //     })
-  //     .catch((err) => console.error(err));
-  // };
+  plusCnt = (year, month, date, day, menu2food_id) => {
+    var form = new FormData();
+    form.append('menu2food_id', menu2food_id);
+    fetch(`${serverUrl}gallery/plusCnt/`, {
+      method: 'POST',
+      body: form,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Token ${this.state.token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.onFetch(year, month, date, day);
+      })
+      .catch((err) => console.error(err));
+  };
 
   setModalVisible = (visible, year, month, date, menu2food_id) => {
     this.setState({
@@ -498,7 +498,12 @@ class Record extends Component {
                           <Icon name='create-outline' style={{fontSize: 20}}></Icon>
                         </TouchableOpacity>
                         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                          <MyCarousel Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime, width]} key={idx}/>
+                          <MyCarousel
+                          Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime, width]}
+                          Minus={(year, month, date, day, cnt, menu2food_id) => this.minusCnt(year, month, date, day, cnt, menu2food_id)}
+                          Plus={(year, month, date, day, menu2food_id) => this.plusCnt(year, month, date, day, menu2food_id)}
+                          key={idx}
+                          />
                         </View>
                       </View>
                     </>

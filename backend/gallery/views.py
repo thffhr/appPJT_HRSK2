@@ -209,7 +209,9 @@ def getMenuInfo(request):
             foods = get_object_or_404(Food, DESC_KOR=kfoodName)
         except:
             foods = Food.objects.filter(DESC_KOR=kfoodName)[0]
-        food_obj['location'] = foodlist[i][idx:]  # 좌표값
+        locationStr = foodlist[i][idx:]
+        location = list(map(int, locationStr[1:-1].split(',')))
+        food_obj['location'] = location  # 좌표값
         food_obj['DESC_KOR'] = foods.DESC_KOR
         food_obj['SERVING_SIZE'] = foods.SERVING_SIZE
         food_obj['NUTR_CONT1'] = foods.NUTR_CONT1
@@ -218,6 +220,8 @@ def getMenuInfo(request):
         food_obj['NUTR_CONT4'] = foods.NUTR_CONT4
         food_obj['value'] = 1
         Foods_lst.append(food_obj)
+        print(food_obj['location'])
+        print(type(Foods_lst[0]['location']))
     return Response(Foods_lst)
 
 @api_view(['POST'])
