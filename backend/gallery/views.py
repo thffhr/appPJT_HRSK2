@@ -87,7 +87,16 @@ def getMenuInfo(request):
                 # print(confidences[i]) #검출된 확률
                 color = colors[i]
                 # 사각형 테두리 그리기 및 텍스트 쓰기
-                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+
+                nx = (x + w) / width
+                ny = (y + h) / height
+
+                if nx > 1:
+                    nx = 1
+                if ny > 1:
+                    ny =1
+
+                cv2.rectangle(img, (x/width, y/height), (nx,ny), color, 2)
                 cv2.rectangle(img, (x - 1, y),
                               (x + len(class_name) * 13, y - 12), color, -1)
                 cv2.putText(img, class_name, (x, y - 4),
@@ -97,118 +106,16 @@ def getMenuInfo(request):
         return det_foods  # 여기서 img는 사용자에게 뿌릴 이미지
 
     foodlist = predict_img(request.data['data'])
-    my_dict = {'rice': '쌀밥 한 공기',
-               'eels-on-rice': '장어덮밥',
-               'pilaf': '한우소고기필라프',
-               'chicken-n-egg-on-rice': '전복치킨진밥',
-               'pork-cutlet-on-rice': '등심돈가스',
-               'beef-curry': '카레라이스',
-               'sushi': '초밥, 모듬 초밥',
-               'chicken-rice': '치킨까스',
-               'fried-rice': '계란볶음밥',
-               'tempura-bowl': '채소튀김',
-               'bibimbap': '비빔밥',
-               'toast': '베이컨 치즈 토스트',
-               'croissant': '빵, 크로와상',
-               'roll-bread': '빵, 하드 롤빵',
-               'raisin-bread': '건포도토종효모빵용 빵',
-               'chip-butty': '허니버터칩메이플시럽',
-               'hamburger': '햄버거',
-               'pizza': '피자',
-               'sandwiches': '샌드위치',
-               'udon-noodle': '우동',
-               'tempura-udon': '튀김우동',
-               'soba-noodle': '메밀소바',
-               'ramen-noodle': '돈코츠라멘',
-               'beef-noodle': '즉석쌀국수',
-               'tensin-noodle': '사누끼 생칼국수',
-               'fried-noodle': '튀김우동 큰사발',
-               'spaghetti': '스파게티',
-               'Japanese-style-pancake': '케이크, 팬케이크',
-               'takoyaki': '타코야끼볼',
-               'gratin': '콘치즈그라탕',
-               'sauteed-vegetables': '감자채소볶음',
-               'croquette': '빵, 크로켓',
-               'grilled-eggplant': '가치, 구운것',
-               'sauteed-spinach': '시금치, 볶은것',
-               'vegetable-tempura': '야채전',
-               'miso-soup': '일본된장국',
-               'potage': '카메다 포타포타야키',
-               'sausage': '그릴소세지',
-               'oden': '어묵국',
-               'omelet': '오믈렛',
-               'ganmodoki': '두부류 또는 묵류',
-               'jiaozi': '감자떡만두',
-               'stew': '스튜, 레토르트',
-               'teriyaki-grilled-fish': '가자미구이',
-               'fried-fish': '생선까스',
-               'grilled-salmon': '연어-훈제품',
-               'salmon-meuniere': '연어',
-               'sashimi': '사시미',
-               'grilled-pacific-saury-': '꽁치',
-               'sukiyaki': '소고기샤브샤브',
-               'sweet-and-sour-pork': '돼지고기, 갈비, 구운것(팬)',
-               'lightly-roasted-fish': '고등어구이',
-               'steamed-egg-hotchpotch': '계란사라다빵',
-               'tempura': '모둠튀김',
-               'fried-chicken': '갓치킨',
-               'sirloin-cutlet': '덴까스 립',
-               'nanbanzuke': '돈까스',
-               'boiled-fish': '고등어찌개',
-               'seasoned-beef-with-potatoes': '감자샐러드',
-               'hambarg-steak': '햄버거',
-               'beef-steak': '블랙앵거스 스테이크(오리지널 M)',
-               'dried-fish': '고등어, 반건조',
-               'ginger-pork-saute': '돼지고기장조림',
-               'spicy-chili-flavored-tofu': '무조림',
-               'yakitori': '쿠리 이리 도라야키',
-               'cabbage-roll': '달걀부침, 부친것',
-               'rolled-omelet': '달걀말이',
-               'egg-sunny-side-up': '달걀프라이',
-               'fermented-soybeans': '나토',
-               'cold-tofu': '무조림',
-               'egg-roll': '에그롤',
-               'chilled-noodle': '막국수',
-               'stir-fried-beef-and-peppers': '돼지고기장조림',
-               'simmered-pork': '돼지고기장조림',
-               'boiled-chicken-and-vegetables': '케이준치킨샐러드',
-               'sashimi-bowl': '생선모둠초밥',
-               'sushi-bowl': '생선모둠초밥',
-               'fish-shaped-pancake-with-bean-jam': '팬케이크',
-               'shrimp-with-chill-source': '칠리새우',
-               'roast-chicken': 'The 오븐치킨',
-               'steamed-meat-dumpling': '만두, 고기 만두',
-               'omelet-with-fried-rice': '볶음밥, 오므라이스',
-               'cutlet-curry': '비프 청크 카레',
-               'spaghetti-meat-sauce': '미트라구 파스타',
-               'fried-shrimp': '새우튀김',
-               'potato-salad': '감자 샐러드',
-               'green-salad': '양배추 샐러드, 코울슬로',
-               'macaroni-salad': '파스타, 마카로니',
-               'Japanese-tofu-and-vegetable-chowder': '야채빵',
-               'pork-miso-soup': '된장찌개',
-               'chinese-soup': '치즈, 크림',
-               'beef-bowl': '된장찌개',
-               'kinpira-style-sauteed-burdock': '우엉조림',
-               'rice-ball': '쇠고기주먹밥',
-               'pizza-toast': '피자토스트',
-               'dipping-noodles': '칼국수, 해물',
-               'hot-dog': '옛날 핫도그',
-               'french-fries': '감자튀김',
-               'mixed-rice': '볶음밥, 오므라이스',
-               'goya-chanpuru': '두부전'
-               }
     # menu2food에 값넣기
     Foods_lst = []
     for i in range(len(foodlist)):
         idx = foodlist[i].find("[")
         food_obj = {}
         fname = foodlist[i][0:idx].strip()
-        kfoodName = my_dict[fname]
         try:
-            foods = get_object_or_404(Food, DESC_KOR=kfoodName)
+            foods = get_object_or_404(Food, DESC_KOR=fname)
         except:
-            foods = Food.objects.filter(DESC_KOR=kfoodName)[0]
+            foods = Food.objects.filter(DESC_KOR=fname)[0]
         locationStr = foodlist[i][idx:]
         location = list(map(int, locationStr[1:-1].split(',')))
         food_obj['location'] = location  # 좌표값

@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from accounts.models import User
+from .models import Recipe
+from .models import Article
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -34,6 +36,23 @@ def create(request):
     # 태그는 string으로 받아서 split하기->for로 중복확인/저장(추가 필요)
     if new_article.is_valid(raise_exception=True):
         new_article.save(user=request.user)
+        nnew_article = Article.objects.order_by('-pk')[0]
+
+        #음식이 없으면 recipe 안생김
+        for food in request.data['foods']:  # key가 food에
+            print(food)
+            new_recipe = Recipe()
+            s = ""
+            for text in request.data['foods'][food]:
+                s =  s+ text+"/"
+            new_recipe.content = s
+            new_recipe.foodname = food
+            new_recipe.article = nnew_article
+            new_recipe.save()
+            # print(new_article)
+            # if (new_recipe.is_valid(raise_exception=True)):  
+            #     new_recipe.save(article = new_article)
+
         return Response(new_article.data)
 
 
