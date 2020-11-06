@@ -16,8 +16,8 @@ import {
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { serverUrl } from '../../constants';
-import { connect } from 'react-redux';
+import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -139,29 +139,34 @@ class Community extends Component {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
-              </TouchableHighlight>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text
+                  style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>
+                  레시피
+                </Text>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <Icon name="close-outline" style={{fontSize: 25}}></Icon>
+                </TouchableHighlight>
               </View>
-              <View style={{margin:10, alignContent: 'center'}}>
-              {this.state.modalData
-                .split('|')
-                .filter((word) => word)
-                .map((line, i) => {
-                  return (
-                    <View style={{flexDirection: 'row', marginVertical: 3}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
-                    <Text style={{fontSize: 17}}>
-                      {line}
-                    </Text>
-                    </View>
-                  );
-                })}
+              <View style={{margin: 10, alignContent: 'center'}}>
+                {/* {this.state.modalData !== '' &&
+                  this.state.modalData
+                    .split('|')
+                    .filter((word) => word)
+                    .map((line, i) => {
+                      return (
+                        <View style={{flexDirection: 'row', marginVertical: 3}}>
+                          <Text style={{fontWeight: 'bold', fontSize: 17}}>
+                            {i + 1}.{' '}
+                          </Text>
+                          <Text style={{fontSize: 17}}>{line}</Text>
+                        </View>
+                      );
+                    })} */}
               </View>
             </View>
           </View>
@@ -173,15 +178,15 @@ class Community extends Component {
                 return (
                   <View style={styles.article} key={article.id}>
                     {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
-                      <View style={styles.writer}>
-                        <View>
+                    <View style={styles.writer}>
+                      <View>
                         <TouchableOpacity
-                            style={styles.userBtn}
-                            onPress={() => {
-                              this.props.navigation.push('UserFeed', {
-                                username: article.user.username,
-                              });
-                            }}>
+                          style={styles.userBtn}
+                          onPress={() => {
+                            this.props.navigation.push('UserFeed', {
+                              username: article.user.username,
+                            });
+                          }}>
                           {article.user.profileImage && (
                             <Image
                               style={styles.writerImg}
@@ -196,20 +201,22 @@ class Community extends Component {
                               source={require('../../assets/images/default-profile.png')}
                             />
                           )}
-                          
-                            <Text
-                              style={{
-                                marginLeft: 10,
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                              }}>
-                              {article.user.username}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                        {/* 여기에 북마크, 삭제 등등 추가 */}
-                        <Icon name="ellipsis-vertical" style={{marginRight: 40, fontSize: 20}}></Icon>
+
+                          <Text
+                            style={{
+                              marginLeft: 10,
+                              fontSize: 20,
+                              fontWeight: 'bold',
+                            }}>
+                            {article.user.username}
+                          </Text>
+                        </TouchableOpacity>
                       </View>
+                      {/* 여기에 북마크, 삭제 등등 추가 */}
+                      <Icon
+                        name="ellipsis-vertical"
+                        style={{marginRight: 40, fontSize: 20}}></Icon>
+                    </View>
                     {/* </View> */}
                     {/* <View style={styles.tags}>
                         {article.tags.map((tag) => {
@@ -240,10 +247,7 @@ class Community extends Component {
                             />
                           )}
                           {!article.isliked && (
-                            <Icon
-                              name="heart-outline"
-                              style={{fontSize: 40}}
-                            />
+                            <Icon name="heart-outline" style={{fontSize: 40}} />
                           )}
                         </TouchableOpacity>
                         {article.canComment && (
