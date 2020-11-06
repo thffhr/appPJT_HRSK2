@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Pie from 'react-native-pie';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { connect } from 'react-redux';
-
+import {serverUrl} from '../../../constants'
 const mapStateToProps = (state) => ({
     menu: state.recordReducer.menu,
 });
@@ -29,58 +29,17 @@ class MyCarousel extends Component {
             dateTime: this.props.Send[1],
             W: this.props.Send[2]
         }
-    }
+    };
     // 캐러셀 내용
     _renderItem({item,index}){
-        // console.log(this.state.dateTime)
-        // 함수
-        // 수량 감소
-        minusCnt = (year, month, date, day, cnt, menu2food_id) => {
-            console.log(year)
-            if (cnt <= 1) {
-            //   this.setModalVisible(true, year, month, date, menu2food_id);
-            } else {
-              var form = new FormData();
-              form.append('menu2food_id', menu2food_id);
-              fetch(`${serverUrl}gallery/minusCnt/`, {
-                method: 'POST',
-                body: form,
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  Authorization: `Token ${this.state.token}`,
-                },
-              })
-                .then((response) => response.json())
-                .then((response) => {
-                //   this.onFetch(year, month, date, day);
-                })
-                .catch((err) => console.error(err));
-            }
-        };
-        // 수량 증가
-        plusCnt = (year, month, date, day, menu2food_id) => {
-            var form = new FormData();
-            form.append('menu2food_id', menu2food_id);
-            fetch(`${serverUrl}gallery/plusCnt/`, {
-              method: 'POST',
-              body: form,
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Token ${this.state.token}`,
-              },
-            })
-              .then((response) => response.json())
-              .then((response) => {
-                // this.onFetch(year, month, date, day);
-              })
-              .catch((err) => console.error(err));
-        };
+        // item = [["치킨까스", 593, 1, 1]] 이름 / 칼로리 / menu2food_id / 수량
         return (
         <>
             {index === 0 && (
                 <ScrollView>
                 <>
                     {item.map((food, i) => {
+                        console.log('--------------확인 2',item)
                         return(
                             <View style={{
                                 flexDirection: 'row',
@@ -100,14 +59,37 @@ class MyCarousel extends Component {
                                     marginLeft: 20,
                                     marginRight: 10,
                                     }}
-                                    onPress={() =>
-                                    this.minusCnt(
-                                        this.state.dateTime.year,
-                                        this.state.dateTime.month,
-                                        this.state.dateTime.date,
-                                        this.state.dateTime.day,
-                                        food[3],
-                                        food[2],)}
+                                    // onPress={() => this.props.Minus(
+                                    //     this.state.date.year,
+                                    //     this.state.date.month,
+                                    //     this.state.date.date,
+                                    //     this.state.date.day,
+                                    //     food[3],
+                                    //     food[2]
+                                    //     )}
+                                    // ></Icon>
+                                    //////////////////////////////////////////////////////////
+                                    // onPress={() => {
+                                    //     if (food[3] <= 1) {
+                                    //         this.setModalVisible(true, this.state.date.year, this.state.date.month, this.state.date.date, food[3]);
+                                    //       } else {
+                                    //         var form = new FormData();
+                                    //         form.append('menu2food_id', food[3]);
+                                    //         fetch(`${serverUrl}gallery/minusCnt/`, {
+                                    //           method: 'POST',
+                                    //           body: form,
+                                    //           headers: {
+                                    //             'Content-Type': 'multipart/form-data',
+                                    //             Authorization: `Token ${this.state.token}`,
+                                    //           },
+                                    //         })
+                                    //           .then((response) => response.json())
+                                    //           .then((response) => {
+                                    //             this.onFetch(this.state.date.year, this.state.date.month, this.state.date.date, this.state.date.day);
+                                    //           })
+                                    //           .catch((err) => console.error(err));
+                                    //       }
+                                    // }}
                                     ></Icon>
                                     <Text style={{fontSize: 18}}>{food[3]}</Text>
                                     <Icon
@@ -117,13 +99,12 @@ class MyCarousel extends Component {
                                     marginTop: 2,
                                     marginHorizontal: 10,
                                     }}
-                                    onPress={() =>
-                                    this.plusCnt(
-                                        this.state.dateTime.year,
-                                        this.state.dateTime.month,
-                                        this.state.dateTime.date,
-                                        this.state.dateTime.day,
-                                        food[2],)}
+                                    // onPress={() => this.props.Plus(
+                                    //     this.state.date.year,
+                                    //     this.state.date.month,
+                                    //     this.state.date.date,
+                                    //     this.state.date.day,
+                                    //     food[2])}
                                         ></Icon>
                                 </View>
                             </View>
@@ -179,7 +160,7 @@ class MyCarousel extends Component {
             )}
         </>
         )
-    }
+    };
     // 페이지 표시
     get pagination () {
         const { entries, activeSlide } = this.state;
@@ -203,7 +184,7 @@ class MyCarousel extends Component {
               inactiveDotScale={0.6}
             />
         );
-    }
+    };
     render() {
         return (
         //   <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>

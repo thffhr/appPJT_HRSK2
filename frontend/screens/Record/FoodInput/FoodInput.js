@@ -23,47 +23,40 @@ export default class Camera extends Component {
     });
   };
   recommend = (text) => {
-    // dkdkdkkd
     this.setState({
       foodInfo: {
-        DESC_KOR: text
+        DESC_KOR: text,
       },
     });
     var data = new FormData();
-    data.append('search', text);
-    fetch(`${serverUrl}food/search/`, {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if(response.length > 0) {
-          this.setState({
-            showRecommend: true,
-            recommendLst: response,
-          })
-          console.log(this.state.recommendLst)
-        }
+      data.append('search', text);
+      fetch(`${serverUrl}food/search/`, {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
       })
-      .catch((error) => console.error(error));
+        .then((response) => response.json())
+        .then((response) => {
+          if(response.length > 0) {
+            this.setState({
+              showRecommend: true,
+              recommendLst: response,
+            })
+            console.log(this.state.recommendLst)
+          } else {
+            this.setState({
+              showRecommend: false,
+              recommendLst: {},
+            })
+          }
+        })
+        .catch((error) => console.error(error));
   };
   chooseFood(idx) {
     var selectedFood = this.state.recommendLst[idx]
-    if (!selectedFood['SERVING_SIZE']) {
-      selectedFood['SERVING_SIZE'] = 0
-    } else if (!selectedFood['NUTR_CONT1']) {
-      selectedFood['NUTR_CONT1'] = 0
-    } else if (!selectedFood['NUTR_CONT2']) {
-      selectedFood['NUTR_CONT2'] = 0
-    } else if (!selectedFood['NUTR_CONT3']) {
-      selectedFood['NUTR_CONT3'] = 0
-    } else if (!selectedFood['NUTR_CONT4']) {
-      selectedFood['NUTR_CONT4'] = 0
-    }
     this.setState({
       showRecommend: false,
       foodInfo: selectedFood,
@@ -108,11 +101,12 @@ export default class Camera extends Component {
           <View>
             <Text>음식이름</Text>
             <TextInput
-              style={[styles.inputArea, {width: W * 0.7,}]}
+              style={[styles.inputArea, {width: W * 0.7, backgroundColor: '#fff',}]}
               placeholder="음식이름을 입력하세요."
               onChangeText={this.recommend}
               value={this.state.foodInfo? this.state.foodInfo.DESC_KOR:''}
             />
+            <Text style={{color:'#BEBEBE', fontSize: 12, marginTop: 10}}>음식을 검색하면 영양정보가 자동으로 등록됩니다.</Text>
             {/* 여기에 추천 검색어가 뜨도록 */}
             {this.state.recommendLst && this.state.showRecommend &&(
               <View style={{position: 'absolute', top: 70, width: W * 0.7, backgroundColor: '#fff', borderRadius: 5, zIndex: 2, padding: 10}}>
@@ -136,33 +130,42 @@ export default class Camera extends Component {
             <View>
               <View style={styles.inputline}>
                 <TextInput
-                  style={[styles.inputArea, {width: W * 0.4,}]}
-                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT1:'0'}
+                  style={[styles.inputArea, {width: W * 0.4, backgroundColor: '#EAEAEA',}]}
+                  onChangeText={text => this.changeNum(text, this.state.foodInfo.NUTR_CONT1)}
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT1:''}
+                  keyboardType="number-pad"
                   placeholder="칼로리"
+                  editable={false}
                 />
                 <Text style={styles.labeltxt}>kcal</Text>
               </View>
               <View style={styles.inputline}>
                 <TextInput
-                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  style={[styles.inputArea, {width: W * 0.4, backgroundColor: '#EAEAEA',}]}
                   placeholder="탄수화물"
-                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT2:'0'}
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT2:''}
+                  keyboardType="number-pad"
+                  editable={false}
                 />
                 <Text style={styles.labeltxt}>g</Text>
               </View>
               <View style={styles.inputline}>
                 <TextInput
-                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  style={[styles.inputArea, {width: W * 0.4, backgroundColor: '#EAEAEA',}]}
                   placeholder="단백질"
-                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT3:'0'}
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT3:''}
+                  keyboardType="number-pad"
+                  editable={false}
                 />
                 <Text style={styles.labeltxt}>g</Text>
               </View>
               <View style={styles.inputline}>
                 <TextInput
-                  style={[styles.inputArea, {width: W * 0.4,}]}
+                  style={[styles.inputArea, {width: W * 0.4, backgroundColor: '#EAEAEA',}]}
                   placeholder="지방"
-                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT4:'0'}
+                  value={this.state.foodInfo? this.state.foodInfo.NUTR_CONT4:''}
+                  keyboardType="number-pad"
+                  editable={false}
                 />
                 <Text style={styles.labeltxt}>g</Text>
               </View>
@@ -203,7 +206,6 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: '#fff',
     marginVertical: H * 0.01,
     marginRight: 5,
     padding: W * 0.02,

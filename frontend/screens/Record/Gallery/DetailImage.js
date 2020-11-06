@@ -233,7 +233,7 @@ export default class DetatilImage extends Component {
               {this.state.onCaption &&
                 this.state.foods &&
                 this.state.foods.map((food, i) => {
-                  const k = 0.8;
+                  const k = width;
                   const color = this.state.colors[i];
                   return (
                     <View
