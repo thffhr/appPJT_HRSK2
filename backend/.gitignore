@@ -151,6 +151,6 @@ dmypy.json
 0001_initial.py
 
 # Machine Learning
-food100.names
-yolo-food100.cfg
-yolov2-food100.weights
+food30.names
+yolov4.cfg
+yolov4_3000.weights
