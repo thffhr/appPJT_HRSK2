@@ -219,7 +219,6 @@ class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log('scope-def', response['Menus']);
         this.setState({
           dayMenus: response['Menus'],
           TotalCal: response['TotalCal'],
@@ -326,10 +325,9 @@ class Record extends Component {
       },
     })
       .then(() => {})
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
   render() {
-    console.log(this.props.menu);
     return (
       <SafeAreaView style={styles.container}>
         <Modal

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   ScrollView,
@@ -34,7 +34,7 @@ export default class Gallery extends Component {
   }
   componentDidMount() {
     this.onGallery();
-  };
+  }
   onGallery = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/myImgs/`, {
@@ -68,8 +68,7 @@ export default class Gallery extends Component {
     this.props.navigation.navigate('MyDatePicker', {
       date: sendDate,
       // image: image,
-
-    })
+    });
   };
   // onDate = (image) => {
   //   var newYear = this.pad(`${year}`, 4);
@@ -84,20 +83,18 @@ export default class Gallery extends Component {
   // };
   // 뱃지
   getBadgeStyle(mealTime) {
-    console.log('함수가 돌아가긴 했니?')
-    console.log(mealTime)
-    if (mealTime==='아침'){
-      return {backgroundColor: this.state.badgeColors[0]}
-    }else if(mealTime==='점심'){
-      return {backgroundColor: this.state.badgeColors[1]}
-    }else if(mealTime==='저녁'){
-      return {backgroundColor: this.state.badgeColors[2]}
-    }else if(mealTime==='간식'){
-      return {backgroundColor: this.state.badgeColors[3]}
-    }else{
-      return {backgroundColor: this.state.badgeColors[4]}
+    if (mealTime === '아침') {
+      return {backgroundColor: this.state.badgeColors[0]};
+    } else if (mealTime === '점심') {
+      return {backgroundColor: this.state.badgeColors[1]};
+    } else if (mealTime === '저녁') {
+      return {backgroundColor: this.state.badgeColors[2]};
+    } else if (mealTime === '간식') {
+      return {backgroundColor: this.state.badgeColors[3]};
+    } else {
+      return {backgroundColor: this.state.badgeColors[4]};
     }
-  };
+  }
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -148,9 +145,15 @@ export default class Gallery extends Component {
                     </View>
                   )}
                   {/* 뱃지 */}
-                  <View style={[styles.badge, this.getBadgeStyle(picture.mealTime)]}>
+                  <View
+                    style={[
+                      styles.badge,
+                      this.getBadgeStyle(picture.mealTime),
+                    ]}>
                     {/* 폰트 크기는 사진에 맞게 바꿀 예정 */}
-                    <Text style={{color: '#fff', fontSize: 10}}>{picture.mealTime}</Text>
+                    <Text style={{color: '#fff', fontSize: 10}}>
+                      {picture.mealTime}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -158,7 +161,7 @@ export default class Gallery extends Component {
           </View>
         </ScrollView>
         <TouchableOpacity style={styles.btnBox} onPress={this.onDate}>
-        <Icon name="camera" style={styles.cameraLogo}></Icon>
+          <Icon name="camera" style={styles.cameraLogo}></Icon>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -195,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     zIndex: 2,
     paddingHorizontal: 5,
-    paddingVertical: 2
+    paddingVertical: 2,
   },
   // 카메라버튼
   btnBox: {

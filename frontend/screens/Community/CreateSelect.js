@@ -87,14 +87,13 @@ class CreateSelect extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -131,7 +130,12 @@ class CreateSelect extends Component {
               : {backgroundColor: '#fffbe6'},
           ]}
           {...this._panResponder.panHandlers}>
-          <Text style={this.state.isDividerClicked ? {color: '#fff'} : {color: '#f39c12'}}>사진에서 선택</Text>
+          <Text
+            style={
+              this.state.isDividerClicked ? {color: '#fff'} : {color: '#f39c12'}
+            }>
+            사진에서 선택
+          </Text>
         </View>
         <Animated.View
           style={[

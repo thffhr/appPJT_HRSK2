@@ -16,7 +16,7 @@ import {
 } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
@@ -93,7 +93,7 @@ class Calendar extends Component {
   }
   componentDidMount() {
     this.onCalendar();
-  };
+  }
   onCalendar = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/getCalendar/`, {
@@ -108,18 +108,16 @@ class Calendar extends Component {
         this.setState({
           nextDays: response,
         });
-        console.log(this.props.menu)
-        console.log(this.props.user)
         var tempObject = {};
         for (var [key, val] of Object.entries(this.state.nextDays)) {
           // 활동대사량 - 칼로리
-          let dotColor = ''
-          if (this.props.user.basal_metabolism-val[5] > 100 ){
-            dotColor = '#2ECC71' // 초
-          } else if (-100 < this.props.user.basal_metabolism-val[5] < 100) {
-            dotColor = '#F1C40F'  // 노 (-100 ~ +100)
+          let dotColor = '';
+          if (this.props.user.basal_metabolism - val[5] > 100) {
+            dotColor = '#2ECC71'; // 초
+          } else if (-100 < this.props.user.basal_metabolism - val[5] < 100) {
+            dotColor = '#F1C40F'; // 노 (-100 ~ +100)
           } else {
-            dotColor = '#E74C3C'  // 빨
+            dotColor = '#E74C3C'; // 빨
           }
           tempObject = {
             ...tempObject,
@@ -225,12 +223,14 @@ class Calendar extends Component {
             ) && (
               <View style={styles.dateBox}>
                 <Text style={{fontSize: 20, marginBottom: 10}}>
-                  {this.state.selectedDate.date.split('-')[0]}년 {this.state.selectedDate.date.split('-')[1]}월 {this.state.selectedDate.date.split('-')[2]}일
+                  {this.state.selectedDate.date.split('-')[0]}년{' '}
+                  {this.state.selectedDate.date.split('-')[1]}월{' '}
+                  {this.state.selectedDate.date.split('-')[2]}일
                 </Text>
                 {Object.entries(this.state.selectedDate)
                   .filter(([key, value]) => key !== 'date')
                   .map(([key, value], i) => {
-                    if (key !== '총합' && value !== 0 ) {
+                    if (key !== '총합' && value !== 0) {
                       return (
                         <View style={styles.macroBox} key={i}>
                           <Text style={styles.macroTxt}>{key}</Text>
@@ -245,12 +245,10 @@ class Calendar extends Component {
                         <View
                           style={[styles.macroBox, {fontWeight: 'bold'}]}
                           key={i}>
-                          <Text
-                            style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                          <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
                             {key}
                           </Text>
-                          <Text
-                            style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                          <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
                             {value}
                             {'   '}kcal
                           </Text>
