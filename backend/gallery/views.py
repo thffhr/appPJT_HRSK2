@@ -106,13 +106,13 @@ def getMenuInfo(request):
         idx = foodlist[i].find("[")
         food_obj = {}
         fname = foodlist[i][0:idx].strip()
-        print('@@@@@@')
-        print(fname)
         try:
             foods = get_object_or_404(Food, DESC_KOR=fname)
         except:
             foods = Food.objects.filter(DESC_KOR=fname)[0]
-        food_obj['location'] = foodlist[i][idx:]  # 좌표값
+        locationStr = foodlist[i][idx:]
+        location = list(map(float, locationStr[1:-1].split(',')))
+        food_obj['location'] = location  # 좌표값
         food_obj['DESC_KOR'] = foods.DESC_KOR
         food_obj['SERVING_SIZE'] = foods.SERVING_SIZE
         food_obj['NUTR_CONT1'] = foods.NUTR_CONT1
@@ -138,6 +138,9 @@ def saveMenu(request):
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
+    print('@@@@@@@')
+    print(request.data['foodLo'])
+    print(type(request.data['foodLo']))
     foodLo = []
     for lo in request.data['foodLo'][:-1].split('/'):
         foodLo.append(list(map(int, lo[:-1].split(','))))

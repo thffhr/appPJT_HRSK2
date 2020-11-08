@@ -1,4 +1,4 @@
-import React, {Component,} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   ScrollView,
@@ -15,14 +15,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  LocaleConfig,
-} from 'react-native-calendars';
+import {LocaleConfig} from 'react-native-calendars';
 import {serverUrl} from '../../../constants';
 
 import MyCarousel from './MyCarousel';
-import { connect } from 'react-redux';
-import { updateMenu } from '../../../src/action/record';
+import {connect} from 'react-redux';
+import {updateMenu} from '../../../src/action/record';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -82,8 +80,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   // js에서 함수 호출을 위한 변수명: (보낼 데이터) => dispatch(action에서 실행할 함수))
-  // this.props.updatemenu로 호출 
-  updateMenu: (menu) => dispatch(updateMenu(menu))
+  // this.props.updatemenu로 호출
+  updateMenu: (menu) => dispatch(updateMenu(menu)),
 });
 
 class Record extends Component {
@@ -105,7 +103,7 @@ class Record extends Component {
   }
   componentDidMount() {
     this.onRecord();
-  };
+  }
   onRecord = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
@@ -221,14 +219,13 @@ class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log('scope-def', response['Menus']);
         this.setState({
           dayMenus: response['Menus'],
           TotalCal: response['TotalCal'],
         });
       })
       .then(() => {
-        console.log('1')
-        console.log(typeof this.state.dayMenus);
         this.props.updateMenu(this.state.dayMenus);
       })
       .catch((err) => console.error(err));
@@ -328,12 +325,11 @@ class Record extends Component {
         Authorization: `Token ${this.state.authToken}`,
       },
     })
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => console.log(error));
   };
   render() {
-    console.log(this.props.menu)
+    console.log(this.props.menu);
     return (
       <SafeAreaView style={styles.container}>
         <Modal
@@ -358,7 +354,8 @@ class Record extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
-              <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
                   onPress={() => {
@@ -395,11 +392,7 @@ class Record extends Component {
               <View style={styles.chartDaybox}>
                 <Text style={styles.chartDaytxt}>
                   {this.state.dateTime.month}월 {this.state.dateTime.date}일 (
-                  {
-                    LocaleConfig.locales['fr'].dayNames[
-                      this.state.dateTime.day
-                    ]
-                  }
+                  {LocaleConfig.locales['fr'].dayNames[this.state.dateTime.day]}
                   )
                 </Text>
               </View>
@@ -444,9 +437,7 @@ class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>
-                    {this.state.TotalCal}
-                  </Text>
+                  <Text style={styles.arrowboxtxt}>{this.state.TotalCal}</Text>
                 </View>
               </View>
             )}
@@ -462,9 +453,7 @@ class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>
-                    {this.state.TotalCal}
-                  </Text>
+                  <Text style={styles.arrowboxtxt}>{this.state.TotalCal}</Text>
                 </View>
               </View>
             )}
@@ -476,40 +465,76 @@ class Record extends Component {
                 marginTop: 50,
                 alignItems: 'center',
               }}>
-              {Object.entries(this.state.dayMenus).map(([MenuKey, MenuVal], idx) => {
-                if (Object.keys(MenuVal).length !== 0) {
-                  return (
-                    <>
-                      <View style={styles.calbox} key={idx}>
-                        <View style={styles.calboxTitle}>
-                          <Icon
-                            name="restaurant-outline"
-                            style={{fontSize: 20, marginTop: 2}}></Icon>
-                          <Text style={{fontSize: 20, marginLeft: 5}}>
-                            {MenuKey}
-                          </Text>
+              {Object.entries(this.state.dayMenus).map(
+                ([MenuKey, MenuVal], idx) => {
+                  if (Object.keys(MenuVal).length !== 0) {
+                    return (
+                      <>
+                        <View style={styles.calbox} key={idx}>
+                          <View style={styles.calboxTitle}>
+                            <Icon
+                              name="restaurant-outline"
+                              style={{fontSize: 20, marginTop: 2}}></Icon>
+                            <Text style={{fontSize: 20, marginLeft: 5}}>
+                              {MenuKey}
+                            </Text>
+                          </View>
+                          <TouchableOpacity
+                            style={{
+                              position: 'relative',
+                              bottom: 25,
+                              left: 325,
+                            }}>
+                            <Icon
+                              name="create-outline"
+                              style={{fontSize: 20}}></Icon>
+                          </TouchableOpacity>
+                          <View
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <MyCarousel
+                              Send={[
+                                [MenuVal['meal'], MenuVal['nutrient']],
+                                this.state.dateTime,
+                                width,
+                              ]}
+                              Minus={(
+                                year,
+                                month,
+                                date,
+                                day,
+                                cnt,
+                                menu2food_id,
+                              ) =>
+                                this.minusCnt(
+                                  year,
+                                  month,
+                                  date,
+                                  day,
+                                  cnt,
+                                  menu2food_id,
+                                )
+                              }
+                              Plus={(year, month, date, day, menu2food_id) =>
+                                this.plusCnt(
+                                  year,
+                                  month,
+                                  date,
+                                  day,
+                                  menu2food_id,
+                                )
+                              }
+                              key={idx}
+                            />
+                          </View>
                         </View>
-                        <TouchableOpacity
-                          style={{
-                            position: 'relative',
-                            bottom: 25,
-                            left: 325,
-                          }}>
-                          <Icon name='create-outline' style={{fontSize: 20}}></Icon>
-                        </TouchableOpacity>
-                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                          <MyCarousel
-                          Send={[[MenuVal['meal'], MenuVal['nutrient']], this.state.dateTime, width]}
-                          Minus={(year, month, date, day, cnt, menu2food_id) => this.minusCnt(year, month, date, day, cnt, menu2food_id)}
-                          Plus={(year, month, date, day, menu2food_id) => this.plusCnt(year, month, date, day, menu2food_id)}
-                          key={idx}
-                          />
-                        </View>
-                      </View>
-                    </>
-                  );
-                }
-              })}
+                      </>
+                    );
+                  }
+                },
+              )}
             </View>
           </View>
         </ScrollView>
@@ -610,4 +635,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Record);
+export default connect(mapStateToProps, mapDispatchToProps)(Record);
