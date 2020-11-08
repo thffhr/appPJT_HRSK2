@@ -111,7 +111,7 @@ class MyCarousel extends Component {
             </>
           </ScrollView>
         )}
-        {index === 1 && (
+        {/* {index === 1 && (
           <View
             style={{
               flexDirection: 'row',
@@ -150,7 +150,7 @@ class MyCarousel extends Component {
               </Text>
             </View>
           </View>
-        )}
+        )} */}
       </>
     );
   }

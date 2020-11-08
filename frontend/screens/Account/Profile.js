@@ -31,7 +31,7 @@ const mapDispatchToProps = (dispatch) => ({
 class Profile extends Component {
   constructor(props) {
     super(props);
-  };
+  }
   state = {
     modalVisible: false,
     secessionModal: false,
@@ -44,7 +44,7 @@ class Profile extends Component {
     this.props.navigation.push('Update');
   };
   setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
+    this.setState({modalVisible: visible});
   };
   onUpdateImg = (visible) => {
     var user = this.deepClone(this.props.user);
@@ -63,7 +63,7 @@ class Profile extends Component {
             Authorization: `Token ${this.props.user.token}`,
           },
         })
-          .then((response) =>response.json())
+          .then((response) => response.json())
           .then((response) => {
             user.profileImage = response.profileImage;
             this.setModalVisible(visible);
@@ -71,7 +71,7 @@ class Profile extends Component {
           .then(() => {
             this.props.login(user);
           })
-          .catch(err => console.error(err))
+          .catch((err) => console.error(err));
       }
     });
   };
@@ -84,30 +84,28 @@ class Profile extends Component {
       },
     })
       .then(() => {
-        user.profileImage = null,
-        this.setModalVisible(visible);
+        (user.profileImage = null), this.setModalVisible(visible);
         this.props.login(user);
       })
       .catch((err) => {
         console.error(err);
       });
-    
   };
   deepClone(obj) {
-    if(obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== 'object') {
       return obj;
     }
     const result = Array.isArray(obj) ? [] : {};
-    for(let key of Object.keys(obj)) {
-      result[key] = this.deepClone(obj[key])
+    for (let key of Object.keys(obj)) {
+      result[key] = this.deepClone(obj[key]);
     }
-    
+
     return result;
-  };
+  }
 
   // 회원 탈퇴
   setSecessionModal = (visible) => {
-    this.setState({ secessionModal: visible });
+    this.setState({secessionModal: visible});
   };
   onConfirm = (visible) => {
     fetch(`${serverUrl}rest-auth/login/`, {
@@ -121,16 +119,16 @@ class Profile extends Component {
       },
     })
       .then((response) => response.json())
-      .then(response => {
+      .then((response) => {
         if (response.key) {
           this.onDelete();
           this.setState({
             secessionModal: visible,
-          })
+          });
         } else {
           alert('비밀번호가 틀렸습니다.');
         }
-      })
+      });
   };
   onDelete = () => {
     fetch(`${serverUrl}accounts/delete/${this.props.user.username}`, {
@@ -158,32 +156,31 @@ class Profile extends Component {
         <View style={styles.headerBox}>
           <View style={styles.guideBox}>
             <Text style={styles.mainComment}>회원정보</Text>
-            <Text style={styles.subComment}>가입 시 입력한 정보를 확인할 수 있습니다.</Text>
+            <Text style={styles.subComment}>
+              가입 시 입력한 정보를 확인할 수 있습니다.
+            </Text>
           </View>
           <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
             <Text style={styles.updateText}>수정</Text>
           </TouchableOpacity>
         </View>
-        
+
         <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.modalVisible}
-        >
+          visible={this.state.modalVisible}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <TouchableHighlight
                 onPress={() => {
-                  this.onUpdateImg(!this.state.modalVisible)
-                }}
-              >
+                  this.onUpdateImg(!this.state.modalVisible);
+                }}>
                 <Text style={styles.modalText}>새 프로필 사진 등록</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 onPress={() => {
-                  this.onDeleteImg(!this.state.modalVisible)
-                }}
-              >
+                  this.onDeleteImg(!this.state.modalVisible);
+                }}>
                 <Text style={styles.modalText}>프로필 사진 삭제</Text>
               </TouchableHighlight>
 
@@ -191,36 +188,34 @@ class Profile extends Component {
                 style={styles.openButton}
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
+                }}>
                 <Text style={styles.textStyle}>닫기</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
-        
+
         <Modal
           animationType="fade"
           transparent={true}
           visible={this.state.secessionModal}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
+            Alert.alert('Modal has been closed.');
+          }}>
           <View style={styles.secessionCenteredView}>
             <View style={styles.secessionModalView}>
               <View style={styles.secessionModalHeader}>
                 <Text style={styles.secessionTitle}>비밀번호 확인</Text>
-                <Icon 
-                  name="close" 
-                  style={styles.secessionIcon} 
+                <Icon
+                  name="close"
+                  style={styles.secessionIcon}
                   onPress={() => {
                     this.setSecessionModal(!this.state.secessionModal);
                   }}
                 />
               </View>
               <View style={styles.secessionModalBody}>
-                <TextInput 
+                <TextInput
                   autoFocus={true}
                   placeholder="비밀번호 확인"
                   secureTextEntry={true}
@@ -228,15 +223,14 @@ class Profile extends Component {
                   onChangeText={(text) => {
                     this.setState({
                       password: text,
-                    })
+                    });
                   }}
                 />
                 <TouchableOpacity
                   style={styles.secessionOpenButton}
                   onPress={() => {
                     this.onConfirm(!this.state.secessionModal);
-                  }}
-                >
+                  }}>
                   <Text style={styles.secessionTextStyle}>확인</Text>
                 </TouchableOpacity>
               </View>
@@ -300,13 +294,19 @@ class Profile extends Component {
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>기초대사량</Text>
-              <Text style={styles.infoValue}>{this.props.user.basal_metabolism} kcal</Text>
+              <Text style={styles.infoValue}>
+                {this.props.user.basal_metabolism} kcal
+              </Text>
             </View>
             <View style={styles.infoBox}>
-              <Text>사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.</Text>
+              <Text>
+                사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.
+              </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => this.setSecessionModal(!this.state.secessionModal)} style={styles.deleteBtn}>
+          <TouchableOpacity
+            onPress={() => this.setSecessionModal(!this.state.secessionModal)}
+            style={styles.deleteBtn}>
             <Text style={styles.delText}>회원 탈퇴</Text>
           </TouchableOpacity>
         </View>
@@ -398,8 +398,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BMJUA',
   },
   subComment: {},
-  updateBtn: {
-  },
+  updateBtn: {},
   updateText: {
     fontSize: 25,
     fontFamily: 'BMJUA',
@@ -407,41 +406,41 @@ const styles = StyleSheet.create({
   // image modal
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: 22,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     // margin: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   openButton: {
-    backgroundColor: "#34495E",
+    backgroundColor: '#34495E',
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    elevation: 2
+    elevation: 2,
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 20,
   },
 
@@ -453,32 +452,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   secessionModalView: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   secessionOpenButton: {
-    backgroundColor: "#34495E",
+    backgroundColor: '#34495E',
     borderRadius: 10,
     paddingHorizontal: 30,
     paddingVertical: 10,
-    elevation: 2
+    elevation: 2,
   },
   secessionTextStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   secessionModalText: {
     marginBottom: 25,
-    textAlign: "center"
+    textAlign: 'center',
   },
   passwordInput: {
     borderWidth: 1,
@@ -491,7 +490,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-    
+
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
@@ -507,7 +506,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-  }
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
