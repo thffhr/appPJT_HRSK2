@@ -143,7 +143,7 @@ def saveMenu(request):
     print(type(request.data['foodLo']))
     foodLo = []
     for lo in request.data['foodLo'][:-1].split('/'):
-        foodLo.append(list(map(int, lo[:-1].split(','))))
+        foodLo.append(list(map(float, lo[:-1].split(','))))
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
@@ -218,10 +218,10 @@ def getChart(request, date):
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
                     Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
-                if T > 0 and D > 0 and G > 0:
-                    total = T+D+G
-                    Send['Menus'][t]['nutrient'] = [
-                        (T/total)*100, (D/total)*100, (G/total)*100]
+                total = T+D+G
+                Send['Menus'][t]['nutrient'] = [
+                    (T/total)*100, (D/total)*100, (G/total)*100]
+    print(Send)
     return Response(Send)
 
 
@@ -295,7 +295,6 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        # location = list(map(int, menu2food.location[1:-1].split(', ')))
-        location = menu2food.location
+        location = list(map(float, menu2food.location[1:-1].split(', ')))
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)

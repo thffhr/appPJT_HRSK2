@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../../constants';
 
-const {width, height} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('window');
 
 export default class DetatilImage extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class DetatilImage extends Component {
         menu_id: this.props.route.params.imageId,
       },
       modalVisible: false,
-      colors: ['#2bff32', '#f5dd73', '#34ebc9', '#f578ec', '#f57373'],
+      colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
     };
   }
   componentDidMount= async () => {
@@ -235,6 +235,8 @@ export default class DetatilImage extends Component {
                 this.state.foods.map((food, i) => {
                   const k = width;
                   const color = this.state.colors[i];
+                  console.log('디테일에서의 type', typeof food[2][0])
+                  console.log('디테일에서의 k', k)
                   return (
                     <View
                       style={{
@@ -264,6 +266,7 @@ export default class DetatilImage extends Component {
                         </Text>
                       </View>
                     </View>
+                  
                   );
                 })}
             </View>

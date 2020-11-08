@@ -34,7 +34,6 @@ class MyCarousel extends Component {
           <ScrollView>
             <>
               {item.map((food, i) => {
-                console.log('--------------확인 2', item);
                 return (
                   <View
                     style={{
@@ -49,7 +48,7 @@ class MyCarousel extends Component {
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={{fontSize: 18}}>{food[1]}kcal</Text>
-                      <Icon
+                      {/* <Icon
                         name="remove-circle-outline"
                         style={{
                           fontSize: 20,
@@ -88,9 +87,9 @@ class MyCarousel extends Component {
                         //           .catch((err) => console.error(err));
                         //       }
                         // }}
-                      ></Icon>
-                      <Text style={{fontSize: 18}}>{food[3]}</Text>
-                      <Icon
+                      ></Icon> */}
+                      <Text style={{fontSize: 18}}>        {food[3]} 인분    </Text>
+                      {/* <Icon
                         name="add-circle-outline"
                         style={{
                           fontSize: 20,
@@ -103,7 +102,7 @@ class MyCarousel extends Component {
                         //     this.state.date.date,
                         //     this.state.date.day,
                         //     food[2])}
-                      ></Icon>
+                      ></Icon> */}
                     </View>
                   </View>
                 );
@@ -179,6 +178,7 @@ class MyCarousel extends Component {
     );
   }
   render() {
+    // console.log('@@@@@@@@@@@@@@@@@@@',this.state.carouselItems)
     return (
       //   <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>
       <View style={{flex: 1, justifyContent: 'center'}}>

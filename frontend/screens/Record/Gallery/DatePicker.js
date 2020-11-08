@@ -376,7 +376,7 @@ export default class MyDatePicker extends Component {
                     // 이미지 크기 = 화면 폭
                     const k = width;
                     const color = this.state.colors[i % 5];
-                    // console.log('여기야 여기!!!!',foodData['location'])
+                    console.log('사진 등록 시 location',foodData['location'][0]*k)
                     return (
                       <>
                         {foodData['location'].length > 0 && (
