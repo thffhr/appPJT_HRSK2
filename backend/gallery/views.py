@@ -138,9 +138,6 @@ def saveMenu(request):
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
-    print('@@@@@@@')
-    print(request.data['foodLo'])
-    print(type(request.data['foodLo']))
     foodLo = []
     for lo in request.data['foodLo'][:-1].split('/'):
         foodLo.append(list(map(float, lo[:-1].split(','))))

@@ -56,7 +56,6 @@ export default class FoodInput extends Component {
             showRecommend: true,
             recommendLst: response,
           });
-          console.log(this.state.recommendLst);
         } else {
           this.setState({
             showRecommend: false,

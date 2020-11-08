@@ -88,7 +88,7 @@ class MyCarousel extends Component {
                         //       }
                         // }}
                       ></Icon> */}
-                      <Text style={{fontSize: 18}}>        {food[3]} 인분    </Text>
+                      <Text style={{fontSize: 18}}> {food[3]} 인분 </Text>
                       {/* <Icon
                         name="add-circle-outline"
                         style={{
@@ -178,7 +178,6 @@ class MyCarousel extends Component {
     );
   }
   render() {
-    // console.log('@@@@@@@@@@@@@@@@@@@',this.state.carouselItems)
     return (
       //   <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>
       <View style={{flex: 1, justifyContent: 'center'}}>

@@ -127,7 +127,6 @@ export default class MyFeedDetail extends Component {
                     })
                       .then((response) => response.json())
                       .then((response) => {
-                        console.log(response);
                         const isliked = this.state.article.isliked;
                         const num_of_like = this.state.article.num_of_like;
                         if (response === 'like') {

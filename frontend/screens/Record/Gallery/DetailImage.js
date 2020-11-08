@@ -241,8 +241,6 @@ export default class DetatilImage extends Component {
                 this.state.foods.map((food, i) => {
                   const k = width;
                   const color = this.state.colors[i];
-                  console.log('디테일에서의 type', typeof food[2][0]);
-                  console.log('디테일에서의 k', k);
                   return (
                     <View
                       style={{

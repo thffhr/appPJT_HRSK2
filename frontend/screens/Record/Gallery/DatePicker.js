@@ -128,7 +128,6 @@ export default class MyDatePicker extends Component {
     }
   };
   delMenu() {
-    // console.log(this.state.delData.idx);
     if (this.state.delData.idx > -1) {
       this.state.foodsLst.splice(this.state.delData.idx, 1);
     }
@@ -353,7 +352,6 @@ export default class MyDatePicker extends Component {
               pickerStyle={styles.dropdownPicker}
               dropdownOffset={{top: 10}}
               onChangeText={(value) => {
-                console.log('hi', value);
                 this.setState({dropVal: value});
               }}
             />
@@ -377,10 +375,6 @@ export default class MyDatePicker extends Component {
                     // 이미지 크기 = 화면 폭
                     const k = width;
                     const color = this.state.colors[i % 5];
-                    console.log(
-                      '사진 등록 시 location',
-                      foodData['location'][0] * k,
-                    );
                     return (
                       <>
                         {foodData['location'].length > 0 && (
