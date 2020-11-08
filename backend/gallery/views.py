@@ -32,7 +32,7 @@ def getMenuInfo(request):
         np_data = np.fromstring(decoded_data,np.uint8)
         img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
-        net = cv2.dnn.readNet("yolov4_3000.weights", "yolov4.cfg")
+        net = cv2.dnn.readNet("yolov4_2000.weights", "yolov4.cfg")
         classes = []
         with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
