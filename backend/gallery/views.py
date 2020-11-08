@@ -69,7 +69,15 @@ def getMenuInfo(request):
                     # 객체의 사각형 테두리 중 좌상단 좌표값 찾기
                     x = abs(int(center_x - w / 2))
                     y = abs(int(center_y - h / 2))
-                    boxes.append([x, y, w, h])
+                    
+                    nx = (x + w) / width
+                    ny = (y + h) / height
+
+                    if nx > 1:
+                        nx = 1
+                    if ny > 1:
+                        ny =1
+                    boxes.append([x/width, y/height, nx, ny])
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
         # Non Maximum Suppression (겹쳐있는 박스 중 confidence 가 가장 높은 박스를 선택)
@@ -79,7 +87,7 @@ def getMenuInfo(request):
         det_foods = []
         for i in range(len(boxes)):  # 검출된 음식 개수만큼 돔
             if i in indexes:  # i에 검출된 음식 번호
-                x, y, w, h = boxes[i]
+                #x, y, w, h = boxes[i]
                 class_name = classes[class_ids[i]]
                 label = f"{class_name} {boxes[i]}"
                 det_foods.append(label)
@@ -87,20 +95,6 @@ def getMenuInfo(request):
                 # print(confidences[i]) #검출된 확률
                 color = colors[i]
                 # 사각형 테두리 그리기 및 텍스트 쓰기
-
-                nx = (x + w) / width
-                ny = (y + h) / height
-
-                if nx > 1:
-                    nx = 1
-                if ny > 1:
-                    ny =1
-
-                cv2.rectangle(img, (x/width, y/height), (nx,ny), color, 2)
-                cv2.rectangle(img, (x - 1, y),
-                              (x + len(class_name) * 13, y - 12), color, -1)
-                cv2.putText(img, class_name, (x, y - 4),
-                            cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         # 리스트 형식으로 반환
         # 사진은 반환 어케?
         return det_foods  # 여기서 img는 사용자에게 뿌릴 이미지
@@ -116,9 +110,7 @@ def getMenuInfo(request):
             foods = get_object_or_404(Food, DESC_KOR=fname)
         except:
             foods = Food.objects.filter(DESC_KOR=fname)[0]
-        locationStr = foodlist[i][idx:]
-        location = list(map(int, locationStr[1:-1].split(',')))
-        food_obj['location'] = location  # 좌표값
+        food_obj['location'] = foodlist[i][idx:]  # 좌표값
         food_obj['DESC_KOR'] = foods.DESC_KOR
         food_obj['SERVING_SIZE'] = foods.SERVING_SIZE
         food_obj['NUTR_CONT1'] = foods.NUTR_CONT1
@@ -127,8 +119,6 @@ def getMenuInfo(request):
         food_obj['NUTR_CONT4'] = foods.NUTR_CONT4
         food_obj['value'] = 1
         Foods_lst.append(food_obj)
-        print(food_obj['location'])
-        print(type(Foods_lst[0]['location']))
     return Response(Foods_lst)
 
 @api_view(['POST'])
