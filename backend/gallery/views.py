@@ -32,9 +32,9 @@ def getMenuInfo(request):
         np_data = np.fromstring(decoded_data,np.uint8)
         img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
-        net = cv2.dnn.readNet("yolov2-food100.weights", "yolo-food100.cfg")
+        net = cv2.dnn.readNet("yolov4_3000.weights", "yolov4.cfg")
         classes = []
-        with open("food100.names", "r") as f:
+        with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
         layer_names = net.getLayerNames()
         output_layers = [layer_names[i[0] - 1]
@@ -96,11 +96,11 @@ def getMenuInfo(request):
                 if ny > 1:
                     ny =1
 
-                cv2.rectangle(img, (x/width, y/height), (nx,ny), color, 2)
-                cv2.rectangle(img, (x - 1, y),
-                              (x + len(class_name) * 13, y - 12), color, -1)
-                cv2.putText(img, class_name, (x, y - 4),
-                            cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+                # cv2.rectangle(img, (x/width, y/height), (nx,ny), color, 2)
+                # cv2.rectangle(img, (x - 1, y),
+                #               (x + len(class_name) * 13, y - 12), color, -1)
+                # cv2.putText(img, class_name, (x, y - 4),
+                #             cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         # 리스트 형식으로 반환
         # 사진은 반환 어케?
         return det_foods  # 여기서 img는 사용자에게 뿌릴 이미지
@@ -112,6 +112,8 @@ def getMenuInfo(request):
         idx = foodlist[i].find("[")
         food_obj = {}
         fname = foodlist[i][0:idx].strip()
+        print('@@@@@@')
+        print(fname)
         try:
             foods = get_object_or_404(Food, DESC_KOR=fname)
         except:

@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
     height: width,
   },
   imageBody: {
-    marginBottom: 140,
+    marginBottom: 40,
   },
   // badge
   tagBtn: {
