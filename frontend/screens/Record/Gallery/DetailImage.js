@@ -230,12 +230,19 @@ export default class DetatilImage extends Component {
           </View>
           <ScrollView style={styles.imageBody}>
             <View>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: `${serverUrl}gallery` + this.state.image,
-                }}
-              />
+              {this.state.image && (
+                <Image
+                  style={styles.image}
+                  source={{
+                    uri: `${serverUrl}gallery` + this.state.image,
+                  }}
+                />
+              )}
+              {!this.state.image && (
+                <View style={{width: width, height: width, backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
+                  <Icon name='fast-food-outline' style={{fontSize: 200, color: '#fff'}}></Icon>
+                </View>
+              )}
               {this.state.onCaption &&
                 this.state.foods &&
                 this.state.foods.map((food, i) => {
@@ -244,7 +251,9 @@ export default class DetatilImage extends Component {
                   console.log('디테일에서의 type', typeof food[2][0]);
                   console.log('디테일에서의 k', k);
                   return (
-                    <View
+                    <>
+                    {food[2] !== 'null' && (
+                      <View
                       style={{
                         position: 'absolute',
                         left: food[2][0] * k,
@@ -272,6 +281,8 @@ export default class DetatilImage extends Component {
                         </Text>
                       </View>
                     </View>
+                    )}
+                    </>
                   );
                 })}
             </View>
