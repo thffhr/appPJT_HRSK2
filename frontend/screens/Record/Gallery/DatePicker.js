@@ -188,9 +188,13 @@ export default class MyDatePicker extends Component {
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
     data.append('foodVal', foodVal);
-    data.append('data', this.state.image.data);
-    data.append('type', this.state.image.type);
-    data.append('fileName', this.state.image.fileName);
+    if (this.state.image !== null) {
+      data.append('data', this.state.image.data);
+      data.append('type', this.state.image.type);
+      data.append('fileName', this.state.image.fileName);
+    } else {
+      data.append('data', 'none');
+    }
     data.append('date', this.state.date);
     data.append('mealTime', this.state.dropVal);
     fetch(`${serverUrl}gallery/saveMenu/`, {

@@ -131,16 +131,18 @@ def saveMenu(request):
     new_menu.user = request.user
     new_menu.mealTime = request.data['mealTime']
     new_menu.created_at = request.data['date']
-    # type, fileName, data << 각각 프론트에서 보낼 수 있는 데이터
-    decoded_data = base64.b64decode(request.data['data'])
-    new_menu.image = ContentFile(
-        decoded_data, name=f"{request.data['fileName']}")  # url
+    if request.data['data'] != 'none':
+        # type, fileName, data << 각각 프론트에서 보낼 수 있는 데이터
+        decoded_data = base64.b64decode(request.data['data'])
+        new_menu.image = ContentFile(
+            decoded_data, name=f"{request.data['fileName']}")  # url
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
     foodLo = []
-    for lo in request.data['foodLo'][:-1].split('/'):
-        foodLo.append(list(map(float, lo[:-1].split(','))))
+    if len(request.data['foodLo']) > 1:
+        for lo in request.data['foodLo'][:-1].split('/'):
+            foodLo.append(list(map(float, lo[:-1].split(','))))
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
@@ -149,7 +151,8 @@ def saveMenu(request):
         except:
             foods = Food.objects.filter(DESC_KOR=foodName[i])[0]
         # new_food.food 는 같은 이름 찾아서 넣어야댐
-        new_food.location = foodLo[i]  # 좌표값
+        if foodLo != []:
+            new_food.location = foodLo[i]  # 좌표값
         new_food.image = new_menu
         new_food.food = foods
         new_food.value = int(foodVal[i])
@@ -216,8 +219,20 @@ def getChart(request, date):
                     Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
                 total = T+D+G
+                if T > 0:
+                    Tper = (T/total)*100
+                else:
+                    Tper = 0
+                if D > 0:
+                    Dper = (D/total)*100
+                else:
+                    Dper = 0
+                if G > 0:
+                    Gper = (G/total)*100
+                else:
+                    Gper = 0
                 Send['Menus'][t]['nutrient'] = [
-                    (T/total)*100, (D/total)*100, (G/total)*100]
+                    Tper, Dper, Gper]
     print(Send)
     return Response(Send)
 
@@ -292,6 +307,9 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        location = list(map(float, menu2food.location[1:-1].split(', ')))
+        if menu2food.location:
+            location = list(map(float, menu2food.location[1:-1].split(', ')))
+        else:
+            location = 'null'
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)

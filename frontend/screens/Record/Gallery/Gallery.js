@@ -131,12 +131,19 @@ export default class Gallery extends Component {
                       mealTime: picture.mealTime,
                     });
                   }}>
-                  <Image
-                    style={styles.picture}
-                    source={{
-                      uri: `${serverUrl}gallery` + picture.image,
-                    }}
-                  />
+                  {picture.image && (
+                    <Image
+                      style={styles.picture}
+                      source={{
+                        uri: `${serverUrl}gallery` + picture.image,
+                      }}
+                    />
+                  )}
+                  {!picture.image && (
+                    <View style={{width: '100%', height: '100%', backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
+                      <Icon name='fast-food-outline' style={{fontSize: 80, color: '#fff'}}></Icon>
+                    </View>
+                  )}
                   {/* 뱃지 */}
                   <View
                     style={[
