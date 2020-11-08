@@ -48,12 +48,20 @@ class CustomDrawerContent extends Component {
       <SafeAreaView style={styles.container}>
         <DrawerContentScrollView style={styles.scrollArea}>
           <View style={styles.profileBox}>
-            <Image 
-              source={{
-                uri: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-              }}
-              style={styles.profileImg}
-            />
+            {this.props.user.profileImage && (
+              <Image 
+                source={{
+                  uri: `${serverUrl}gallery${this.props.user.profileImage}`,
+                }}
+                style={styles.profileImg}
+              />
+            )}
+            {!this.props.user.profileImage && (
+              <Image 
+                source={require('../assets/images/default-profile.png')}
+                style={styles.profileImg}
+              />
+            )}
             <Text style={styles.profileTxt}>{this.props.user.username}</Text>
           </View>
           <TouchableOpacity
@@ -108,6 +116,7 @@ const styles = StyleSheet.create({
   profileImg: {
     width: 50,
     height: 50,
+    borderRadius: 100,
   },
   profileTxt: {
     fontFamily: 'BMJUA',

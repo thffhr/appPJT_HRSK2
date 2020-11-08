@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from accounts.models import User
+from .models import Recipe
+from .models import Article
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -34,6 +36,23 @@ def create(request):
     # 태그는 string으로 받아서 split하기->for로 중복확인/저장(추가 필요)
     if new_article.is_valid(raise_exception=True):
         new_article.save(user=request.user)
+        nnew_article = Article.objects.order_by('-pk')[0]
+
+        #음식이 없으면 recipe 안생김
+        for food in request.data['foods']:  # key가 food에
+            print(food)
+            new_recipe = Recipe()
+            s = ""
+            for text in request.data['foods'][food]:
+                s =  s+ text+"/"
+            new_recipe.content = s
+            new_recipe.foodname = food
+            new_recipe.article = nnew_article
+            new_recipe.save()
+            # print(new_article)
+            # if (new_recipe.is_valid(raise_exception=True)):  
+            #     new_recipe.save(article = new_article)
+
         return Response(new_article.data)
 
 
@@ -156,13 +175,11 @@ def articleLikeBtn(request):
         article.save()
         return Response("like")
 
-
 @api_view(['GET'])
 def details(request, article_id):
     article = get_object_or_404(models.Article, pk=article_id)
     article_details = serializers.ArticleSerializer(article)
     return Response(article_details.data)
-
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -317,3 +334,25 @@ def getBestArticles(request):
                 articles_All.append(serializer.data)
 
     return Response(articles_All)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def bookmarkbtn(request, article_id):
+    user = request.user
+    article = get_object_or_404(models.Article, id=article_id)
+    if article.bookmark_users.filter(id=user.id).exists():
+        article.bookmark_users.remove(user)
+    else:
+        article.bookmark_users.add(user)
+    article.save()
+    return Response("북마크 갱신 성공")
+
+
+@api_view(['GET'])
+def bookmarkAll(request):
+    bookamrks = models.Article.objects.bookmark_users.filter(id=user.id)
+    bookmarks_All = []
+    for bookmark in bookmarks:
+        bookmarks_All.append(bookmarks)
+    return Response(bookmarks_All)

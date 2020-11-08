@@ -87,14 +87,13 @@ class CreateSelect extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -127,11 +126,16 @@ class CreateSelect extends Component {
           style={[
             styles.description,
             this.state.isDividerClicked
-              ? {backgroundColor: '#fca652'}
-              : {backgroundColor: '#ffb46b'},
+              ? {backgroundColor: '#f39c12'}
+              : {backgroundColor: '#fffbe6'},
           ]}
           {...this._panResponder.panHandlers}>
-          <Text style={{color: '#fff'}}>사진에서 선택</Text>
+          <Text
+            style={
+              this.state.isDividerClicked ? {color: '#fff'} : {color: '#f39c12'}
+            }>
+            사진에서 선택
+          </Text>
         </View>
         <Animated.View
           style={[
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // borderBottomColor: 'gray',
     // borderBottomWidth: 2,
-    backgroundColor: '#fca652',
+    backgroundColor: '#f39c12',
   },
   title: {
     fontSize: 30,
@@ -215,10 +219,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   imgBtn: {
-    width: '25%',
-    height: 100,
+    width: '33.3%',
+    height: 130,
     borderColor: 'white',
-    borderWidth: 2,
+    borderWidth: 3,
   },
   picture: {
     width: '100%',

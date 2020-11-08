@@ -21,22 +21,28 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
+import copy
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def saveMenu(request):
-    def predict_img(uri):
-        net = cv2.dnn.readNet("yolov2-food100.weights", "yolo-food100.cfg")
+def getMenuInfo(request):
+    def predict_img(bs64_data):
+        # 이미지 변환해서 가져오기
+        decoded_data = base64.b64decode(bs64_data)
+        np_data = np.fromstring(decoded_data,np.uint8)
+        img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
+
+        net = cv2.dnn.readNet("yolov4_3000.weights", "yolov4.cfg")
         classes = []
-        with open("food100.names", "r") as f:
+        with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
         layer_names = net.getLayerNames()
         output_layers = [layer_names[i[0] - 1]
                          for i in net.getUnconnectedOutLayers()]
         colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-        img_path = uri
-        img = cv2.imread(img_path)
+        # img_path = uri
+        # img = cv2.imread(img_path)
         height, width, channels = img.shape
 
         blob = cv2.dnn.blobFromImage(
@@ -63,7 +69,15 @@ def saveMenu(request):
                     # 객체의 사각형 테두리 중 좌상단 좌표값 찾기
                     x = abs(int(center_x - w / 2))
                     y = abs(int(center_y - h / 2))
-                    boxes.append([x, y, w, h])
+                    
+                    nx = (x + w) / width
+                    ny = (y + h) / height
+
+                    if nx > 1:
+                        nx = 1
+                    if ny > 1:
+                        ny =1
+                    boxes.append([x/width, y/height, nx, ny])
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
         # Non Maximum Suppression (겹쳐있는 박스 중 confidence 가 가장 높은 박스를 선택)
@@ -73,7 +87,7 @@ def saveMenu(request):
         det_foods = []
         for i in range(len(boxes)):  # 검출된 음식 개수만큼 돔
             if i in indexes:  # i에 검출된 음식 번호
-                x, y, w, h = boxes[i]
+                #x, y, w, h = boxes[i]
                 class_name = classes[class_ids[i]]
                 label = f"{class_name} {boxes[i]}"
                 det_foods.append(label)
@@ -81,148 +95,66 @@ def saveMenu(request):
                 # print(confidences[i]) #검출된 확률
                 color = colors[i]
                 # 사각형 테두리 그리기 및 텍스트 쓰기
-                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-                cv2.rectangle(img, (x - 1, y),
-                              (x + len(class_name) * 13, y - 12), color, -1)
-                cv2.putText(img, class_name, (x, y - 4),
-                            cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         # 리스트 형식으로 반환
         # 사진은 반환 어케?
-        return det_foods, img  # 여기서 img는 사용자에게 뿌릴 이미지
+        return det_foods  # 여기서 img는 사용자에게 뿌릴 이미지
 
+    foodlist = predict_img(request.data['data'])
+    # menu2food에 값넣기
+    Foods_lst = []
+    for i in range(len(foodlist)):
+        idx = foodlist[i].find("[")
+        food_obj = {}
+        fname = foodlist[i][0:idx].strip()
+        try:
+            foods = get_object_or_404(Food, DESC_KOR=fname)
+        except:
+            foods = Food.objects.filter(DESC_KOR=fname)[0]
+        locationStr = foodlist[i][idx:]
+        location = list(map(float, locationStr[1:-1].split(',')))
+        food_obj['location'] = location  # 좌표값
+        food_obj['DESC_KOR'] = foods.DESC_KOR
+        food_obj['SERVING_SIZE'] = foods.SERVING_SIZE
+        food_obj['NUTR_CONT1'] = foods.NUTR_CONT1
+        food_obj['NUTR_CONT2'] = foods.NUTR_CONT2
+        food_obj['NUTR_CONT3'] = foods.NUTR_CONT3
+        food_obj['NUTR_CONT4'] = foods.NUTR_CONT4
+        food_obj['value'] = 1
+        Foods_lst.append(food_obj)
+    return Response(Foods_lst)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def saveMenu(request):
+    # Menu에 값넣기
     new_menu = Menu()
     new_menu.user = request.user
+    new_menu.mealTime = request.data['mealTime']
+    new_menu.created_at = request.data['date']
     # type, fileName, data << 각각 프론트에서 보낼 수 있는 데이터
     decoded_data = base64.b64decode(request.data['data'])
     new_menu.image = ContentFile(
         decoded_data, name=f"{request.data['fileName']}")  # url
-    print(type(new_menu.image))
-    # predict_img(new_menu.image)
     new_menu.save()  # insert
-
-    foodlist, img = predict_img('media/' + str(new_menu.image))
-    print(foodlist)
-    my_dict = {'rice': '쌀밥 한 공기',
-               'eels-on-rice': '장어덮밥',
-               'pilaf': '한우소고기필라프',
-               'chicken-n-egg-on-rice': '전복치킨진밥',
-               'pork-cutlet-on-rice': '등심돈가스',
-               'beef-curry': '카레라이스',
-               'sushi': '초밥, 모듬 초밥',
-               'chicken-rice': '치킨까스',
-               'fried-rice': '계란볶음밥',
-               'tempura-bowl': '채소튀김',
-               'bibimbap': '비빔밥',
-               'toast': '베이컨 치즈 토스트',
-               'croissant': '빵, 크로와상',
-               'roll-bread': '빵, 하드 롤빵',
-               'raisin-bread': '건포도토종효모빵용 빵',
-               'chip-butty': '허니버터칩메이플시럽',
-               'hamburger': '햄버거',
-               'pizza': '피자',
-               'sandwiches': '샌드위치',
-               'udon-noodle': '우동',
-               'tempura-udon': '튀김우동',
-               'soba-noodle': '메밀소바',
-               'ramen-noodle': '돈코츠라멘',
-               'beef-noodle': '즉석쌀국수',
-               'tensin-noodle': '사누끼 생칼국수',
-               'fried-noodle': '튀김우동 큰사발',
-               'spaghetti': '스파게티',
-               'Japanese-style-pancake': '케이크, 팬케이크',
-               'takoyaki': '타코야끼볼',
-               'gratin': '콘치즈그라탕',
-               'sauteed-vegetables': '감자채소볶음',
-               'croquette': '빵, 크로켓',
-               'grilled-eggplant': '가치, 구운것',
-               'sauteed-spinach': '시금치, 볶은것',
-               'vegetable-tempura': '야채전',
-               'miso-soup': '일본된장국',
-               'potage': '카메다 포타포타야키',
-               'sausage': '그릴소세지',
-               'oden': '어묵국',
-               'omelet': '오믈렛',
-               'ganmodoki': '두부류 또는 묵류',
-               'jiaozi': '감자떡만두',
-               'stew': '스튜, 레토르트',
-               'teriyaki-grilled-fish': '가자미구이',
-               'fried-fish': '생선까스',
-               'grilled-salmon': '연어-훈제품',
-               'salmon-meuniere': '연어',
-               'sashimi': '사시미',
-               'grilled-pacific-saury-': '꽁치',
-               'sukiyaki': '소고기샤브샤브',
-               'sweet-and-sour-pork': '돼지고기, 갈비, 구운것(팬)',
-               'lightly-roasted-fish': '고등어구이',
-               'steamed-egg-hotchpotch': '계란사라다빵',
-               'tempura': '모둠튀김',
-               'fried-chicken': '갓치킨',
-               'sirloin-cutlet': '덴까스 립',
-               'nanbanzuke': '돈까스',
-               'boiled-fish': '고등어찌개',
-               'seasoned-beef-with-potatoes': '감자샐러드',
-               'hambarg-steak': '햄버거',
-               'beef-steak': '블랙앵거스 스테이크(오리지널 M)',
-               'dried-fish': '고등어, 반건조',
-               'ginger-pork-saute': '돼지고기장조림',
-               'spicy-chili-flavored-tofu': '무조림',
-               'yakitori': '쿠리 이리 도라야키',
-               'cabbage-roll': '달걀부침, 부친것',
-               'rolled-omelet': '달걀말이',
-               'egg-sunny-side-up': '달걀프라이',
-               'fermented-soybeans': '나토',
-               'cold-tofu': '무조림',
-               'egg-roll': '에그롤',
-               'chilled-noodle': '막국수',
-               'stir-fried-beef-and-peppers': '돼지고기장조림',
-               'simmered-pork': '돼지고기장조림',
-               'boiled-chicken-and-vegetables': '케이준치킨샐러드',
-               'sashimi-bowl': '생선모둠초밥',
-               'sushi-bowl': '생선모둠초밥',
-               'fish-shaped-pancake-with-bean-jam': '팬케이크',
-               'shrimp-with-chill-source': '칠리새우',
-               'roast-chicken': 'The 오븐치킨',
-               'steamed-meat-dumpling': '만두, 고기 만두',
-               'omelet-with-fried-rice': '볶음밥, 오므라이스',
-               'cutlet-curry': '비프 청크 카레',
-               'spaghetti-meat-sauce': '미트라구 파스타',
-               'fried-shrimp': '새우튀김',
-               'potato-salad': '감자 샐러드',
-               'green-salad': '양배추 샐러드, 코울슬로',
-               'macaroni-salad': '파스타, 마카로니',
-               'Japanese-tofu-and-vegetable-chowder': '야채빵',
-               'pork-miso-soup': '된장찌개',
-               'chinese-soup': '치즈, 크림',
-               'beef-bowl': '된장찌개',
-               'kinpira-style-sauteed-burdock': '우엉조림',
-               'rice-ball': '쇠고기주먹밥',
-               'pizza-toast': '피자토스트',
-               'dipping-noodles': '칼국수, 해물',
-               'hot-dog': '옛날 핫도그',
-               'french-fries': '감자튀김',
-               'mixed-rice': '볶음밥, 오므라이스',
-               'goya-chanpuru': '두부전'
-               }
+    foodName = request.data['foodName'][:-1].split(',')
+    foodVal = request.data['foodVal'][:-1].split(',')
+    foodLo = []
+    for lo in request.data['foodLo'][:-1].split('/'):
+        foodLo.append(list(map(float, lo[:-1].split(','))))
     # menu2food에 값넣기
-    for i in range(len(foodlist)):
-        idx = foodlist[i].find("[")
+    for i in range(len(foodName)):
         new_food = Menu2food()
-        fname = foodlist[i][0:idx].strip()
-        kfoodName = my_dict[fname]
-        # input_menu = get_object_or_404(Menu, id=new_menu.id)
         try:
-            foods = get_object_or_404(Food, DESC_KOR=kfoodName)
+            foods = get_object_or_404(Food, DESC_KOR=foodName[i])
         except:
-            foods = Food.objects.filter(DESC_KOR=kfoodName)[0]
+            foods = Food.objects.filter(DESC_KOR=foodName[i])[0]
         # new_food.food 는 같은 이름 찾아서 넣어야댐
-        new_food.location = foodlist[i][idx:]  # 좌표값
+        new_food.location = foodLo[i]  # 좌표값
         new_food.image = new_menu
         new_food.food = foods
+        new_food.value = int(foodVal[i])
         new_food.save()
-    # predict = predict_img('media/' + str(new_menu.image)) #db 저장 위치
     return Response("파일을 저장했습니다.")
-    # response = FileResponse(open(f"media/image/{request.data['fileName']}", 'rb'))
-    # return response
 
 
 @ api_view(['POST'])
@@ -237,6 +169,7 @@ def delImg(request, image_id):
 # 일단 내 사진 목록에서 보여줄 용도로 하나 만들어보겠음
 
 
+
 @ api_view(['POST'])
 @ permission_classes([IsAuthenticated])
 def myImgs(request):
@@ -245,6 +178,7 @@ def myImgs(request):
     for image in images:
         my_imgs.append(MenuSerializer(image).data)
     return Response(my_imgs)
+
 
 
 def getImage(request, uri):
@@ -257,7 +191,7 @@ def getImage(request, uri):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getChart(request, date):
-    Menus = Menu.objects.filter(user=request.user, created_at__contains=date)
+    Menus = Menu.objects.filter(user=request.user, created_at=date)
     Send = {'TotalCal': 0, 'Menus': {
         '아침': {}, '점심': {}, '저녁': {}, '간식': {}, '야식': {}, }}
     # Send = {'TotalCal' : 0, }
@@ -284,6 +218,7 @@ def getChart(request, date):
                 total = T+D+G
                 Send['Menus'][t]['nutrient'] = [
                     (T/total)*100, (D/total)*100, (G/total)*100]
+    print(Send)
     return Response(Send)
 
 
@@ -325,8 +260,7 @@ def getCalendar(request):
     Menus = Menu.objects.filter(user=request.user)
     MenusDict = {}
     for menu in Menus:
-        created_at = str(menu.created_at)
-        target = created_at.split()[0]
+        target = str(menu.created_at)
         if target not in MenusDict.keys():
             # 아침, 점심, 저녁, 간식, 야식, 총칼로리
             MenusDict[target] = [0, 0, 0, 0, 0, 0]
@@ -358,6 +292,6 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        location = list(map(int, menu2food.location[1:-1].split(', ')))
-        lst.append([serializer.data, value, location])
+        location = list(map(float, menu2food.location[1:-1].split(', ')))
+        lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)
