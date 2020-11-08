@@ -353,7 +353,8 @@ export default class MyDatePicker extends Component {
               pickerStyle={styles.dropdownPicker}
               dropdownOffset={{top: 10}}
               onChangeText={(value) => {
-                this.setState({value});
+                console.log('hi', value);
+                this.setState({dropVal: value});
               }}
             />
           </View>
@@ -376,7 +377,10 @@ export default class MyDatePicker extends Component {
                     // 이미지 크기 = 화면 폭
                     const k = width;
                     const color = this.state.colors[i % 5];
-                    console.log('사진 등록 시 location',foodData['location'][0]*k)
+                    console.log(
+                      '사진 등록 시 location',
+                      foodData['location'][0] * k,
+                    );
                     return (
                       <>
                         {foodData['location'].length > 0 && (
@@ -671,7 +675,7 @@ const styles = StyleSheet.create({
     height: width,
   },
   imageBody: {
-    marginBottom: 40,
+    marginBottom: 60,
   },
   // badge
   tagBtn: {

@@ -35,13 +35,13 @@ export default class DetatilImage extends Component {
       colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
     };
   }
-  componentDidMount= async () => {
+  componentDidMount = async () => {
     this.getFood();
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
       token: token,
     });
-  }
+  };
   getFood = () => {
     fetch(`${serverUrl}gallery/getFood/${this.state.imageId}/`, {
       method: 'POST',
@@ -106,7 +106,7 @@ export default class DetatilImage extends Component {
       this.setModalVisible(true);
       this.setState({
         menu2food_id: menu2food_id,
-      })
+      });
     } else {
       var form = new FormData();
       form.append('menu2food_id', menu2food_id);
@@ -165,10 +165,16 @@ export default class DetatilImage extends Component {
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 22,}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 22,
+            }}>
             <View style={styles.modalView}>
               <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
-              <View style={{flexDirection:'row'}}>
+              <View style={{flexDirection: 'row'}}>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
                   onPress={() => {
@@ -235,8 +241,8 @@ export default class DetatilImage extends Component {
                 this.state.foods.map((food, i) => {
                   const k = width;
                   const color = this.state.colors[i];
-                  console.log('디테일에서의 type', typeof food[2][0])
-                  console.log('디테일에서의 k', k)
+                  console.log('디테일에서의 type', typeof food[2][0]);
+                  console.log('디테일에서의 k', k);
                   return (
                     <View
                       style={{
@@ -266,7 +272,6 @@ export default class DetatilImage extends Component {
                         </Text>
                       </View>
                     </View>
-                  
                   );
                 })}
             </View>
@@ -286,63 +291,77 @@ export default class DetatilImage extends Component {
                         paddingHorizontal: 30,
                       }}
                       key={i}>
-                      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10}}>
-                          <View style={{flexDirection: 'row'}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 10,
+                        }}>
+                        <View style={{flexDirection: 'row'}}>
                           <Text
-                          style={{
-                            fontSize: 20,
-                            fontWeight: 'bold',
-                            fontFamily: 'BMHANNAAir',
-                            color: '#232323',
-                          }}>
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 'bold',
+                              fontFamily: 'BMHANNAAir',
+                              color: '#232323',
+                            }}>
                             {food[0]['DESC_KOR']}
                           </Text>
                           <Text
-                              style={{
-                                fontSize: 17,
-                                fontWeight: 'normal',
-                                fontFamily: 'BMHANNAAir',
-                                color: '#232323',
-                                marginLeft: 10,
-                                marginTop: 6,
-                              }}>
-                              ({food[0]['SERVING_SIZE']*food[1]} g)
-                            </Text>
-                          </View>
-                          <Icon name='create-outline' style={{fontSize: 20}}></Icon>
+                            style={{
+                              fontSize: 17,
+                              fontWeight: 'normal',
+                              fontFamily: 'BMHANNAAir',
+                              color: '#232323',
+                              marginLeft: 10,
+                              marginTop: 6,
+                            }}>
+                            ({food[0]['SERVING_SIZE'] * food[1]} g)
+                          </Text>
                         </View>
-                      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: 'BMHANNAAir',
-                          color: '#7F7F7F',
-                        }}>
-                        탄수화물: {(food[0]['NUTR_CONT2']*food[1]).toFixed(1)} g
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: 'BMHANNAAir',
-                          color: '#7F7F7F',
-                        }}>
-                        단백질: {(food[0]['NUTR_CONT3']*food[1]).toFixed(1)} g
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: 'BMHANNAAir',
-                          color: '#7F7F7F',
-                        }}>
-                        지방: {(food[0]['NUTR_CONT4']*food[1]).toFixed(1)} g
-                      </Text>
+                        <Icon
+                          name="create-outline"
+                          style={{fontSize: 20}}></Icon>
                       </View>
-                      <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginTop: 15,
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
                         }}>
-                        <View style={{flexDirection: 'row', marginTop: 2,}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontFamily: 'BMHANNAAir',
+                            color: '#7F7F7F',
+                          }}>
+                          탄수화물:{' '}
+                          {(food[0]['NUTR_CONT2'] * food[1]).toFixed(1)} g
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontFamily: 'BMHANNAAir',
+                            color: '#7F7F7F',
+                          }}>
+                          단백질: {(food[0]['NUTR_CONT3'] * food[1]).toFixed(1)}{' '}
+                          g
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontFamily: 'BMHANNAAir',
+                            color: '#7F7F7F',
+                          }}>
+                          지방: {(food[0]['NUTR_CONT4'] * food[1]).toFixed(1)} g
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginTop: 15,
+                        }}>
+                        <View style={{flexDirection: 'row', marginTop: 2}}>
                           <Icon
                             name="remove-circle-outline"
                             style={{
@@ -350,24 +369,19 @@ export default class DetatilImage extends Component {
                               marginHorizontal: 20,
                             }}
                             onPress={() =>
-                              this.minusCnt(
-                                food[1],
-                                food[3],
-                              )
+                              this.minusCnt(food[1], food[3])
                             }></Icon>
-                          <Text style={{fontSize: 18, margin:-2}}>{food[1]}</Text>
+                          <Text style={{fontSize: 18, margin: -2}}>
+                            {food[1]}
+                          </Text>
                           <Icon
                             name="add-circle-outline"
                             style={{
                               fontSize: 20,
                               marginHorizontal: 20,
                             }}
-                            onPress={() =>
-                              this.plusCnt(
-                                food[3],
-                              )
-                            }></Icon>
-                            <Text style={{fontSize: 18, margin:-2}}>인분</Text>
+                            onPress={() => this.plusCnt(food[3])}></Icon>
+                          <Text style={{fontSize: 18, margin: -2}}>인분</Text>
                         </View>
                         <Text
                           style={{
@@ -376,7 +390,7 @@ export default class DetatilImage extends Component {
                             color: '#232323',
                             marginTop: 2,
                           }}>
-                          {food[0]['NUTR_CONT1']*food[1]} kcal
+                          {food[0]['NUTR_CONT1'] * food[1]} kcal
                         </Text>
                       </View>
                     </View>
@@ -410,7 +424,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   imageBody: {
-    marginBottom: 140,
+    marginBottom: 60,
   },
   image: {
     width: width,
@@ -437,7 +451,7 @@ const styles = StyleSheet.create({
   iconBox: {
     flexDirection: 'row',
   },
-  
+
   //modal
   modalView: {
     width: '60%',
