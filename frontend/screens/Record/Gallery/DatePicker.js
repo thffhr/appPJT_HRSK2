@@ -134,26 +134,6 @@ export default class MyDatePicker extends Component {
     }
     this.setdelModalVisible(false, -1);
   }
-  // food 추가
-  // addFoodInfo(foodInfo) {
-  //   var newFoodInfo = {};
-  //   newFoodInfo['location'] = [];
-  //   newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
-  //   newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
-  //   newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
-  //   newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
-  //   newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
-  //   newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
-  //   newFoodInfo['value'] = 1;
-  //   // console.log(newFoodInfo)
-  //   const temp = this.state.foodsLst.concat(newFoodInfo);
-  //   // console.log(temp)
-  //   this.setState({
-  //     foodsLst: temp,
-  //     nowView: newFoodInfo['DESC_KOR'],
-  //   });
-  //   this.setFIModalVisible(false);
-  // }
   setFIModalVisible(tf, idx) {
     this.setState({
       foodInputData: {
@@ -219,9 +199,7 @@ export default class MyDatePicker extends Component {
       newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
       newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
       newFoodInfo['value'] = 1;
-      // console.log(newFoodInfo)
       const temp = this.state.foodsLst.concat(newFoodInfo);
-      // console.log(temp)
       this.setState({
         foodsLst: temp,
         nowView: newFoodInfo['DESC_KOR'],

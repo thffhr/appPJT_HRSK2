@@ -32,7 +32,6 @@ export default class FoodInput extends Component {
     //여기서 props 가 있는지 없는지에 따라서 분기 해줘야 함
     if (Object.values(this.props.food).length > 0) {
       this.setState({
-        // foodInfo: this.props.food,
         update: true,
       })
     }
@@ -96,12 +95,8 @@ export default class FoodInput extends Component {
     });
   }
   isUpdate() {
-    console.log('@@@@@', this.state.update, '//', this.state.foodInfo)
     this.props.isUpdate(this.state.update, this.state.foodInfo)
   }
-  // saveFoodInfo() {
-  //   this.props.saveFoodInfo(this.state.foodInfo);
-  // }
   close(tf) {
     this.props.close(tf);
   }
