@@ -219,6 +219,7 @@ class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log(response)
         this.setState({
           dayMenus: response['Menus'],
           TotalCal: response['TotalCal'],
@@ -229,14 +230,6 @@ class Record extends Component {
       })
       .catch((err) => console.error(err));
   };
-
-  // touchCalbox = (key, tf) => {
-  //   var calboxObj = this.state.dayMenus;
-  //   calboxObj[key]['flag'] = tf;
-  //   this.setState({
-  //     dayMenus: calboxObj,
-  //   });
-  // };
 
   minusCnt = (year, month, date, day, cnt, menu2food_id) => {
     if (cnt <= 1) {
@@ -314,19 +307,19 @@ class Record extends Component {
       : new Array(width - n.length + 1).join('0') + n;
   };
 
-  getDayInfo = () => {
-    const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
-    fetch(`${serverUrl}gallery/`, {
-      method: 'GET',
-      body: YMD,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${this.state.authToken}`,
-      },
-    })
-      .then(() => {})
-      .catch((error) => console.error(error));
-  };
+  // getDayInfo = () => {
+  //   const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
+  //   fetch(`${serverUrl}gallery/`, {
+  //     method: 'GET',
+  //     body: YMD,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Token ${this.state.authToken}`,
+  //     },
+  //   })
+  //     .then(() => {})
+  //     .catch((error) => console.error(error));
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -408,7 +401,7 @@ class Record extends Component {
             </View>
             {/* 여기는 총 칼로리*/}
             <Text style={styles.caltxt}>
-              {this.state.TotalCal}/{this.state.basal}
+              {this.state.TotalCal.toFixed(0)}/{this.state.basal}
             </Text>
             {this.state.TotalCal / this.state.basal < 1 && (
               <View style={styles.progressBar}>
@@ -435,7 +428,7 @@ class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>{this.state.TotalCal}</Text>
+                  <Text style={styles.arrowboxtxt}>{((this.state.TotalCal / this.state.basal) * 100).toFixed(0)}%</Text>
                 </View>
               </View>
             )}
@@ -451,7 +444,7 @@ class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>{this.state.TotalCal}</Text>
+                  <Text style={styles.arrowboxtxt}>{((this.state.TotalCal / this.state.basal) * 100).toFixed(0)}%</Text>
                 </View>
               </View>
             )}

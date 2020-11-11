@@ -105,6 +105,7 @@ class Calendar extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log(response)
         this.setState({
           nextDays: response,
         });
@@ -235,7 +236,7 @@ class Calendar extends Component {
                         <View style={styles.macroBox} key={i}>
                           <Text style={styles.macroTxt}>{key}</Text>
                           <Text style={styles.macroTxt}>
-                            {value}
+                            {value.toFixed(2)}
                             {'   '}kcal
                           </Text>
                         </View>
@@ -249,7 +250,7 @@ class Calendar extends Component {
                             {key}
                           </Text>
                           <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
-                            {value}
+                            {value.toFixed(2)}
                             {'   '}kcal
                           </Text>
                         </View>

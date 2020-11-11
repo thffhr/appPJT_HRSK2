@@ -3,7 +3,7 @@ from .models import Menu
 from .models import Menu2food
 from .models import Food
 
-from .serializers import MenuSerializer, FoodSerializer
+from .serializers import MenuSerializer, FoodSerializer, Menu2foodSerializer
 from accounts.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -32,7 +32,7 @@ def getMenuInfo(request):
         np_data = np.fromstring(decoded_data,np.uint8)
         img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
-        net = cv2.dnn.readNet("yolov4_2000.weights", "yolov4.cfg")
+        net = cv2.dnn.readNet("yolov4_3000.weights", "yolov4.cfg")
         classes = []
         with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
@@ -140,9 +140,16 @@ def saveMenu(request):
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
     foodLo = []
+    print('1-----', request.data['foodLo'])
     if len(request.data['foodLo']) > 1:
+        print('2-----', request.data['foodLo'][:-1].split('/'))
         for lo in request.data['foodLo'][:-1].split('/'):
-            foodLo.append(list(map(float, lo[:-1].split(','))))
+            if lo != '' :
+                print('3-----', lo)
+                foodLo.append(list(map(float, lo[:-1].split(','))))
+            else:
+                foodLo.append([])
+    print('4-----', foodLo)
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
@@ -216,7 +223,7 @@ def getChart(request, date):
                         D += float(menu2food.food.NUTR_CONT3)*menu2food.value
                     if menu2food.food.NUTR_CONT4:
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
-                    Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
+                    Send['TotalCal'] += float(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
                 total = T+D+G
                 if T > 0:
@@ -293,8 +300,8 @@ def getCalendar(request):
             MenusDict[target][3] += tot
         elif menu.mealTime == '야식':
             MenusDict[target][4] += tot
-
-    MenusDict[target][5] += sum(MenusDict[target][:5])
+        MenusDict[target][5] += tot
+    print(MenusDict)
     return Response(MenusDict)
 
 
@@ -307,9 +314,18 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        if menu2food.location:
+        if menu2food.location != '[]':
             location = list(map(float, menu2food.location[1:-1].split(', ')))
         else:
             location = 'null'
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)
+
+@api_view(['POST'])
+def updateM2F(request, menu2food_id):
+    menu2food = get_object_or_404(Menu2food, id=menu2food_id)
+    new_food = get_object_or_404(Food, id=request.data['foodId'])
+    up_menu2food = Menu2foodSerializer(menu2food, data=request.data)
+    if up_menu2food.is_valid(raise_exception=True):
+        up_menu2food.save(food=new_food)
+        return Response(up_menu2food.data)
