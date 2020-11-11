@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../../constants';
+import FoodInput from '../FoodInput/FoodInput';
 
 const {width, height} = Dimensions.get('window');
 
@@ -26,6 +27,7 @@ export default class DetatilImage extends Component {
       picture: this.props.route.params.picture,
       dateTime: this.props.route.params.pictureDate,
       mealTime: this.props.route.params.mealTime,
+      InputModalVisible: false,
       foods: [],
       onCaption: false,
       info: {
@@ -142,6 +144,48 @@ export default class DetatilImage extends Component {
       })
       .catch((err) => console.error(err));
   };
+  // 나중에 여기에 이미지도 넣어줘야 함
+  sendFood(food, id) {
+    this.setState({
+      sendFood: {
+        DESC_KOR: food['DESC_KOR'],
+        SERVING_SIZE: food['SERVING_SIZE'],
+        NUTR_CONT1: food['NUTR_CONT1'],
+        NUTR_CONT2: food['NUTR_CONT2'],
+        NUTR_CONT3: food['NUTR_CONT3'],
+        NUTR_CONT4: food['NUTR_CONT4'],
+      }
+    })
+    this.setFIModalVisible(true, id)
+  };
+  setFIModalVisible(tf, id) {
+    this.setState({
+      InputModalVisible: tf,
+      updateFoodId: id,
+    });
+  }
+  sendNewFood(foodInfo) {
+    var newFoodInfo = new FormData();
+    newFoodInfo.append('image', this.state.image);
+    newFoodInfo.append('foodId', foodInfo.id);
+    newFoodInfo.append('location', []);
+    newFoodInfo.append('value', 1);
+    fetch(`${serverUrl}gallery/updateM2F/${this.state.updateFoodId}/`, {
+      method: 'POST',
+      body: newFoodInfo,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Token ${this.state.token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((err) => console.error(err));
+    this.setFIModalVisible(false, this.state.updateFoodId);
+    this.getFood();
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -193,6 +237,44 @@ export default class DetatilImage extends Component {
             </View>
           </View>
         </Modal>
+        {/* 식단수정 */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.InputModalVisible}>
+          <View
+            style={{
+              width: '100%',
+              height: height,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}></View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.InputModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <View style={styles.FImodalView}>
+              <FoodInput
+                image={this.state.image === null ? null : this.state.image}
+                food={this.state.sendFood}
+                saveFoodInfo={(foodInfo) => this.sendNewFood(foodInfo)}
+                close={(tf) => this.setFIModalVisible(tf, this.state.updateFoodId)}
+              />
+            </View>
+          </View>
+        </Modal>
+
 
         <View style={styles.detailArea}>
           <View style={styles.detailHeader}>
@@ -328,9 +410,11 @@ export default class DetatilImage extends Component {
                             ({food[0]['SERVING_SIZE'] * food[1]} g)
                           </Text>
                         </View>
-                        <Icon
+                        <TouchableOpacity onPress={() => this.sendFood(food[0], food[3])}>
+                          <Icon
                           name="create-outline"
                           style={{fontSize: 20}}></Icon>
+                        </TouchableOpacity>
                       </View>
                       <View
                         style={{
@@ -483,5 +567,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 100,
     marginHorizontal: 20,
+  },
+  FImodalView: {
+    width: width * 0.85,
+    // height: height*0.8,
+    margin: 20,
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

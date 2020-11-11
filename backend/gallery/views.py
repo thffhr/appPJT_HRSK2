@@ -3,7 +3,7 @@ from .models import Menu
 from .models import Menu2food
 from .models import Food
 
-from .serializers import MenuSerializer, FoodSerializer
+from .serializers import MenuSerializer, FoodSerializer, Menu2foodSerializer
 from accounts.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -32,7 +32,7 @@ def getMenuInfo(request):
         np_data = np.fromstring(decoded_data,np.uint8)
         img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
-        net = cv2.dnn.readNet("yolov4_2000.weights", "yolov4.cfg")
+        net = cv2.dnn.readNet("yolov4_3000.weights", "yolov4.cfg")
         classes = []
         with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
@@ -307,9 +307,18 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        if menu2food.location:
+        if menu2food.location != '[]':
             location = list(map(float, menu2food.location[1:-1].split(', ')))
         else:
             location = 'null'
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)
+
+@api_view(['POST'])
+def updateM2F(request, menu2food_id):
+    menu2food = get_object_or_404(Menu2food, id=menu2food_id)
+    new_food = get_object_or_404(Food, id=request.data['foodId'])
+    up_menu2food = Menu2foodSerializer(menu2food, data=request.data)
+    if up_menu2food.is_valid(raise_exception=True):
+        up_menu2food.save(food=new_food)
+        return Response(up_menu2food.data)

@@ -230,14 +230,6 @@ class Record extends Component {
       .catch((err) => console.error(err));
   };
 
-  // touchCalbox = (key, tf) => {
-  //   var calboxObj = this.state.dayMenus;
-  //   calboxObj[key]['flag'] = tf;
-  //   this.setState({
-  //     dayMenus: calboxObj,
-  //   });
-  // };
-
   minusCnt = (year, month, date, day, cnt, menu2food_id) => {
     if (cnt <= 1) {
       this.setModalVisible(true, year, month, date, menu2food_id);
@@ -314,19 +306,19 @@ class Record extends Component {
       : new Array(width - n.length + 1).join('0') + n;
   };
 
-  getDayInfo = () => {
-    const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
-    fetch(`${serverUrl}gallery/`, {
-      method: 'GET',
-      body: YMD,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${this.state.authToken}`,
-      },
-    })
-      .then(() => {})
-      .catch((error) => console.error(error));
-  };
+  // getDayInfo = () => {
+  //   const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
+  //   fetch(`${serverUrl}gallery/`, {
+  //     method: 'GET',
+  //     body: YMD,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Token ${this.state.authToken}`,
+  //     },
+  //   })
+  //     .then(() => {})
+  //     .catch((error) => console.error(error));
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>

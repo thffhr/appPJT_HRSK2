@@ -249,7 +249,7 @@ class Calendar extends Component {
                             {key}
                           </Text>
                           <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
-                            {value}
+                            {value.toFixed(2)}
                             {'   '}kcal
                           </Text>
                         </View>
