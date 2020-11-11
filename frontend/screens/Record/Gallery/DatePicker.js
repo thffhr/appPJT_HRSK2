@@ -165,6 +165,7 @@ export default class MyDatePicker extends Component {
         NUTR_CONT2: food['NUTR_CONT2'],
         NUTR_CONT3: food['NUTR_CONT3'],
         NUTR_CONT4: food['NUTR_CONT4'],
+        location: food['location'],
       }
     })
     this.setFIModalVisible(true, idx)
@@ -173,7 +174,7 @@ export default class MyDatePicker extends Component {
     // update일 경우
     if (update) {
       var newFoodInfo = {};
-      newFoodInfo['location'] = [];
+      newFoodInfo['location'] = this.state.sendFood['location'];
       newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
       newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
       newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
@@ -225,6 +226,7 @@ export default class MyDatePicker extends Component {
     var data = new FormData();
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
+    console.log('저장할때 위치', foodLo)
     data.append('foodVal', foodVal);
     if (this.state.image !== null) {
       data.append('data', this.state.image.data);

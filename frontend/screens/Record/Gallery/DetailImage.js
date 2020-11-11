@@ -50,6 +50,7 @@ export default class DetatilImage extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log('디테일 왜 안나와', response)
         this.setState({
           foods: response,
         });
