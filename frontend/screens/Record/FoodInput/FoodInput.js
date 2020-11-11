@@ -23,15 +23,16 @@ export default class FoodInput extends Component {
     super(props);
 
     this.state = {
-      // foodInfo: this.props.existingInfo
+      update: false,
+      foodInfo: this.props.food,
     };
   }
   componentDidMount = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     //여기서 props 가 있는지 없는지에 따라서 분기 해줘야 함
-    if (this.props.food) {
+    if (Object.values(this.props.food).length > 0) {
       this.setState({
-        foodInfo: this.props.food
+        update: true,
       })
     }
     this.setState({
@@ -93,8 +94,8 @@ export default class FoodInput extends Component {
       foodInfo: selectedFood,
     });
   }
-  saveFoodInfo() {
-    this.props.saveFoodInfo(this.state.foodInfo);
+  isUpdate() {
+    this.props.isUpdate(this.state.update, this.state.foodInfo)
   }
   close(tf) {
     this.props.close(tf);
@@ -258,7 +259,7 @@ export default class FoodInput extends Component {
           <TouchableHighlight
             style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
             onPress={() => {
-              this.saveFoodInfo();
+              this.isUpdate();
             }}>
             <Text>저장</Text>
           </TouchableHighlight>

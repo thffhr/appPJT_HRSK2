@@ -55,6 +55,7 @@ export default class MyDatePicker extends Component {
       colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
       badgeColors: ['#2ECC71', '#3498DB', '#8E44AD', '#F1C40F', '#F312A4'],
       foodsLst: [],
+      sendFood: {},
     };
   }
   componentDidMount = async () => {
@@ -133,33 +134,19 @@ export default class MyDatePicker extends Component {
     }
     this.setdelModalVisible(false, -1);
   }
-  // food 추가
-  addFoodInfo(foodInfo) {
-    var newFoodInfo = {};
-    newFoodInfo['location'] = [];
-    newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
-    newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
-    newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
-    newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
-    newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
-    newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
-    newFoodInfo['value'] = 1;
-    // console.log(newFoodInfo)
-    const temp = this.state.foodsLst.concat(newFoodInfo);
-    // console.log(temp)
-    this.setState({
-      foodsLst: temp,
-      nowView: newFoodInfo['DESC_KOR'],
-    });
-    this.setFIModalVisible(false);
-  }
-  setFIModalVisible(tf) {
+  setFIModalVisible(tf, idx) {
     this.setState({
       foodInputData: {
         ...this.state.foodInputData,
         modalVisible: tf,
+        updateFoodIdx: idx,
       },
     });
+    if (idx < 0) {
+      this.setState({
+        sendFood: {}
+      });
+    }
   }
   // food 보기
   changeView(foodName) {
@@ -168,7 +155,59 @@ export default class MyDatePicker extends Component {
     });
   }
   // food 수정
-  foodInput() {}
+  // 보낼 food 정보들
+  sendFood(food, idx) {
+    this.setState({
+      sendFood: {
+        DESC_KOR: food['DESC_KOR'],
+        SERVING_SIZE: food['SERVING_SIZE'],
+        NUTR_CONT1: food['NUTR_CONT1'],
+        NUTR_CONT2: food['NUTR_CONT2'],
+        NUTR_CONT3: food['NUTR_CONT3'],
+        NUTR_CONT4: food['NUTR_CONT4'],
+        location: food['location'],
+      }
+    })
+    this.setFIModalVisible(true, idx)
+  };
+  isUpdate(update, foodInfo) {
+    // update일 경우
+    if (update) {
+      var newFoodInfo = {};
+      newFoodInfo['location'] = this.state.sendFood['location'];
+      newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
+      newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
+      newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
+      newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
+      newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
+      newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
+      newFoodInfo['value'] = 1;
+      const temp = this.state.foodsLst
+      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo)
+      this.setState({
+        foodsLst: temp,
+        nowView: newFoodInfo['DESC_KOR'],
+      });
+      this.setFIModalVisible(false, this.state.updateFoodIdx);
+    } else {
+      // create일 경우
+      var newFoodInfo = {};
+      newFoodInfo['location'] = [];
+      newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
+      newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
+      newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
+      newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
+      newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
+      newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
+      newFoodInfo['value'] = 1;
+      const temp = this.state.foodsLst.concat(newFoodInfo);
+      this.setState({
+        foodsLst: temp,
+        nowView: newFoodInfo['DESC_KOR'],
+      });
+      this.setFIModalVisible(false, this.state.updateFoodIdx);
+    }
+  };
   // 사진 저장
   onCamera() {
     let foodName = '';
@@ -187,6 +226,7 @@ export default class MyDatePicker extends Component {
     var data = new FormData();
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
+    console.log('저장할때 위치', foodLo)
     data.append('foodVal', foodVal);
     if (this.state.image !== null) {
       data.append('data', this.state.image.data);
@@ -296,8 +336,9 @@ export default class MyDatePicker extends Component {
             <View style={styles.FImodalView}>
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
-                saveFoodInfo={(foodInfo) => this.addFoodInfo(foodInfo)}
-                close={(tf) => this.setFIModalVisible(tf)}
+                food={this.state.sendFood}
+                isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
+                close={(tf) => this.setFIModalVisible(tf, -1)}
               />
             </View>
           </View>
@@ -437,7 +478,7 @@ export default class MyDatePicker extends Component {
                   zIndex: 1,
                   height: '100%',
                 }}>
-                <TouchableOpacity onPress={() => this.setFIModalVisible(true)}>
+                <TouchableOpacity onPress={() => this.setFIModalVisible(true, -1)}>
                   <Icon
                     name="add-outline"
                     style={{
@@ -540,9 +581,11 @@ export default class MyDatePicker extends Component {
                               </Text>
                             </View>
                             {/* food 수정 */}
-                            <Icon
+                            <TouchableOpacity onPress={() => this.sendFood(foodData, i)}>
+                              <Icon
                               name="create-outline"
                               style={{fontSize: 20}}></Icon>
+                            </TouchableOpacity>
                           </View>
                           <View
                             style={{

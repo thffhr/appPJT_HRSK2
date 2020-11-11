@@ -50,6 +50,7 @@ export default class DetatilImage extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log('디테일 왜 안나와', response)
         this.setState({
           foods: response,
         });
@@ -159,33 +160,36 @@ export default class DetatilImage extends Component {
     this.setFIModalVisible(true, id)
   };
   setFIModalVisible(tf, id) {
+    console.log(this.state.sendFood)
     this.setState({
       InputModalVisible: tf,
       updateFoodId: id,
     });
   }
-  sendNewFood(foodInfo) {
-    var newFoodInfo = new FormData();
-    newFoodInfo.append('image', this.state.image);
-    newFoodInfo.append('foodId', foodInfo.id);
-    newFoodInfo.append('location', []);
-    newFoodInfo.append('value', 1);
-    fetch(`${serverUrl}gallery/updateM2F/${this.state.updateFoodId}/`, {
-      method: 'POST',
-      body: newFoodInfo,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response)
+  isUpdate(update, foodInfo) {
+    if (update) {
+      var newFoodInfo = new FormData();
+      newFoodInfo.append('image', this.state.image);
+      newFoodInfo.append('foodId', foodInfo.id);
+      newFoodInfo.append('location', []);
+      newFoodInfo.append('value', 1);
+      fetch(`${serverUrl}gallery/updateM2F/${this.state.updateFoodId}/`, {
+        method: 'POST',
+        body: newFoodInfo,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
       })
-      .catch((err) => console.error(err));
-    this.setFIModalVisible(false, this.state.updateFoodId);
-    this.getFood();
-  }
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((err) => console.error(err));
+      this.setFIModalVisible(false, this.state.updateFoodId);
+      this.getFood();
+    }
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -268,7 +272,8 @@ export default class DetatilImage extends Component {
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
-                saveFoodInfo={(foodInfo) => this.sendNewFood(foodInfo)}
+                isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
+                // saveFoodInfo={(foodInfo) => this.sendNewFood(foodInfo)}
                 close={(tf) => this.setFIModalVisible(tf, this.state.updateFoodId)}
               />
             </View>

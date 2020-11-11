@@ -140,9 +140,16 @@ def saveMenu(request):
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
     foodLo = []
+    print('1-----', request.data['foodLo'])
     if len(request.data['foodLo']) > 1:
+        print('2-----', request.data['foodLo'][:-1].split('/'))
         for lo in request.data['foodLo'][:-1].split('/'):
-            foodLo.append(list(map(float, lo[:-1].split(','))))
+            if lo != '' :
+                print('3-----', lo)
+                foodLo.append(list(map(float, lo[:-1].split(','))))
+            else:
+                foodLo.append([])
+    print('4-----', foodLo)
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
@@ -216,7 +223,7 @@ def getChart(request, date):
                         D += float(menu2food.food.NUTR_CONT3)*menu2food.value
                     if menu2food.food.NUTR_CONT4:
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
-                    Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
+                    Send['TotalCal'] += float(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
                 total = T+D+G
                 if T > 0:
@@ -293,8 +300,8 @@ def getCalendar(request):
             MenusDict[target][3] += tot
         elif menu.mealTime == '야식':
             MenusDict[target][4] += tot
-
-    MenusDict[target][5] += sum(MenusDict[target][:5])
+        MenusDict[target][5] += tot
+    print(MenusDict)
     return Response(MenusDict)
 
 
