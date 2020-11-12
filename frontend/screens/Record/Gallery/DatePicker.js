@@ -698,6 +698,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffbe6',
+    paddingHorizontal: 20
   },
   navbar: {
     padding: 5,
@@ -716,7 +717,7 @@ const styles = StyleSheet.create({
     height: width,
   },
   imageBody: {
-    marginBottom: 60,
+    marginBottom: 70,
   },
   // badge
   tagBtn: {
