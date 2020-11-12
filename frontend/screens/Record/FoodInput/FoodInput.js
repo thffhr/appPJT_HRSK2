@@ -29,6 +29,7 @@ export default class FoodInput extends Component {
   }
   componentDidMount = async () => {
     const token = await AsyncStorage.getItem('auth-token');
+    console.log('확인', this.props.image.data)
     //여기서 props 가 있는지 없는지에 따라서 분기 해줘야 함
     if (Object.values(this.props.food).length > 0) {
       this.setState({

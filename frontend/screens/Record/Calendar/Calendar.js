@@ -115,10 +115,10 @@ class Calendar extends Component {
           let dotColor = '';
           if (this.props.user.basal_metabolism - val[5] > 100) {
             dotColor = '#2ECC71'; // 초
-          } else if (-100 < this.props.user.basal_metabolism - val[5] < 100) {
-            dotColor = '#F1C40F'; // 노 (-100 ~ +100)
+          } else if (this.props.user.basal_metabolism - val[5] < -100) {
+            dotColor = '#E74C3C'; // 노 (-100 ~ +100)
           } else {
-            dotColor = '#E74C3C'; // 빨
+            dotColor = '#F1C40F'; // 빨
           }
           tempObject = {
             ...tempObject,
