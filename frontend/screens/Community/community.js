@@ -140,7 +140,7 @@ class Community extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{marginBottom: 5, fontSize: 19, fontFamily: 'NanumSquareRoundEB'}}>레시피</Text>
+              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
               <TouchableHighlight
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
@@ -155,8 +155,8 @@ class Community extends Component {
                 .map((line, i) => {
                   return (
                     <View style={{flexDirection: 'row', marginVertical: 3}}>
-                    <Text style={{fontFamily: 'NanumBarunGothicBold', fontSize: 17}}>{i + 1}. </Text>
-                    <Text style={{fontFamily: 'NanumBarunGothicBold', fontSize: 17}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
+                    <Text style={{fontSize: 17}}>
                       {line}
                     </Text>
                     </View>
@@ -204,7 +204,7 @@ class Community extends Component {
                               style={{
                                 marginLeft: 10,
                                 fontSize: 20,
-                                fontFamily: 'NanumSquareRoundEB'
+                                fontWeight: 'bold',
                               }}>
                               {article.user.username}
                             </Text>
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 20,
     textAlign: 'center',
-    fontFamily: 'NanumSquareRoundEB'
+    fontFamily: 'BMHANNA',
   },
   tags: {
     marginBottom: 10,

@@ -219,11 +219,10 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: W * 0.05,
-    fontFamily: 'NanumSquareRoundEB'
+    fontWeight: 'bold',
   },
   infoValue: {
     fontSize: W * 0.05,
-    fontFamily: 'NanumBarunGothicBold'
   },
   infoInput: {
     fontSize: W * 0.032,
@@ -259,6 +258,11 @@ const styles = StyleSheet.create({
     right: W * 0.03,
     top: W * 0.03,
   },
+  updateText: {
+    fontSize: W * 0.05,
+    color: '#fca652',
+    fontWeight: 'bold',
+  },
   inputBox: {
     flexDirection: 'row',
   },
@@ -272,16 +276,14 @@ const styles = StyleSheet.create({
   guideBox: {},
   mainComment: {
     fontSize: 25,
-    fontFamily: 'NanumBarunGothicBold'
+    fontFamily: 'BMJUA',
   },
-  subComment: {
-    fontFamily: 'NanumBarunGothicBold'
-  },
+  subComment: {},
   updateBtn: {
   },
   updateText: {
     fontSize: 25,
-    fontFamily: 'NanumSquareRoundEB'
+    fontFamily: 'BMJUA',
   },
 });
 

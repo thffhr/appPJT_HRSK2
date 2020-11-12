@@ -375,19 +375,17 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: W * 0.05,
-    fontFamily: 'NanumSquareRoundEB'
+    fontWeight: 'bold',
   },
   infoValue: {
     fontSize: W * 0.05,
-    fontFamily: 'NanumBarunGothicBold'
   },
   deleteBtn: {
     marginTop: H * 0.02,
-    fontFamily: 'NanumBarunGothicBold'
   },
   delText: {
     color: '#34495E',
-    fontFamily: 'NanumBarunGothicBold',
+    fontFamily: 'BMHANNAAir',
     fontSize: W * 0.06,
   },
   // header
@@ -400,16 +398,14 @@ const styles = StyleSheet.create({
   guideBox: {},
   mainComment: {
     fontSize: 25,
-    fontFamily: 'NanumSquareRoundEB',
+    fontFamily: 'BMJUA',
   },
-  subComment: {
-    fontFamily: 'NanumBarunGothicBold'
-  },
+  subComment: {},
   updateBtn: {
   },
   updateText: {
     fontSize: 25,
-    fontFamily: 'NanumSquareRoundEB',
+    fontFamily: 'BMJUA',
   },
   // image modal
   centeredView: {
@@ -450,7 +446,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    fontFamily: 'NanumSquareRoundEB'
   },
 
   // secession modal
@@ -505,12 +500,10 @@ const styles = StyleSheet.create({
   },
   secessionTitle: {
     fontSize: 20,
-    fontFamily: 'NanumSquareRoundEB',
     marginHorizontal: 10,
   },
   secessionIcon: {
     fontSize: 30,
-    fontFamily: 'NanumSquareRoundEB',
     marginHorizontal: 10,
   },
   secessionModalBody: {
