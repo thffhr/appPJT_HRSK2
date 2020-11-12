@@ -34,7 +34,9 @@ def create(request):
     # 태그는 string으로 받아서 split하기->for로 중복확인/저장(추가 필요)
     if new_article.is_valid(raise_exception=True):
         new_article.save(user=request.user)
+        print(new_article)
         return Response(new_article.data)
+
 
 
 @api_view(['POST'])

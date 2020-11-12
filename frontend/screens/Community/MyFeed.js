@@ -104,6 +104,7 @@ class MyFeed extends Component {
               )}
               <Text
                 style={{
+                  fontFamily: 'NanumSquareRoundEB',
                   fontSize: 20,
                   marginLeft: 5,
                 }}>
@@ -179,6 +180,8 @@ const styles = StyleSheet.create({
   },
   cntBox: {},
   cntContent: {
+    fontFamily: 'NanumBarunGothicBold',
+    marginBottom: 3,
     textAlign: 'center',
     fontSize: 20,
   },

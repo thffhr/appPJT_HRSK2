@@ -88,10 +88,12 @@ class CreateSelect extends Component {
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
+        if(response.length){
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},
         });
+      }
       })
       .catch((err) => {
         console.log(err);
@@ -102,7 +104,7 @@ class CreateSelect extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.onNext}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: '#fff'}}>
+          <Text style={{fontSize: 20, fontFamily: 'NanumSquareRoundEB', color: '#fff'}}>
             다음
           </Text>
           <Icon name="chevron-forward" size={26} color={'#fff'}></Icon>
@@ -131,7 +133,7 @@ class CreateSelect extends Component {
               : {backgroundColor: '#ffb46b'},
           ]}
           {...this._panResponder.panHandlers}>
-          <Text style={{color: '#fff'}}>사진에서 선택</Text>
+          <Text style={{color: '#fff', fontFamily: 'NanumBarunGothicBold'}}>사진에서 선택</Text>
         </View>
         <Animated.View
           style={[
@@ -188,8 +190,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    // fontWeight: 'bold',
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     color: '#fff',
   },
   next: {

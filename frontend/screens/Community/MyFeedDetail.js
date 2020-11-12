@@ -102,7 +102,7 @@ export default class MyFeedDetail extends Component {
                 style={{
                   marginLeft: 10,
                   fontSize: 20,
-                  fontWeight: 'bold',
+                  fontFamily: 'NanumSquareRoundEB'
                 }}>
                 {this.state.article.user.username}
               </Text>
@@ -300,10 +300,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 20,
     textAlign: 'center',
+    fontFamily: 'NanumBarunGothicBold'
   },
   articleContent: {
     fontSize: 20,
     fontFamily: 'BMEULJROTTF',
+    fontFamily: 'NanumBarunGothicBold'
   },
 
   // modal
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'NanumBarunGothicBold',
     textAlign: 'center',
   },
 });

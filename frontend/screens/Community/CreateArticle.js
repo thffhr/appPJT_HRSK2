@@ -162,7 +162,7 @@ class CreateArticle extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.createArticle}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: 'orange'}}>
+          <Text style={{fontSize: 20, fontFamily: 'NanumSquareRoundEB', color: 'orange'}}>
             공유
           </Text>
         </TouchableOpacity>
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontFamily: 'NanumSquareRoundEB'
   },
   profileImg: {
     width: 40,
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   },
   fs1: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'NanumBarunGothicBold'
   },
 });
 

@@ -44,10 +44,12 @@ export default class Gallery extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        if(response.length){
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},
         });
+      }
       })
       .catch((err) => {
         console.error(err);
@@ -74,7 +76,7 @@ export default class Gallery extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={{width: '100%'}}>
-          <View style={styles.pictureBox}>
+           <View style={styles.pictureBox}>
             {this.state.pictures.map((picture) => {
               const borderColor =
                 picture.id === this.state.selected.id
@@ -116,7 +118,7 @@ export default class Gallery extends Component {
             })}
           </View>
         </ScrollView>
-        <Camera onCamera={(image) => this.onDate(image)} />
+         <Camera onCamera={(image) => this.onDate(image)} />
       </SafeAreaView>
     );
   }

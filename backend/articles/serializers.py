@@ -3,8 +3,15 @@ from . import models
 from accounts.serializers import UserSerializer
 
 
+class ArticleImageSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = models.ArticleImage
+      fields = ['image']
+
+
 class ArticleSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
+    images = ArticleImageSerializer(required=False, many=True, read_only=True)
     created_at = serializers.DateTimeField(
         format="%Y-%m-%d %H:%M:%S", required=False)
     updated_at = serializers.DateTimeField(

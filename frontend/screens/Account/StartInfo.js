@@ -71,7 +71,7 @@ class Startinfo extends Component {
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.infoNext}>
           <Text
-            style={{fontSize: W * 0.05, fontWeight: 'bold', color: '#fca652'}}>
+            style={{fontSize: W * 0.05, fontFamily: 'NanumSquareRoundEB', color: '#fca652'}}>
             다음
           </Text>
         </TouchableOpacity>
@@ -82,7 +82,7 @@ class Startinfo extends Component {
         <Text
           style={{
             fontSize: 25,
-            fontFamily: 'BMHANNA',
+            fontFamily: 'NanumSquareRoundEB',
             color: 'darkgray',
             textAlign: 'center',
             marginVertical: W * 0.05,
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     width: W * 0.5,
     height: W * 0.1,
     fontSize: W * 0.04,
+    fontFamily: 'NanumBarunGothicBold',
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
@@ -175,6 +176,7 @@ const styles = StyleSheet.create({
   unit: {
     marginTop: W * 0.04,
     fontSize: W * 0.045,
+    fontFamily: 'NanumBarunGothicBold',
     color: 'gray',
     marginLeft: 5,
   },

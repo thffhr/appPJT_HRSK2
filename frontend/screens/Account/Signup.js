@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   guideTxt: {
     textAlign: 'center',
     fontSize: 25,
-    fontFamily: 'BMHANNA',
+    fontFamily: 'NanumSquareRoundEB',
     color: 'darkgray',
   },
   signupBtn: {
@@ -178,12 +178,13 @@ const styles = StyleSheet.create({
   signBtnText: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumBarunGothicBold',
   },
   inputArea: {
     width: W * 0.7,
     height: W * 0.1,
     fontSize: W * 0.04,
+    fontFamily: 'NanumBarunGothicBold',
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
