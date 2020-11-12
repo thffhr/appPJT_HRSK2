@@ -1,19 +1,18 @@
-import { LOGIN } from '../action/user';
+import {LOGIN} from '../action/user';
 
 const initialState = {
-    user: null,
+  user: null,
 };
 
-function userReducer(state=initialState, action) {
-    switch(action.type) {
-        case LOGIN:
-            const newState = Object.assign({}, state, {user: action.user} );
-            return newState
+function userReducer(state = initialState, action) {
+  switch (action.type) {
+    case LOGIN:
+      const newState = Object.assign({}, state, {user: action.user});
+      return newState;
 
-        default:
-            console.log('default')
-            return state
-    }
-};
+    default:
+      return state;
+  }
+}
 
 export default userReducer;
