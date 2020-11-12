@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ScrollView,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
@@ -32,10 +33,12 @@ class Update extends Component {
   }
   state = {
     userData: {
-      age: '',
+      age: this.props.user.age,
       sex: this.props.user.sex,
-      height: '',
-      wegiht: '',
+      height: this.props.user.height,
+      weight: this.props.user.weight,
+      active: this.props.user.active,
+      basal_metabolism: this.props.user.basal_metabolism,
     },
   };
   onUpdateImg = () => {
@@ -49,8 +52,11 @@ class Update extends Component {
     ) {
       var user = this.deepClone(this.props.user);
       user.age = this.state.userData.age;
+      user.sex = this.state.userData.sex;
       user.height = this.state.userData.height;
       user.weight = this.state.userData.weight;
+      user.active = this.state.userData.active;
+      user.basal_metabolism = this.state.userData.basal_metabolism;
       await fetch(`${serverUrl}accounts/update/`, {
         method: 'PATCH',
         body: JSON.stringify(user),
@@ -90,7 +96,7 @@ class Update extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.headerBox}>
           <View style={styles.guideBox}>
             <Text style={styles.mainComment}>회원 정보 수정</Text>
@@ -179,6 +185,7 @@ class Update extends Component {
                   style={styles.infoInput}
                   keyboardType="number-pad"
                   selectionColor="#e74c3c"
+                  value={String(this.state.userData.age)}
                   onChangeText={(age) => {
                     this.setState({
                       userData: {
@@ -196,6 +203,7 @@ class Update extends Component {
                 <TextInput
                   style={styles.infoInput}
                   keyboardType="number-pad"
+                  value={String(this.state.userData.height)}
                   onChangeText={(height) => {
                     this.setState({
                       userData: {
@@ -213,6 +221,7 @@ class Update extends Component {
                 <TextInput
                   style={styles.infoInput}
                   keyboardType="number-pad"
+                  value={String(this.state.userData.weight)}
                   onChangeText={(weight) => {
                     this.setState({
                       userData: {
@@ -224,11 +233,94 @@ class Update extends Component {
                 <Text style={styles.infoValue}> kg</Text>
               </View>
             </View>
+
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>기초대사량</Text>
-              <Text style={styles.infoValue}>
-                {this.props.user.basal_metabolism} kcal
-              </Text>
+              <Text style={styles.infoTitle}>활동량</Text>
+              <View style={styles.radioBox}>
+                <View style={{flexDirection: 'row', marginLeft: W * 0.01}}>
+                  <Text style={{marginHorizontal: W * 0.01}}>상</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        userData: {
+                          ...this.state.userData,
+                          active: 'high',
+                        },
+                      });
+                    }}>
+                    {this.state.userData.active === 'high' && (
+                      <Icon
+                        name="checkbox-outline"
+                        style={{fontSize: 20}}></Icon>
+                    )}
+                    {this.state.userData.active !== 'high' && (
+                      <Icon name="square-outline" style={{fontSize: 20}}></Icon>
+                    )}
+                  </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: 'row', marginLeft: W * 0.01}}>
+                  <Text style={{marginHorizontal: W * 0.01}}>중</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        userData: {
+                          ...this.state.userData,
+                          active: 'normal',
+                        },
+                      });
+                    }}>
+                    {this.state.userData.active === 'normal' && (
+                      <Icon
+                        name="checkbox-outline"
+                        style={{fontSize: 20}}></Icon>
+                    )}
+                    {this.state.userData.active !== 'normal' && (
+                      <Icon name="square-outline" style={{fontSize: 20}}></Icon>
+                    )}
+                  </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: 'row', marginLeft: W * 0.01}}>
+                  <Text style={{marginHorizontal: W * 0.01}}>하</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({
+                        userData: {
+                          ...this.state.userData,
+                          active: 'low',
+                        },
+                      });
+                    }}>
+                    {this.state.userData.active === 'low' && (
+                      <Icon
+                        name="checkbox-outline"
+                        style={{fontSize: 20}}></Icon>
+                    )}
+                    {this.state.userData.active !== 'low' && (
+                      <Icon name="square-outline" style={{fontSize: 20}}></Icon>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>활동대사량</Text>
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.infoInput}
+                  keyboardType="number-pad"
+                  value={String(this.state.userData.basal_metabolism)}
+                  onChangeText={(val) => {
+                    this.setState({
+                      userData: {
+                        ...this.state.userData,
+                        basal_metabolism: val,
+                      },
+                    });
+                  }}
+                />
+                <Text style={styles.infoValue}> kcal</Text>
+              </View>
             </View>
             <View style={styles.infoBox}>
               <Text>
@@ -237,7 +329,7 @@ class Update extends Component {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -277,7 +369,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   infoValue: {
-    fontSize: W * 0.05,
+    fontSize: W * 0.06,
   },
   infoInput: {
     fontSize: W * 0.032,
@@ -323,7 +415,7 @@ const styles = StyleSheet.create({
   radioBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 100,
+    width: 150,
   },
   // header
   headerBox: {

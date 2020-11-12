@@ -10,6 +10,7 @@ import {
   Alert,
   TextInput,
   Image,
+  AsyncStorage,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
@@ -118,9 +119,9 @@ class Profile extends Component {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.key) {
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.key) {
           this.onDelete();
           this.setState({
             secessionModal: visible,
