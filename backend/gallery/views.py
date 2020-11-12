@@ -81,7 +81,18 @@ def getMenuInfo(request):
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
         # Non Maximum Suppression (겹쳐있는 박스 중 confidence 가 가장 높은 박스를 선택)
-        indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.3, 0.3)
+        #indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.3, 0.3)
+        class_list = list(set(class_ids))
+        idxx = []
+        indexes=[]
+        for i in range(len(class_list)):
+            max_v=0
+            for j in range(len(class_ids)):
+                if class_ids[j] == class_list[i]:
+                    if max_v < confidences[j]:
+                        max_v = confidences[j]
+                        idxx.append(j)
+            indexes.append(idxx[len(idxx)-1])    
         # 최종적으로 indexes에 음식에 매치된 번호가 들어감 boxes에는 검출돤 하나의 음식에 대한 좌표
         font = cv2.FONT_HERSHEY_PLAIN
         det_foods = []
