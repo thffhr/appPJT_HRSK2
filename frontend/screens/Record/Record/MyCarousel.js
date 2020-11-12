@@ -48,61 +48,7 @@ class MyCarousel extends Component {
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={{fontSize: 18}}>{food[1]}kcal</Text>
-                      {/* <Icon
-                        name="remove-circle-outline"
-                        style={{
-                          fontSize: 20,
-                          marginTop: 2,
-                          marginLeft: 20,
-                          marginRight: 10,
-                        }}
-                        // onPress={() => this.props.Minus(
-                        //     this.state.date.year,
-                        //     this.state.date.month,
-                        //     this.state.date.date,
-                        //     this.state.date.day,
-                        //     food[3],
-                        //     food[2]
-                        //     )}
-                        // ></Icon>
-                        //////////////////////////////////////////////////////////
-                        // onPress={() => {
-                        //     if (food[3] <= 1) {
-                        //         this.setModalVisible(true, this.state.date.year, this.state.date.month, this.state.date.date, food[3]);
-                        //       } else {
-                        //         var form = new FormData();
-                        //         form.append('menu2food_id', food[3]);
-                        //         fetch(`${serverUrl}gallery/minusCnt/`, {
-                        //           method: 'POST',
-                        //           body: form,
-                        //           headers: {
-                        //             'Content-Type': 'multipart/form-data',
-                        //             Authorization: `Token ${this.state.token}`,
-                        //           },
-                        //         })
-                        //           .then((response) => response.json())
-                        //           .then((response) => {
-                        //             this.onFetch(this.state.date.year, this.state.date.month, this.state.date.date, this.state.date.day);
-                        //           })
-                        //           .catch((err) => console.error(err));
-                        //       }
-                        // }}
-                      ></Icon> */}
-                      <Text style={{fontSize: 18}}> {food[3]} 인분 </Text>
-                      {/* <Icon
-                        name="add-circle-outline"
-                        style={{
-                          fontSize: 20,
-                          marginTop: 2,
-                          marginHorizontal: 10,
-                        }}
-                        // onPress={() => this.props.Plus(
-                        //     this.state.date.year,
-                        //     this.state.date.month,
-                        //     this.state.date.date,
-                        //     this.state.date.day,
-                        //     food[2])}
-                      ></Icon> */}
+                      <Text style={{fontSize: 18, marginLeft: 30, marginRight: 10}}>{food[3]} 인분</Text>
                     </View>
                   </View>
                 );

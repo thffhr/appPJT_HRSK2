@@ -16,4 +16,5 @@ urlpatterns = [
     path('getFood/<int:menu_id>/', views.getFood, name='getFood'),
     path('getMenuInfo/', views.getMenuInfo, name='getMenuInfo'),
     path('updateM2F/<int:menu2food_id>/', views.updateM2F, name='updateM2F'),
+    path('addM2F/', views.addM2F, name='addM2F'),
 ]

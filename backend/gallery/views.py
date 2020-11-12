@@ -329,3 +329,12 @@ def updateM2F(request, menu2food_id):
     if up_menu2food.is_valid(raise_exception=True):
         up_menu2food.save(food=new_food)
         return Response(up_menu2food.data)
+
+@api_view(['POST'])
+def addM2F(request):
+    add_Menu = get_object_or_404(Menu, id=request.data['menuId'])
+    new_Food = get_object_or_404(Food, id=request.data['foodId'])
+    new_menu2food = Menu2foodSerializer(data=request.data)
+    if new_menu2food.is_valid(raise_exception=True):
+        new_menu2food.save(image=add_Menu, food=new_Food)
+        return Response(new_menu2food.data)

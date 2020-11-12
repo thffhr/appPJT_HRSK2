@@ -27,17 +27,19 @@ export default class DetatilImage extends Component {
       picture: this.props.route.params.picture,
       dateTime: this.props.route.params.pictureDate,
       mealTime: this.props.route.params.mealTime,
-      InputModalVisible: false,
       foods: [],
       onCaption: false,
       info: {
         menu_id: this.props.route.params.imageId,
       },
       modalVisible: false,
+      InputModalVisible: false,
+      onDelmodalVisible: false,
       colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
     };
   }
   componentDidMount = async () => {
+    console.log(this.state.picture)
     this.getFood();
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
@@ -50,7 +52,6 @@ export default class DetatilImage extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log('디테일 왜 안나와', response)
         this.setState({
           foods: response,
         });
@@ -65,6 +66,11 @@ export default class DetatilImage extends Component {
       onCaption: !this.state.onCaption,
     });
   };
+  setonDelModalVisible = (visible) => {
+    this.setState({
+      onDelmodalVisible: visible,
+    });
+  };
   onDelete = async () => {
     fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
       method: 'POST',
@@ -72,7 +78,6 @@ export default class DetatilImage extends Component {
         Authorization: `Token ${this.state.token}`,
       },
     }).then(() => {
-      alert('삭제되었습니다.');
       this.props.navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -165,6 +170,11 @@ export default class DetatilImage extends Component {
       InputModalVisible: tf,
       updateFoodId: id,
     });
+    if (id < 0) {
+      this.setState({
+        sendFood: {}
+      });
+    }
   }
   isUpdate(update, foodInfo) {
     if (update) {
@@ -188,12 +198,35 @@ export default class DetatilImage extends Component {
         .catch((err) => console.error(err));
       this.setFIModalVisible(false, this.state.updateFoodId);
       this.getFood();
+    } else {
+      var newFoodInfo = new FormData();
+      // newFoodInfo.append('image', this.state.image)
+      newFoodInfo.append('menuId', this.state.imageId);
+      newFoodInfo.append('foodId', foodInfo.id);
+      newFoodInfo.append('location', []);
+      newFoodInfo.append('value', 1);
+      console.log(newFoodInfo)
+      fetch(`${serverUrl}gallery/addM2F/`, {
+        method: 'POST',
+        body: newFoodInfo,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((err) => console.error(err));
+      this.setFIModalVisible(false, -1);
+      this.getFood();
     }
   };
   render() {
     return (
       <View style={styles.container}>
-        {/* 식단 삭제 확인용 모달 */}
+        {/* 음식 삭제 확인용 모달 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -221,7 +254,7 @@ export default class DetatilImage extends Component {
               marginTop: 22,
             }}>
             <View style={styles.modalView}>
-              <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
+              <Text style={{marginBottom: 20}}>음식을 삭제하시겠습니까?</Text>
               <View style={{flexDirection: 'row'}}>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
@@ -234,6 +267,54 @@ export default class DetatilImage extends Component {
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
                   onPress={() => {
                     this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <Text style={styles.textStyle}>취소</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </View>
+        </Modal>
+        {/* 식단삭제 확인용 모달 */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.onDelmodalVisible}>
+          <View
+            style={{
+              width: '100%',
+              height: height,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}></View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.onDelmodalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 22,
+            }}>
+            <View style={styles.modalView}>
+              <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.onDelete();
+                  }}>
+                  <Text style={styles.textStyle}>삭제</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.setonDelmodalVisible(!this.state.onDelmodalVisible);
                   }}>
                   <Text style={styles.textStyle}>취소</Text>
                 </TouchableHighlight>
@@ -273,7 +354,6 @@ export default class DetatilImage extends Component {
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
                 isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
-                // saveFoodInfo={(foodInfo) => this.sendNewFood(foodInfo)}
                 close={(tf) => this.setFIModalVisible(tf, this.state.updateFoodId)}
               />
             </View>
@@ -294,6 +374,11 @@ export default class DetatilImage extends Component {
               </Text>
             </View>
             <View style={styles.iconBox}>
+              <Icon
+                style={styles.onCaption}
+                onPress={() => this.setFIModalVisible(true, -1)}
+                name="add"
+              />
               {!this.state.onCaption && (
                 <Icon
                   style={styles.onCaption}
@@ -310,7 +395,7 @@ export default class DetatilImage extends Component {
               )}
               <Icon
                 name="trash"
-                onPress={this.onDelete}
+                onPress={() => this.setonDelModalVisible(true)}
                 style={styles.onCaption}
               />
             </View>
@@ -522,7 +607,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   imageBody: {
-    marginBottom: 60,
+    marginBottom: 70,
   },
   image: {
     width: width,

@@ -19,5 +19,5 @@ class Menu2food(models.Model):
                               on_delete=models.CASCADE)  # Menuid가 들어가는거
     food = models.ForeignKey(Food,
                              on_delete=models.CASCADE)  # food id가 들어가는거
-    location = models.TextField(null=True)  # 좌상우하, 좌표값
+    location = models.TextField(default='[]')  # 좌상우하, 좌표값
     value = models.IntegerField(default=1)  # 음식의 양

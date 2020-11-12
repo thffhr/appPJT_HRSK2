@@ -470,16 +470,6 @@ class Record extends Component {
                               {MenuKey}
                             </Text>
                           </View>
-                          <TouchableOpacity
-                            style={{
-                              position: 'relative',
-                              bottom: 25,
-                              left: 325,
-                            }}>
-                            <Icon
-                              name="create-outline"
-                              style={{fontSize: 20}}></Icon>
-                          </TouchableOpacity>
                           <View
                             style={{
                               justifyContent: 'center',
@@ -576,6 +566,7 @@ const styles = StyleSheet.create({
   },
   calboxTitle: {
     flexDirection: 'row',
+    marginBottom: 20
   },
   // calchart: {},
   caltxt: {
