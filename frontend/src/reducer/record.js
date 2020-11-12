@@ -1,23 +1,18 @@
-import { UPDATE_MENU } from '../action/record';
+import {UPDATE_MENU} from '../action/record';
 
 const initialState = {
-    menu: null,
+  menu: null,
 };
 
-function recordReducer(state=initialState, action) {
-    console.log('3')
-    switch(action.type) {
-        case UPDATE_MENU:
-            console.log('4')
-            console.log(action)
-            const newState = Object.assign({}, state, {menu: action.menu} );
-            console.log(newState)
-            return newState
+function recordReducer(state = initialState, action) {
+  switch (action.type) {
+    case UPDATE_MENU:
+      const newState = Object.assign({}, state, {menu: action.menu});
+      return newState;
 
-        default:
-            console.log('default')
-            return state
-    }
-};
+    default:
+      return state;
+  }
+}
 
 export default recordReducer;

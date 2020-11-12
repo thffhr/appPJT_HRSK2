@@ -9,8 +9,9 @@ import {
   TouchableHighlight,
   Alert,
   TextInput,
+  Image,
+  AsyncStorage,
 } from 'react-native';
-import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -118,9 +119,9 @@ class Profile extends Component {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.key) {
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.key) {
           this.onDelete();
           this.setState({
             secessionModal: visible,
@@ -293,7 +294,7 @@ class Profile extends Component {
               <Text style={styles.infoValue}>{this.props.user.weight}</Text>
             </View>
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>기초대사량</Text>
+              <Text style={styles.infoTitle}>활동대사량</Text>
               <Text style={styles.infoValue}>
                 {this.props.user.basal_metabolism} kcal
               </Text>
@@ -443,7 +444,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
-
   // secession modal
   secessionCenteredView: {
     flex: 1,
