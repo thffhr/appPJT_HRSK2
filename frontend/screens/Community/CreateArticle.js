@@ -13,7 +13,7 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
@@ -22,45 +22,33 @@ const mapStateToProps = (state) => ({
 class CreateArticle extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      tags: ['칼국수', '닭가슴살'],
-      tagInput: '',
+  }
+  state = {
+    tagInput: '',
+    content: '',
+    CswitchValue: true,
+    SswitchValue: true,
+    RswitchValue: false,
+    articleInfo: {
       content: '',
-      CswitchValue: true,
-      SswitchValue: true,
-      RswitchValue: false,
-      articleInfo: {
-        content: '',
-        foods: {
-        },
-        recipes: {},
-        image: this.props.route.params.selected.image,
-        canComment: true,
-        canSearch: true,
+      foods: {},
+      recipes: {},
+      image: this.props.route.params.selected.image,
+      canComment: true,
+      canSearch: true,
+      tags: [],
+    },
+    tempArticleInfo: {
+      foods: {
+        칼국수: ['밀'],
+        닭가슴살: [],
       },
-      tempArticleInfo: {
-        // foods: [
-        //   {
-        //     food: '칼국수',
-        //     recipe: '',
-        //   },
-        //   {
-        //     food: '닭가슴살',
-        //     recipe: '',
-        //   },
-        // ],
-        foods: {
-          '칼국수': ['밀'],
-          '닭가슴살': [],
-        }
-      },
-      recipeInput: '',
-      activeRecipe: '칼국수',
-      count: 1,
-    };
+    },
+    recipeInput: '',
+    activeRecipe: '칼국수',
+    count: 1,
   };
-  createArticle = async() => {
+  createArticle = async () => {
     var myRecipe = '';
     // Object.values(this.state.tempArticleInfo.foods[food]).map((value) => {
     //   if (value) {
@@ -76,7 +64,7 @@ class CreateArticle extends Component {
       articleInfo: {
         ...this.state.articleInfo,
         recipes: this.state.tempArticleInfo.foods,
-      }
+      },
       // foods: {
       //   ...this.state.articleInfo.foods,
       //   recipe: myRecipe,
@@ -111,6 +99,7 @@ class CreateArticle extends Component {
         image: this.state.articleInfo.image,
         canComment: visible,
         canSearch: this.state.articleInfo.canSearch,
+        tags: this.state.articleInfo.tags,
       },
     });
   };
@@ -123,6 +112,7 @@ class CreateArticle extends Component {
         image: this.state.articleInfo.image,
         canComment: this.state.articleInfo.canComment,
         canSearch: visible,
+        tags: this.state.articleInfo.tags,
       },
     });
   };
@@ -135,8 +125,10 @@ class CreateArticle extends Component {
         image: this.state.articleInfo.image,
         canComment: this.state.articleInfo.canComment,
         canSearch: visible,
+        tags: this.state.articleInfo.tags,
       },
     });
+    console.log(this.state.articleInfo.image);
   };
   addRecipe = () => {
     this.state.articleInfo.recipe[`sentence${this.state.count}`] = '';
@@ -149,16 +141,16 @@ class CreateArticle extends Component {
     this.setState({});
   };
   deepClone(obj) {
-    if(obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== 'object') {
       return obj;
     }
     const result = Array.isArray(obj) ? [] : {};
-    for(let key of Object.keys(obj)) {
-      result[key] = this.deepClone(obj[key])
+    for (let key of Object.keys(obj)) {
+      result[key] = this.deepClone(obj[key]);
     }
-    
+
     return result;
-  };
+  }
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -170,7 +162,7 @@ class CreateArticle extends Component {
         <View style={styles.navbar}>
           <Text style={styles.title}>새 게시물</Text>
         </View>
-        <ScrollView>  
+        <ScrollView>
           <View style={styles.block}>
             <TextInput
               placeholder="내용을 입력하세요"
@@ -187,7 +179,7 @@ class CreateArticle extends Component {
               }}
               style={styles.contentInput}
               multiline={true}
-            />  
+            />
             <Image
               style={{width: 100, height: 100}}
               source={{
@@ -196,57 +188,83 @@ class CreateArticle extends Component {
             />
           </View>
           <View style={styles.tagBlock}>
-            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10,}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}>
               <Text style={{fontSize: 20}}>태그 추가</Text>
-              <Text style={{color: 'gray', marginLeft: 15}}>태그를 추가해보세요.</Text>
+              <Text style={{color: 'gray', marginLeft: 15}}>
+                태그를 추가해보세요.
+              </Text>
             </View>
             <View style={styles.tagArea}>
-              {this.state.tags.map((value, idx) => {
+              {this.state.articleInfo.tags.map((value, idx) => {
                 return (
                   <View key={idx} style={styles.tagBox}>
                     <Text style={{color: '#fff', fontSize: 18}}>#</Text>
-                    <Text  style={{color: '#fff', fontSize: 18, paddingHorizontal: 5,}}>{value}</Text>
-                    <Icon 
-                      name="close" 
-                      style={{color: '#fff', fontSize: 20}} 
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: 18,
+                        paddingHorizontal: 5,
+                      }}>
+                      {value}
+                    </Text>
+                    <Icon
+                      name="close"
+                      style={{color: '#fff', fontSize: 20}}
                       onPress={() => {
-                        const tags = this.state.tags.filter((v,i) => i !== idx);
+                        const tags = this.state.articleInfo.tags.filter(
+                          (v, i) => i !== idx,
+                        );
                         this.setState({
-                          tags: tags,
+                          articleInfo: {
+                            ...this.state.articleInfo,
+                            tags: tags,
+                          },
                         });
-                      }}
-                    ></Icon>
+                      }}></Icon>
                   </View>
-                )
+                );
               })}
               <View style={styles.tagBox}>
-                <Text style={{color: '#fff', fontSize: 20, paddingHorizontal: 3}}>#</Text>
+                <Text
+                  style={{color: '#fff', fontSize: 20, paddingHorizontal: 3}}>
+                  #
+                </Text>
                 <TextInput
-                    placeholder="태그"
-                    value={this.state.tagInput}
-                    maxLength={10}
-                    onChangeText={(text) => {
-                      this.setState({
-                        tagInput: text,
-                      });
-                    }}
-                    style={styles.tagInput}
-                    multiline={true}
-                  />
-                <Icon 
-                  name="add" 
+                  placeholder="태그"
+                  value={this.state.tagInput}
+                  maxLength={10}
+                  onChangeText={(text) => {
+                    this.setState({
+                      tagInput: text,
+                    });
+                  }}
+                  style={styles.tagInput}
+                  multiline={true}
+                />
+                <Icon
+                  name="add"
                   size={20}
                   style={{color: '#fff'}}
                   onPress={() => {
-                    const tags = this.state.tags.concat(this.state.tagInput)
+                    const tags = this.state.articleInfo.tags.concat(
+                      this.state.tagInput,
+                    );
                     this.setState({
-                      tags: tags,
+                      articleInfo: {
+                        ...this.state.articleInfo,
+                        tags: tags,
+                      },
                       tagInput: '',
                     });
                   }}></Icon>
-                </View>
               </View>
             </View>
+          </View>
           <View style={styles.switchBlock}>
             <Text style={styles.fs1}>댓글 허용</Text>
             <Switch
@@ -264,7 +282,7 @@ class CreateArticle extends Component {
           <View style={styles.switchBlock}>
             <View>
               <Text style={styles.fs1}>레시피 추가</Text>
-              <Text >하단에 레시피 입력창이 생성됩니다.</Text>
+              <Text>하단에 레시피 입력창이 생성됩니다.</Text>
             </View>
             <Switch
               onValueChange={() => this.RtoggleSwitch(!this.state.RswitchValue)}
@@ -274,92 +292,137 @@ class CreateArticle extends Component {
           {this.state.RswitchValue && (
             <>
               <View style={styles.recipeArea}>
-                {this.state.tempArticleInfo.foods && Object.entries(this.state.tempArticleInfo.foods).map(([key, value], i) => {
-                  const btnColor = this.state.activeRecipe === key ? '#f39c12' : 'transparent';
-                  return (
-                    <TouchableOpacity
-                      key={i} 
-                      style={[styles.foodBox, {borderColor: btnColor, borderWidth:2}]}
-                      onPress={() => {
-                        this.setState({
-                          activeRecipe: key,
-                        });
-                      }}>
-                      <Text>{key}</Text>
-                    </TouchableOpacity>
-                  )
-                })}
+                {this.state.tempArticleInfo.foods &&
+                  Object.entries(this.state.tempArticleInfo.foods).map(
+                    ([key, value], i) => {
+                      const btnColor =
+                        this.state.activeRecipe === key
+                          ? '#f39c12'
+                          : 'transparent';
+                      return (
+                        <TouchableOpacity
+                          key={i}
+                          style={[
+                            styles.foodBox,
+                            {borderColor: btnColor, borderWidth: 2},
+                          ]}
+                          onPress={() => {
+                            this.setState({
+                              activeRecipe: key,
+                            });
+                          }}>
+                          <Text>{key}</Text>
+                        </TouchableOpacity>
+                      );
+                    },
+                  )}
               </View>
               <View style={styles.recipeArea}>
-                {this.state.tempArticleInfo.foods && Object.entries(this.state.tempArticleInfo.foods).map(([key, value], i) => {
-                  return (
-                    <>
-                    {key === this.state.activeRecipe && (  
-                      <View key={i} style={{width: '100%'}}>
-                        <Text style={{fontSize: 15, color: 'gray'}}>{key}의 레시피를 입력하세요.</Text>
-                        {this.state.tempArticleInfo.foods[key].map((v, idx) => {
-                          return (
-                            <View key={idx} style={{flexDirection: 'row', justifyContent: 'space-between', margin: 10, alignItems: 'center'}}>
-                              <View style={{flexDirection: 'row'}}>
-                                <Text style={{fontSize: 20}}>{idx+1}. </Text>
-                                <Text style={{fontSize: 20, maxWidth: '85%'}}>{v}</Text>
-                              </View>
-                              <Icon 
-                                name="trash-outline"
-                                style={{fontSize: 30,}}
-                                onPress={() => {
-                                  const newArray = this.state.tempArticleInfo.foods[key].filter((v,index) => index !== idx);
-                                  this.setState({
-                                    tempArticleInfo: {
-                                      ...this.state.tempArticleInfo,
-                                      foods: {
-                                        ...this.state.tempArticleInfo.foods,
-                                        [key]: newArray, 
-                                      },
-                                    },
-                                    recipeInput: '',
-                                  });
-                                }}  
-                              ></Icon>
-                            </View>
-                          )
-                        })}
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin:10,}}>
-                          <Text style={{fontSize: 20, textAlign: 'center'}}>{this.state.tempArticleInfo.foods[key].length + 1}. </Text>
-                          <TextInput 
-                            placeholder="레시피를 입력하세요"
-                            value={this.state.recipeInput}
-                            maxLength={50}
-                            onChangeText={(text) => {
-                              this.setState({
-                                recipeInput: text,
-                              });
-                            }}
-                            style={styles.recipeInput}
-                          />
-                          <Icon 
-                            name="checkbox-outline" 
-                            style={{fontSize: 40, color: 'gray'}}
-                            onPress={()=> {
-                              const recipeArray = value.concat(this.state.recipeInput);
-                              this.setState({
-                                tempArticleInfo: {
-                                  ...this.state.tempArticleInfo,
-                                  foods: {
-                                    ...this.state.tempArticleInfo.foods,
-                                    [key]: recipeArray, 
-                                  },
+                {this.state.tempArticleInfo.foods &&
+                  Object.entries(this.state.tempArticleInfo.foods).map(
+                    ([key, value], i) => {
+                      return (
+                        <>
+                          {key === this.state.activeRecipe && (
+                            <View key={i} style={{width: '100%'}}>
+                              <Text style={{fontSize: 15, color: 'gray'}}>
+                                {key}의 레시피를 입력하세요.
+                              </Text>
+                              {this.state.tempArticleInfo.foods[key].map(
+                                (v, idx) => {
+                                  return (
+                                    <View
+                                      key={idx}
+                                      style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        margin: 10,
+                                        alignItems: 'center',
+                                      }}>
+                                      <View style={{flexDirection: 'row'}}>
+                                        <Text style={{fontSize: 20}}>
+                                          {idx + 1}.{' '}
+                                        </Text>
+                                        <Text
+                                          style={{
+                                            fontSize: 20,
+                                            maxWidth: '85%',
+                                          }}>
+                                          {v}
+                                        </Text>
+                                      </View>
+                                      <Icon
+                                        name="trash-outline"
+                                        style={{fontSize: 30}}
+                                        onPress={() => {
+                                          const newArray = this.state.tempArticleInfo.foods[
+                                            key
+                                          ].filter((v, index) => index !== idx);
+                                          this.setState({
+                                            tempArticleInfo: {
+                                              ...this.state.tempArticleInfo,
+                                              foods: {
+                                                ...this.state.tempArticleInfo
+                                                  .foods,
+                                                [key]: newArray,
+                                              },
+                                            },
+                                            recipeInput: '',
+                                          });
+                                        }}></Icon>
+                                    </View>
+                                  );
                                 },
-                                recipeInput: '',
-                              });
-                            }}  
-                          ></Icon>
-                        </View>
-                      </View>
-                    )}
-                    </>
-                  )
-                })}
+                              )}
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  margin: 10,
+                                }}>
+                                <Text
+                                  style={{fontSize: 20, textAlign: 'center'}}>
+                                  {this.state.tempArticleInfo.foods[key]
+                                    .length + 1}
+                                  .{' '}
+                                </Text>
+                                <TextInput
+                                  placeholder="레시피를 입력하세요"
+                                  value={this.state.recipeInput}
+                                  maxLength={50}
+                                  onChangeText={(text) => {
+                                    this.setState({
+                                      recipeInput: text,
+                                    });
+                                  }}
+                                  style={styles.recipeInput}
+                                />
+                                <Icon
+                                  name="checkbox-outline"
+                                  style={{fontSize: 40, color: 'gray'}}
+                                  onPress={() => {
+                                    const recipeArray = value.concat(
+                                      this.state.recipeInput,
+                                    );
+                                    this.setState({
+                                      tempArticleInfo: {
+                                        ...this.state.tempArticleInfo,
+                                        foods: {
+                                          ...this.state.tempArticleInfo.foods,
+                                          [key]: recipeArray,
+                                        },
+                                      },
+                                      recipeInput: '',
+                                    });
+                                  }}></Icon>
+                              </View>
+                            </View>
+                          )}
+                        </>
+                      );
+                    },
+                  )}
               </View>
             </>
           )}
@@ -430,8 +493,8 @@ const styles = StyleSheet.create({
   },
   //recipe
   recipeArea: {
-    backgroundColor: '#fff', 
-    // height: 50, 
+    backgroundColor: '#fff',
+    // height: 50,
     flexDirection: 'row',
     margin: 10,
     borderWidth: 1,
@@ -468,7 +531,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  tagBlock:{
+  tagBlock: {
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     paddingHorizontal: 10,
@@ -489,7 +552,6 @@ const styles = StyleSheet.create({
     height: 40,
     minWidth: 40,
     maxWidth: 100,
-
   },
 });
 
