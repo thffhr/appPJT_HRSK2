@@ -128,7 +128,6 @@ class CreateArticle extends Component {
         tags: this.state.articleInfo.tags,
       },
     });
-    console.log(this.state.articleInfo.image);
   };
   addRecipe = () => {
     this.state.articleInfo.recipe[`sentence${this.state.count}`] = '';
@@ -452,7 +451,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   block: {
-    // width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -464,7 +462,6 @@ const styles = StyleSheet.create({
   switchBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     paddingHorizontal: 10,
@@ -494,7 +491,6 @@ const styles = StyleSheet.create({
   //recipe
   recipeArea: {
     backgroundColor: '#fff',
-    // height: 50,
     flexDirection: 'row',
     margin: 10,
     borderWidth: 1,
