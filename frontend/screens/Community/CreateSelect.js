@@ -87,6 +87,7 @@ class CreateSelect extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log(response);
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},

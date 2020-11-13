@@ -1,7 +1,22 @@
-import React, { Component } from 'react';
-import {  } from 'react-native';
-import { SafeAreaView, StyleSheet, Text } from 'react-native';
+import React, {Component} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  Dimensions,
+} from 'react-native';
+import {} from 'react-native';
+import {connect} from 'react-redux';
+import {serverUrl} from '../../constants';
 
+const H = Dimensions.get('window').height;
+const W = Dimensions.get('window').width;
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 class Analysis extends Component {
   constructor(props) {
@@ -10,14 +25,48 @@ class Analysis extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>서비스 준비중입니다...</Text>
+        <View style={styles.header}>
+          {this.props.user.profileImage && (
+            <Image
+              style={styles.profileImg}
+              source={{
+                uri: `${serverUrl}gallery` + this.props.user.profileImage,
+              }}
+            />
+          )}
+          {!this.props.user.profileImage && (
+            <Image
+              style={styles.profileImg}
+              source={require('../../assets/images/default-profile.png')}
+            />
+          )}
+          <Text style={{fontWeight: 'bold', marginRight: W * 0.01}}>
+            {this.props.user.username}
+          </Text>
+          <Text>님의 식단 분석 결과입니다.</Text>
+        </View>
       </SafeAreaView>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
-})
+  container: {
+    flex: 1,
+    backgroundColor: '#FBFBE6',
+  },
+  // header
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: W * 0.03,
+  },
+  profileImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    marginRight: W * 0.03,
+  },
+});
 
-export default Analysis;
+export default connect(mapStateToProps)(Analysis);
