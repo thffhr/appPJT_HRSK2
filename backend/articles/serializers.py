@@ -18,10 +18,11 @@ class ArticleSerializer(serializers.ModelSerializer):
         format="%Y-%m-%d %H:%M:%S", required=False)
     user_1 = UserSerializer(required=False)
     user_2 = UserSerializer(required=False)
+    # bookmark_users = UserSerializer(required=False)
 
     class Meta:
         model = models.Article
-        exclude = ['tag', 'like_users']
+        exclude = ['tag', 'like_users','bookmark_users']
         # fields = '__all__'
         # fields = ['user', 'tag', 'content', 'recipe']
         # read_only_fields = ('id', 'user', 'created_at', 'updated_at')

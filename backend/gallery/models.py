@@ -10,7 +10,8 @@ class Menu(models.Model):
                              on_delete=models.CASCADE)
     image = models.FileField(upload_to="image", null=True)
     mealTime = models.CharField(max_length=2, blank=True)  # 아침/점심/저녁/간식/야식
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    # created_at = models.DateTimeField(auto_now_add=True, null=True)
+    created_at = models.CharField(max_length=10, blank=True)
 
 
 class Menu2food(models.Model):
@@ -18,5 +19,5 @@ class Menu2food(models.Model):
                               on_delete=models.CASCADE)  # Menuid가 들어가는거
     food = models.ForeignKey(Food,
                              on_delete=models.CASCADE)  # food id가 들어가는거
-    location = models.TextField(null=False)  # 좌상우하, 좌표값
+    location = models.TextField(null=True)  # 좌상우하, 좌표값
     value = models.IntegerField(default=1)  # 음식의 양

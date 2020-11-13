@@ -47,9 +47,9 @@ def need(request):
     user = get_object_or_404(User, id=request.user.id)
     save_data = request.data
     if save_data['sex'] == 'male':
-        basal_metabolism = 1500
+        basal_metabolism = 2300
     elif save_data['sex'] == 'female':
-        basal_metabolism = 1000
+        basal_metabolism = 1800
 
     save_data['basal_metabolism'] = int(basal_metabolism)
     serializer = UserSerializer(user, data=save_data, partial=True)
@@ -65,18 +65,18 @@ def need_info(request):
     user = get_object_or_404(User, id=request.user.id)
     save_data = request.data
     if user.sex == 'male':
-        basal_metabolism = 66.47 + \
-            (13.75 * int(save_data['weight'])) + (5 *
-                                                  int(save_data['height'])) - (6.76 * int(save_data['age']))
+        basal_metabolism = (10 * int(save_data['weight'])) + (6.25 *
+                                                              int(save_data['height'])) - (5 * int(save_data['age'])) + 5
     elif user.sex == 'female':
-        basal_metabolism = 655.1 + \
-            (9.56 * int(save_data['weight'])) + (1.85 *
-                                                 int(save_data['height'])) - (4.68 * int(save_data['age']))
+        basal_metabolism = (10 * int(save_data['weight'])) + (
+            6.25 * int(save_data['height'])) - (5 * int(save_data['age'])) - 151
 
     if save_data['active'] == 'high':
-        basal_metabolism *= 1.1
+        basal_metabolism *= 1.55
+    elif save_data['active'] == 'normal':
+        basal_metabolism *= 1.4
     elif save_data['active'] == 'low':
-        basal_metabolism *= 0.9
+        basal_metabolism *= 1.2
 
     save_data['basal_metabolism'] = int(basal_metabolism)
     serializer = UserSerializer(user, data=save_data, partial=True)
@@ -94,18 +94,22 @@ def update_info(request):
     save_data['weight'] = int(request.data['weight'])
     save_data['height'] = int(request.data['height'])
     basal_metabolism = 0
-    if request.user.sex == 'male':
-        basal_metabolism = 66.47 + \
-            (13.75 * save_data['weight']) + (5 *
-                                             save_data['height']) - (6.76 * save_data['age'])
-    elif request.user.sex == 'female':
-        basal_metabolism = 655.1 + \
-            (9.56 * save_data['weight']) + (1.85 *
-                                            save_data['height']) - (4.68 * save_data['age'])
-    if request.data['active'] == 'high':
-        basal_metabolism *= 1.1
-    elif request.data['active'] == 'low':
-        basal_metabolism *= 0.9
+
+    if 'basal_metabolism' not in request.data or user.basal_metabolism == request.data['basal_metabolism'] or not request.data['basal_metabolism']:
+        if request.user.sex == 'male':
+            basal_metabolism = (10 * int(save_data['weight'])) + (6.25 *
+                                                                  int(save_data['height'])) - (5 * int(save_data['age'])) + 5
+        elif request.user.sex == 'female':
+            basal_metabolism = (10 * int(save_data['weight'])) + (
+                6.25 * int(save_data['height'])) - (5 * int(save_data['age'])) - 151
+        if request.data['active'] == 'high':
+            basal_metabolism *= 1.55
+        elif request.data['active'] == 'normal':
+            basal_metabolism *= 1.4
+        elif request.data['active'] == 'low':
+            basal_metabolism *= 1.2
+    else:
+        basal_metabolism = request.data['basal_metabolism']
 
     save_data['basal_metabolism'] = int(basal_metabolism)
     serializer = UserSerializer(user, data=save_data, partial=True)

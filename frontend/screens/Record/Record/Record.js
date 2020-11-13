@@ -1,4 +1,4 @@
-import React, {Component,} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   ScrollView,
@@ -14,12 +14,13 @@ import {
   AsyncStorage,
   SafeAreaView,
 } from 'react-native';
-import Pie from 'react-native-pie';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  LocaleConfig,
-} from 'react-native-calendars';
+import {LocaleConfig} from 'react-native-calendars';
 import {serverUrl} from '../../../constants';
+
+import MyCarousel from './MyCarousel';
+import {connect} from 'react-redux';
+import {updateMenu} from '../../../src/action/record';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -67,12 +68,23 @@ LocaleConfig.locales['fr'] = {
 LocaleConfig.defaultLocale = 'fr';
 
 let today = new Date();
-let year = today.getFullYear(); // 년도
+let year = today.getFullYear(); // 년도s
 let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
 let day = today.getDay(); // 요일
 
-export default class Record extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+  menu: state.recordReducer.menu,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  // js에서 함수 호출을 위한 변수명: (보낼 데이터) => dispatch(action에서 실행할 함수))
+  // this.props.updatemenu로 호출
+  updateMenu: (menu) => dispatch(updateMenu(menu)),
+});
+
+class Record extends Component {
   constructor(props) {
     super(props);
 
@@ -91,7 +103,7 @@ export default class Record extends Component {
   }
   componentDidMount() {
     this.onRecord();
-  };
+  }
   onRecord = async () => {
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
@@ -207,20 +219,16 @@ export default class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log(response)
         this.setState({
           dayMenus: response['Menus'],
           TotalCal: response['TotalCal'],
         });
       })
+      .then(() => {
+        this.props.updateMenu(this.state.dayMenus);
+      })
       .catch((err) => console.error(err));
-  };
-
-  touchCalbox = (key, tf) => {
-    var calboxObj = this.state.dayMenus;
-    calboxObj[key]['flag'] = tf;
-    this.setState({
-      dayMenus: calboxObj,
-    });
   };
 
   minusCnt = (year, month, date, day, cnt, menu2food_id) => {
@@ -299,20 +307,19 @@ export default class Record extends Component {
       : new Array(width - n.length + 1).join('0') + n;
   };
 
-  getDayInfo = () => {
-    const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
-    fetch(`${serverUrl}gallery/`, {
-      method: 'GET',
-      body: YMD,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${this.state.authToken}`,
-      },
-    })
-      .then(() => {
-      })
-      .catch((error) => console.log(error));
-  };
+  // getDayInfo = () => {
+  //   const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
+  //   fetch(`${serverUrl}gallery/`, {
+  //     method: 'GET',
+  //     body: YMD,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Token ${this.state.authToken}`,
+  //     },
+  //   })
+  //     .then(() => {})
+  //     .catch((error) => console.error(error));
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -338,7 +345,8 @@ export default class Record extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
-              <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
                   onPress={() => {
@@ -375,11 +383,7 @@ export default class Record extends Component {
               <View style={styles.chartDaybox}>
                 <Text style={styles.chartDaytxt}>
                   {this.state.dateTime.month}월 {this.state.dateTime.date}일 (
-                  {
-                    LocaleConfig.locales['fr'].dayNames[
-                      this.state.dateTime.day
-                    ]
-                  }
+                  {LocaleConfig.locales['fr'].dayNames[this.state.dateTime.day]}
                   )
                 </Text>
               </View>
@@ -397,7 +401,7 @@ export default class Record extends Component {
             </View>
             {/* 여기는 총 칼로리*/}
             <Text style={styles.caltxt}>
-              {this.state.TotalCal}/{this.state.basal}
+              {this.state.TotalCal.toFixed(0)}/{this.state.basal}
             </Text>
             {this.state.TotalCal / this.state.basal < 1 && (
               <View style={styles.progressBar}>
@@ -424,9 +428,7 @@ export default class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>
-                    {this.state.TotalCal}
-                  </Text>
+                  <Text style={styles.arrowboxtxt}>{((this.state.TotalCal / this.state.basal) * 100).toFixed(0)}%</Text>
                 </View>
               </View>
             )}
@@ -442,9 +444,7 @@ export default class Record extends Component {
                   }></View>
                 <View style={styles.arrow}></View>
                 <View style={styles.arrowbox}>
-                  <Text style={styles.arrowboxtxt}>
-                    {this.state.TotalCal}
-                  </Text>
+                  <Text style={styles.arrowboxtxt}>{((this.state.TotalCal / this.state.basal) * 100).toFixed(0)}%</Text>
                 </View>
               </View>
             )}
@@ -456,153 +456,66 @@ export default class Record extends Component {
                 marginTop: 50,
                 alignItems: 'center',
               }}>
-              {Object.entries(this.state.dayMenus).map(([k, v], idx) => {
-                if (Object.keys(v).length !== 0) {
-                  return (
-                    <>
-                      {/* <Text key={idx}>{k}</Text> */}
-                      <View style={styles.calbox} key={idx}>
-                        <View style={styles.calboxTitle}>
-                          <Icon
-                            name="restaurant-outline"
-                            style={{fontSize: 20, marginTop: 2}}></Icon>
-                          <Text style={{fontSize: 20, marginLeft: 5}}>
-                            {k}
-                          </Text>
-                        </View>
-                        {!v.flag && (
-                          <>
-                            <TouchableOpacity
-                              style={{
-                                position: 'relative',
-                                bottom: 25,
-                                left: 290,
-                              }}
-                              onPress={() => this.touchCalbox(k, true)}>
-                              <Text>차트보기</Text>
-                            </TouchableOpacity>
-                            {v['meal'].map((m, i) => {
-                              return (
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    // borderBottomWidth: 1,
-                                    marginTop: 10,
-                                  }}
-                                  key={i}>
-                                  <Text
-                                    style={{fontSize: 18, marginLeft: 10}}>
-                                    {m[0]}
-                                  </Text>
-                                  <View
-                                    style={{
-                                      flexDirection: 'row',
-                                    }}>
-                                    <Text style={{fontSize: 18}}>
-                                      {m[1]}kcal
-                                    </Text>
-                                    <Icon
-                                      name="remove-circle-outline"
-                                      style={{
-                                        fontSize: 20,
-                                        marginTop: 2,
-                                        marginLeft: 20,
-                                        marginRight: 10,
-                                      }}
-                                      onPress={() =>
-                                        this.minusCnt(
-                                          this.state.dateTime.year,
-                                          this.state.dateTime.month,
-                                          this.state.dateTime.date,
-                                          this.state.dateTime.day,
-                                          m[3],
-                                          m[2],
-                                        )
-                                      }></Icon>
-                                    <Text style={{fontSize: 18}}>{m[3]}</Text>
-                                    <Icon
-                                      name="add-circle-outline"
-                                      style={{
-                                        fontSize: 20,
-                                        marginTop: 2,
-                                        marginHorizontal: 10,
-                                      }}
-                                      onPress={() =>
-                                        this.plusCnt(
-                                          this.state.dateTime.year,
-                                          this.state.dateTime.month,
-                                          this.state.dateTime.date,
-                                          this.state.dateTime.day,
-                                          m[2],
-                                        )
-                                      }></Icon>
-                                  </View>
-                                </View>
-                              );
-                            })}
-                          </>
-                        )}
-                        {v.flag && (
+              {Object.entries(this.state.dayMenus).map(
+                ([MenuKey, MenuVal], idx) => {
+                  if (Object.keys(MenuVal).length !== 0) {
+                    return (
+                      <>
+                        <View style={styles.calbox} key={idx}>
+                          <View style={styles.calboxTitle}>
+                            <Icon
+                              name="restaurant-outline"
+                              style={{fontSize: 20, marginTop: 2}}></Icon>
+                            <Text style={{fontSize: 20, marginLeft: 5}}>
+                              {MenuKey}
+                            </Text>
+                          </View>
                           <View
                             style={{
-                              flexDirection: 'row',
-                              alignContent: 'center',
+                              justifyContent: 'center',
+                              alignItems: 'center',
                             }}>
-                            <TouchableOpacity
-                              style={{
-                                position: 'relative',
-                                bottom: 25,
-                                left: 287,
-                              }}
-                              onPress={() => this.touchCalbox(k, false)}>
-                              <Text>수량 보기</Text>
-                            </TouchableOpacity>
-                            <Pie
-                              radius={65}
-                              sections={[
-                                {
-                                  percentage: v['nutrient'][0], //탄수화물
-                                  color: '#FBC02D',
-                                },
-                                {
-                                  percentage: v['nutrient'][1], //단백질
-                                  color: '#FFEB3B',
-                                },
-                                {
-                                  percentage: v['nutrient'][2], //지방
-                                  color: '#FFF59D',
-                                },
+                            <MyCarousel
+                              Send={[
+                                [MenuVal['meal'], MenuVal['nutrient']],
+                                this.state.dateTime,
+                                width,
                               ]}
-                              strokeCap={'butt'}
+                              Minus={(
+                                year,
+                                month,
+                                date,
+                                day,
+                                cnt,
+                                menu2food_id,
+                              ) =>
+                                this.minusCnt(
+                                  year,
+                                  month,
+                                  date,
+                                  day,
+                                  cnt,
+                                  menu2food_id,
+                                )
+                              }
+                              Plus={(year, month, date, day, menu2food_id) =>
+                                this.plusCnt(
+                                  year,
+                                  month,
+                                  date,
+                                  day,
+                                  menu2food_id,
+                                )
+                              }
+                              key={idx}
                             />
-                            <View style={{marginTop: 20, marginLeft: 20}}>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FBC02D'}}></Icon>
-                                탄수화물 {v['nutrient'][0].toFixed(1)}%
-                              </Text>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FFEB3B'}}></Icon>
-                                단백질 {v['nutrient'][1].toFixed(1)}%
-                              </Text>
-                              <Text>
-                                <Icon
-                                  name="ellipse"
-                                  style={{color: '#FFF59D'}}></Icon>
-                                지방 {v['nutrient'][2].toFixed(1)}%
-                              </Text>
-                            </View>
                           </View>
-                        )}
-                      </View>
-                    </>
-                  );
-                }
-              })}
+                        </View>
+                      </>
+                    );
+                  }
+                },
+              )}
             </View>
           </View>
         </ScrollView>
@@ -653,6 +566,7 @@ const styles = StyleSheet.create({
   },
   calboxTitle: {
     flexDirection: 'row',
+    marginBottom: 20
   },
   // calchart: {},
   caltxt: {
@@ -702,3 +616,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Record);
