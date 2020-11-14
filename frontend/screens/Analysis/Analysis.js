@@ -6,8 +6,8 @@ import {
   Image,
   View,
   Dimensions,
+  ScrollView,
 } from 'react-native';
-import {} from 'react-native';
 import {connect} from 'react-redux';
 import {serverUrl} from '../../constants';
 
@@ -16,6 +16,7 @@ const W = Dimensions.get('window').width;
 
 const mapStateToProps = (state) => ({
   user: state.userReducer.user,
+  menu: state.recordReducer.menu,
 });
 
 class Analysis extends Component {
@@ -23,6 +24,7 @@ class Analysis extends Component {
     super(props);
   }
   render() {
+    console.log('1', this.props.menu);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -45,6 +47,9 @@ class Analysis extends Component {
           </Text>
           <Text>님의 식단 분석 결과입니다.</Text>
         </View>
+
+        {/*body*/}
+        <ScrollView></ScrollView>
       </SafeAreaView>
     );
   }
