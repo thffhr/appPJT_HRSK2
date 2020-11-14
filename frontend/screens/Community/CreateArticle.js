@@ -48,6 +48,19 @@ class CreateArticle extends Component {
     activeRecipe: '칼국수',
     count: 1,
   };
+  componentDidMount() {
+    fetch(
+      `${serverUrl}gallery/getFood/${this.props.route.params.selected.id}/`,
+      {
+        method: 'POST',
+      },
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        console.log('응답: ', response);
+      })
+      .catch((err) => console.error(err));
+  }
   createArticle = async () => {
     var myRecipe = '';
     // Object.values(this.state.tempArticleInfo.foods[food]).map((value) => {
