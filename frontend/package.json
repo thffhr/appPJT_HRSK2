@@ -28,6 +28,7 @@
     "react-native": "0.63.2",
     "react-native-calendars": "1.403.0",
     "react-native-datepicker": "1.7.2",
+    "react-native-draggable": "^3.3.0",
     "react-native-gesture-handler": "1.8.0",
     "react-native-image-picker": "2.3.4",
     "react-native-material-dropdown": "git+https://github.com/noway/react-native-material-dropdown.git",

@@ -254,7 +254,15 @@ export default class MyDatePicker extends Component {
         );
       })
       .catch((error) => console.error(error));
-  }
+  };
+  // CropImg
+  // onCropImg(tf) {
+  //   if (tf) {
+  //     this.props.navigation.push('CropImg', {
+  //       image: this.props.image,
+  //     });
+  //   }
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -339,6 +347,7 @@ export default class MyDatePicker extends Component {
                 food={this.state.sendFood}
                 isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
                 close={(tf) => this.setFIModalVisible(tf, -1)}
+                // onCropImg={(tf) => this.onCropImg(tf)}
               />
             </View>
           </View>
@@ -407,7 +416,6 @@ export default class MyDatePicker extends Component {
             )}
             {this.state.image !== null && (
               <View>
-                {/* 음식사진 */}
                 <Image
                   style={styles.image}
                   source={{
@@ -698,7 +706,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffbe6',
-    paddingHorizontal: 20
   },
   navbar: {
     padding: 5,

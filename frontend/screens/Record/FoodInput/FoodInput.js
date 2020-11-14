@@ -6,13 +6,14 @@ import {
   TextInput,
   StyleSheet,
   Image,
+  Modal,
   TouchableOpacity,
   TouchableHighlight,
   AsyncStorage,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import ImagePicker from 'react-native-image-crop-picker';
+import CropImg from './CropImg';
 import {serverUrl} from '../../../constants';
 
 const H = Dimensions.get('window').height;
@@ -25,6 +26,7 @@ export default class FoodInput extends Component {
     this.state = {
       update: false,
       foodInfo: this.props.food,
+      modalVisible: false,
     };
   }
   componentDidMount = async () => {
@@ -101,22 +103,60 @@ export default class FoodInput extends Component {
   close(tf) {
     this.props.close(tf);
   }
-  // cropImg() {
-  //   ImagePicker.openPicker({
-  //     path: this.props.image.data,
-  //     width: 300,
-  //     height: 400,
-  //   }).then(image => {
-  //     console.log(image);
-  //   });
-  // }
+  setModalVisible = (tf) => {
+    this.setState({
+      modalVisible: tf,
+    });
+  };
   render() {
     return (
       <View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 22,
+            }}>
+            <View style={styles.modalView}>
+              <TouchableHighlight
+                style={{
+                  alignItems: 'flex-end',
+                }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Icon
+                  name='close'
+                  style={{
+                    alignItems: 'flex-end',
+                    fontSize: 30,
+                    marginRight: 15,
+                    marginBottom: 10,
+                    // fontWeight: 'bold',
+                    // fontFamily: 'BMHANNAAir',
+                    color: '#F39C12',
+                  }}
+                ></Icon>
+              </TouchableHighlight>
+              <CropImg image={this.props.image === null ? null : this.props.image} />
+            </View>
+          </View>
+        </Modal>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text>영역선택</Text>
           {this.props.image !== null && (
-            <TouchableOpacity onPress={this.cropImg}>
+            <TouchableOpacity onPress={() => {
+              // this.onCropImg(true)
+              this.setModalVisible(!this.state.modalVisible);
+            }}>
               <Image
                 style={{height: 100, width: 100}}
                 source={{
@@ -304,4 +344,26 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginHorizontal: 20,
   },
+  modalView: {
+    width: '100%',
+    height: '100%',
+    zIndex: 10,
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    paddingVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  // modalButton: {
+  //   paddingHorizontal: 20,
+  //   paddingVertical: 10,
+  //   borderRadius: 100,
+  //   marginHorizontal: 20,
+  // },
 });
