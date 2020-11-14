@@ -143,11 +143,17 @@ class Login extends Component {
         </View>
         <View style={styles.findBox}>
           <TouchableOpacity style={styles.findBtn} color="transparent">
-            <Text style={{fontSize: W * 0.035}}>아이디 찾기</Text>
+            <Text
+              style={{fontSize: W * 0.035, fontFamily: 'NanumBarunGothicBold'}}>
+              아이디 찾기
+            </Text>
           </TouchableOpacity>
           <Text style={{fontSize: W * 0.03}}>|</Text>
           <TouchableOpacity style={styles.findBtn}>
-            <Text style={{fontSize: W * 0.035}}>비밀번호 찾기</Text>
+            <Text
+              style={{fontSize: W * 0.035, fontFamily: 'NanumBarunGothicBold'}}>
+              비밀번호 찾기
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.signupBox}>
@@ -156,6 +162,7 @@ class Login extends Component {
               textAlign: 'center',
               marginBottom: H * 0.01,
               fontSize: W * 0.035,
+              fontFamily: 'NanumBarunGothicBold',
             }}>
             가입이 되어 있지 않으신가요?
           </Text>
@@ -165,6 +172,7 @@ class Login extends Component {
                 color: 'blue',
                 textDecorationLine: 'underline',
                 fontSize: W * 0.035,
+                fontFamily: 'NanumBarunGothicBold',
               }}>
               회원가입
             </Text>
@@ -201,6 +209,7 @@ const styles = StyleSheet.create({
     width: W * 0.7,
     height: W * 0.1,
     fontSize: W * 0.04,
+    fontFamily: 'NanumBarunGothicBold',
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
@@ -224,7 +233,7 @@ const styles = StyleSheet.create({
   loginBtnText: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumBarunGothicBold',
   },
   findBox: {
     flexDirection: 'row',

@@ -154,7 +154,12 @@ class CreateArticle extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.createArticle}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: 'orange'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'NanumSquareRoundEB',
+              color: 'orange',
+            }}>
             공유
           </Text>
         </TouchableOpacity>
@@ -448,7 +453,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontFamily: 'NanumSquareRoundEB',
   },
   block: {
     flexDirection: 'row',

@@ -45,10 +45,12 @@ export default class Gallery extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        this.setState({
-          pictures: response,
-          selected: {id: response[0].id, image: response[0].image},
-        });
+        if (response.length) {
+          this.setState({
+            pictures: response,
+            selected: {id: response[0].id, image: response[0].image},
+          });
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -140,8 +142,17 @@ export default class Gallery extends Component {
                     />
                   )}
                   {!picture.image && (
-                    <View style={{width: '100%', height: '100%', backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
-                      <Icon name='fast-food-outline' style={{fontSize: 80, color: '#fff'}}></Icon>
+                    <View
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#FAD499',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Icon
+                        name="fast-food-outline"
+                        style={{fontSize: 80, color: '#fff'}}></Icon>
                     </View>
                   )}
                   {/* 뱃지 */}

@@ -101,7 +101,12 @@ class CreateSelect extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.onNext}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: '#fff'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'NanumSquareRoundEB',
+              color: '#fff',
+            }}>
             다음
           </Text>
           <Icon name="chevron-forward" size={26} color={'#fff'}></Icon>
@@ -192,8 +197,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    // fontWeight: 'bold',
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     color: '#fff',
   },
   next: {

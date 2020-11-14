@@ -86,7 +86,7 @@ class StartSex extends Component {
         <Text
           style={{
             fontSize: W * 0.06,
-            fontWeight: 'bold',
+            fontFamily: 'NanumSquareRoundEB',
             color: 'gray',
             marginBottom: H * 0.04,
             marginTop: H * 0.02,
@@ -102,7 +102,7 @@ class StartSex extends Component {
               style={styles.selectsex}
             /> */}
             <Text
-              style={{fontSize: W * 0.1, fontWeight: 'bold', color: 'gray'}}>
+              style={{fontSize: W * 0.1,  fontFamily: 'NanumSquareRoundEB', color: 'gray'}}>
               남
             </Text>
           </TouchableOpacity>

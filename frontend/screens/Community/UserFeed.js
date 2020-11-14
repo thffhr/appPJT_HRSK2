@@ -178,6 +178,7 @@ export default class UserFeed extends Component {
                 style={{
                   fontSize: 20,
                   marginLeft: 5,
+                  fontFamily: 'NanumSquareRoundEB'
                 }}>
                 {this.state.userData.username}
               </Text>
@@ -300,6 +301,8 @@ const styles = StyleSheet.create({
   cntContent: {
     textAlign: 'center',
     fontSize: 20,
+    fontFamily: 'NanumBarunGothicBold',
+    marginTop: 3,
   },
 
   // my articles
@@ -336,7 +339,7 @@ const styles = StyleSheet.create({
   followTxt: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumBarunGothicBold',
     textAlign: 'center',
   },
   follow: {
@@ -347,6 +350,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderColor: '#fca652',
     borderWidth: 1,
+    
   },
   followingTxt: {
     color: '#fca652',
@@ -388,7 +392,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'NanumBarunGothicBold',
     textAlign: 'center',
   },
 });

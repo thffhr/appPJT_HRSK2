@@ -313,13 +313,14 @@ const styles = StyleSheet.create({
   },
   commentContent: {
     fontSize: 16,
-    fontFamily: 'BMEULJROTTF',
+    fontFamily: 'NanumBarunGothicBold'
   },
   commentData: {
     flexDirection: 'row',
   },
   cmdData: {
     marginRight: 7,
+    fontFamily: 'NanumBarunGothicBold'
   },
   inputArea: {
     backgroundColor: '#fff',
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
   },
   inputTxt: {
     color: '#fff',
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     fontSize: 20,
   },
   writerImg: {
