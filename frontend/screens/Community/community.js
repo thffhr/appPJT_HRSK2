@@ -28,15 +28,14 @@ const mapStateToProps = (state) => ({
 class Community extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      articles: [],
-      selected: {id: null, image: null},
-      modalData: '',
-      modalVisible: false,
-      userData: {},
-    };
   }
+  state = {
+    articles: [],
+    selected: {id: null, image: null},
+    modalData: '',
+    modalVisible: false,
+    userData: {},
+  };
   componentDidMount() {
     this.getAllArticles();
   }
@@ -175,6 +174,7 @@ class Community extends Component {
           <View style={{width: '100%'}}>
             <View style={styles.articles}>
               {this.state.articles.map((article) => {
+                console.log(article.image);
                 return (
                   <View style={styles.article} key={article.id}>
                     {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
