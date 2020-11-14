@@ -7,13 +7,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
-import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
-// import {store} from '../../src/store/index';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
