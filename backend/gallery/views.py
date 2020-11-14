@@ -332,6 +332,19 @@ def getFood(request, menu_id):
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)
 
+
+@api_view(['POST'])
+def readFood(request, menu_id):
+    menu = get_object_or_404(Menu, id=menu_id)
+    menu2foods = Menu2food.objects.filter(image=menu)
+    lst = dict()
+    for menu2food in menu2foods:
+        food = menu2food.food
+        serializer = FoodSerializer(food)
+        lst[serializer.data['DESC_KOR']] = []
+    return Response(lst)
+
+
 @api_view(['POST'])
 def updateM2F(request, menu2food_id):
     menu2food = get_object_or_404(Menu2food, id=menu2food_id)
