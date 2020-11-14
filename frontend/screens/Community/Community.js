@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   AsyncStorage,
@@ -51,6 +50,7 @@ class Community extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log('@@@@@@@@', response);
         this.setState({
           articles: response,
         });
