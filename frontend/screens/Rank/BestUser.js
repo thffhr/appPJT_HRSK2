@@ -11,12 +11,17 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
 import {serverUrl} from '../../constants';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-export default class BestUser extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class BestUser extends Component {
   constructor(props) {
     super(props);
 
@@ -346,3 +351,5 @@ const styles = StyleSheet.create({
     color: 'transparent',
   },
 });
+
+export default connect(mapStateToProps)(BestUser);

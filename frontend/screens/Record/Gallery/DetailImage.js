@@ -15,10 +15,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../../constants';
 import FoodInput from '../FoodInput/FoodInput';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-export default class DetatilImage extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class DetatilImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +44,7 @@ export default class DetatilImage extends Component {
     };
   }
   componentDidMount = async () => {
-    console.log(this.state.picture)
+    console.log(this.state.picture);
     this.getFood();
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
@@ -160,19 +165,19 @@ export default class DetatilImage extends Component {
         NUTR_CONT2: food['NUTR_CONT2'],
         NUTR_CONT3: food['NUTR_CONT3'],
         NUTR_CONT4: food['NUTR_CONT4'],
-      }
-    })
-    this.setFIModalVisible(true, id)
-  };
+      },
+    });
+    this.setFIModalVisible(true, id);
+  }
   setFIModalVisible(tf, id) {
-    console.log(this.state.sendFood)
+    console.log(this.state.sendFood);
     this.setState({
       InputModalVisible: tf,
       updateFoodId: id,
     });
     if (id < 0) {
       this.setState({
-        sendFood: {}
+        sendFood: {},
       });
     }
   }
@@ -193,7 +198,7 @@ export default class DetatilImage extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response)
+          console.log(response);
         })
         .catch((err) => console.error(err));
       this.setFIModalVisible(false, this.state.updateFoodId);
@@ -205,7 +210,7 @@ export default class DetatilImage extends Component {
       newFoodInfo.append('foodId', foodInfo.id);
       newFoodInfo.append('location', []);
       newFoodInfo.append('value', 1);
-      console.log(newFoodInfo)
+      console.log(newFoodInfo);
       fetch(`${serverUrl}gallery/addM2F/`, {
         method: 'POST',
         body: newFoodInfo,
@@ -216,13 +221,13 @@ export default class DetatilImage extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response)
+          console.log(response);
         })
         .catch((err) => console.error(err));
       this.setFIModalVisible(false, -1);
       this.getFood();
     }
-  };
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -353,13 +358,14 @@ export default class DetatilImage extends Component {
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
-                isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
-                close={(tf) => this.setFIModalVisible(tf, this.state.updateFoodId)}
+                isUpdate={(update, foodInfo) => this.isUpdate(update, foodInfo)}
+                close={(tf) =>
+                  this.setFIModalVisible(tf, this.state.updateFoodId)
+                }
               />
             </View>
           </View>
         </Modal>
-
 
         <View style={styles.detailArea}>
           <View style={styles.detailHeader}>
@@ -411,8 +417,17 @@ export default class DetatilImage extends Component {
                 />
               )}
               {!this.state.image && (
-                <View style={{width: width, height: width, backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
-                  <Icon name='fast-food-outline' style={{fontSize: 200, color: '#fff'}}></Icon>
+                <View
+                  style={{
+                    width: width,
+                    height: width,
+                    backgroundColor: '#FAD499',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Icon
+                    name="fast-food-outline"
+                    style={{fontSize: 200, color: '#fff'}}></Icon>
                 </View>
               )}
               {this.state.onCaption &&
@@ -422,36 +437,36 @@ export default class DetatilImage extends Component {
                   const color = this.state.colors[i];
                   return (
                     <>
-                    {food[2] !== 'null' && (
-                      <View
-                      style={{
-                        position: 'absolute',
-                        left: food[2][0] * k,
-                        top: food[2][1] * k,
-                        width: food[2][2] * k,
-                        height: food[2][3] * k,
-                        borderWidth: 2,
-                        borderColor: color,
-                      }}
-                      key={i}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                        }}>
-                        <Text
+                      {food[2] !== 'null' && (
+                        <View
                           style={{
-                            backgroundColor: color,
-                            padding: 4,
-                            borderBottomRightRadius: 4,
-                            borderBottomLeftRadius: 4,
-                            borderTopRightRadius: 4,
-                            fontWeight: 'bold',
-                          }}>
-                          {food[0]['DESC_KOR']}
-                        </Text>
-                      </View>
-                    </View>
-                    )}
+                            position: 'absolute',
+                            left: food[2][0] * k,
+                            top: food[2][1] * k,
+                            width: food[2][2] * k,
+                            height: food[2][3] * k,
+                            borderWidth: 2,
+                            borderColor: color,
+                          }}
+                          key={i}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                            }}>
+                            <Text
+                              style={{
+                                backgroundColor: color,
+                                padding: 4,
+                                borderBottomRightRadius: 4,
+                                borderBottomLeftRadius: 4,
+                                borderTopRightRadius: 4,
+                                fontWeight: 'bold',
+                              }}>
+                              {food[0]['DESC_KOR']}
+                            </Text>
+                          </View>
+                        </View>
+                      )}
                     </>
                   );
                 })}
@@ -500,10 +515,11 @@ export default class DetatilImage extends Component {
                             ({food[0]['SERVING_SIZE'] * food[1]} g)
                           </Text>
                         </View>
-                        <TouchableOpacity onPress={() => this.sendFood(food[0], food[3])}>
+                        <TouchableOpacity
+                          onPress={() => this.sendFood(food[0], food[3])}>
                           <Icon
-                          name="create-outline"
-                          style={{fontSize: 20}}></Icon>
+                            name="create-outline"
+                            style={{fontSize: 20}}></Icon>
                         </TouchableOpacity>
                       </View>
                       <View
@@ -677,3 +693,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+export default connect(mapStateToProps)(DetatilImage);

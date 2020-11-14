@@ -18,12 +18,16 @@ import {CommonActions, TabRouter} from '@react-navigation/native';
 import {Dropdown} from 'react-native-material-dropdown';
 import {serverUrl} from '../../../constants';
 import FoodInput from '../FoodInput/FoodInput';
-
+import {connect} from 'react-redux';
 import Camera from '../../Camera/Camera';
 
 const {width, height} = Dimensions.get('window');
 
-export default class MyDatePicker extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class MyDatePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -144,7 +148,7 @@ export default class MyDatePicker extends Component {
     });
     if (idx < 0) {
       this.setState({
-        sendFood: {}
+        sendFood: {},
       });
     }
   }
@@ -166,10 +170,10 @@ export default class MyDatePicker extends Component {
         NUTR_CONT3: food['NUTR_CONT3'],
         NUTR_CONT4: food['NUTR_CONT4'],
         location: food['location'],
-      }
-    })
-    this.setFIModalVisible(true, idx)
-  };
+      },
+    });
+    this.setFIModalVisible(true, idx);
+  }
   isUpdate(update, foodInfo) {
     // update일 경우
     if (update) {
@@ -182,8 +186,8 @@ export default class MyDatePicker extends Component {
       newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
       newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
       newFoodInfo['value'] = 1;
-      const temp = this.state.foodsLst
-      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo)
+      const temp = this.state.foodsLst;
+      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo);
       this.setState({
         foodsLst: temp,
         nowView: newFoodInfo['DESC_KOR'],
@@ -207,7 +211,7 @@ export default class MyDatePicker extends Component {
       });
       this.setFIModalVisible(false, this.state.updateFoodIdx);
     }
-  };
+  }
   // 사진 저장
   onCamera() {
     let foodName = '';
@@ -226,7 +230,7 @@ export default class MyDatePicker extends Component {
     var data = new FormData();
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
-    console.log('저장할때 위치', foodLo)
+    console.log('저장할때 위치', foodLo);
     data.append('foodVal', foodVal);
     if (this.state.image !== null) {
       data.append('data', this.state.image.data);
@@ -337,7 +341,7 @@ export default class MyDatePicker extends Component {
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
-                isUpdate={(update, foodInfo)=>this.isUpdate(update, foodInfo)}
+                isUpdate={(update, foodInfo) => this.isUpdate(update, foodInfo)}
                 close={(tf) => this.setFIModalVisible(tf, -1)}
               />
             </View>
@@ -478,7 +482,8 @@ export default class MyDatePicker extends Component {
                   zIndex: 1,
                   height: '100%',
                 }}>
-                <TouchableOpacity onPress={() => this.setFIModalVisible(true, -1)}>
+                <TouchableOpacity
+                  onPress={() => this.setFIModalVisible(true, -1)}>
                   <Icon
                     name="add-outline"
                     style={{
@@ -581,10 +586,11 @@ export default class MyDatePicker extends Component {
                               </Text>
                             </View>
                             {/* food 수정 */}
-                            <TouchableOpacity onPress={() => this.sendFood(foodData, i)}>
+                            <TouchableOpacity
+                              onPress={() => this.sendFood(foodData, i)}>
                               <Icon
-                              name="create-outline"
-                              style={{fontSize: 20}}></Icon>
+                                name="create-outline"
+                                style={{fontSize: 20}}></Icon>
                             </TouchableOpacity>
                           </View>
                           <View
@@ -698,7 +704,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffbe6',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   navbar: {
     padding: 5,
@@ -834,3 +840,5 @@ const styles = StyleSheet.create({
   //   textAlign: "center"
   // }
 });
+
+export default connect(mapStateToProps)(DatePicker);

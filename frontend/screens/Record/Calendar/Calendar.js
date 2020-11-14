@@ -105,7 +105,7 @@ class Calendar extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response)
+        console.log(response);
         this.setState({
           nextDays: response,
         });

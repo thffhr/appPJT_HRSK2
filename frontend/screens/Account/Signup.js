@@ -11,15 +11,15 @@ import {
 import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
-import { login } from '../../src/action/user';
-import { connect } from 'react-redux';
+import {login} from '../../src/action/user';
+import {connect} from 'react-redux';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
 class Signup extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class Signup extends Component {
           const userData = {
             token: response.key,
             username: this.state.signupData.username,
-          }
+          };
           this.props.login(userData);
           this.props.navigation.dispatch(
             CommonActions.reset({
@@ -82,7 +82,9 @@ class Signup extends Component {
           style={styles.image}
         />
         <View style={styles.guide}>
-          <Text style={styles.guideTxt}>생성할 아이디와 비밀번호를 입력해주세요.</Text>
+          <Text style={styles.guideTxt}>
+            생성할 아이디와 비밀번호를 입력해주세요.
+          </Text>
         </View>
         <View>
           <TextInput

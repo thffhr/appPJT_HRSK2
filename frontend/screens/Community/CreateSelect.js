@@ -15,6 +15,11 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 class CreateSelect extends Component {
   constructor(props) {
@@ -78,16 +83,14 @@ class CreateSelect extends Component {
   }
 
   getAllPictures = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/myImgs/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           pictures: response,
           selected: {id: response[0].id, image: response[0].image},
@@ -235,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateSelect;
+export default connect(mapStateToProps)(CreateSelect);

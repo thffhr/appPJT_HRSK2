@@ -11,35 +11,38 @@ import {
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 class Comment extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      articleId: this.props.route.params.articleId,
-      comments: [],
-      myComment: {
-        content: '',
-      },
-      selectedReply: {
-        flag: false,
-        commentId: null,
-      },
-    };
   }
-
+  state = {
+    articleId: this.props.route.params.articleId,
+    comments: [],
+    myComment: {
+      content: '',
+    },
+    selectedReply: {
+      flag: false,
+      commentId: null,
+    },
+    username: this.props.user.username,
+  };
   createComment = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     if (this.state.myComment.content) {
       fetch(`${serverUrl}articles/${this.state.articleId}/create_comment/`, {
         method: 'POST',
         body: JSON.stringify(this.state.myComment),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
@@ -57,8 +60,7 @@ class Comment extends Component {
         });
     }
   };
-  createReply = async (co) => {
-    const token = await AsyncStorage.getItem('auth-token');
+  createReply = () => {
     if (this.state.myComment.content) {
       fetch(
         `${serverUrl}articles/${this.state.selectedReply.commentId}/create_reply/`,
@@ -67,7 +69,7 @@ class Comment extends Component {
           body: JSON.stringify(this.state.myComment),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
+            Authorization: `Token ${this.props.user.token}`,
           },
         },
       )
@@ -87,11 +89,8 @@ class Comment extends Component {
     }
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
     this.getComments();
   }
 
@@ -109,7 +108,7 @@ class Comment extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   getReply = (commentId, i) => {
@@ -313,14 +312,14 @@ const styles = StyleSheet.create({
   },
   commentContent: {
     fontSize: 16,
-    fontFamily: 'NanumBarunGothicBold'
+    fontFamily: 'NanumBarunGothicBold',
   },
   commentData: {
     flexDirection: 'row',
   },
   cmdData: {
     marginRight: 7,
-    fontFamily: 'NanumBarunGothicBold'
+    fontFamily: 'NanumBarunGothicBold',
   },
   inputArea: {
     backgroundColor: '#fff',
@@ -343,4 +342,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Comment;
+export default connect(mapStateToProps)(Comment);

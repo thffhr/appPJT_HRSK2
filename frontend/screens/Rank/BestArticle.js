@@ -14,11 +14,16 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-export default class BestArticle extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class BestArticle extends Component {
   constructor(props) {
     super(props);
 
@@ -531,3 +536,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+export default connect(mapStateToProps)(BestArticle);

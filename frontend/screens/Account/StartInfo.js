@@ -11,27 +11,26 @@ import {
   Dimensions,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions} from 'react-navigation';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
 const mapStateToProps = (state) => ({
-  user: state.userReducer.user
-})
+  user: state.userReducer.user,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
-class Startinfo extends Component {
+class StartInfo extends Component {
   constructor(props) {
     super(props);
-
-  };
+  }
   state = {
     height: null,
     weight: null,
@@ -64,14 +63,17 @@ class Startinfo extends Component {
         routes: [{name: 'drawer'}],
       }),
     );
-    
   };
   render() {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.infoNext}>
           <Text
-            style={{fontSize: W * 0.05, fontFamily: 'NanumSquareRoundEB', color: '#fca652'}}>
+            style={{
+              fontSize: W * 0.05,
+              fontFamily: 'NanumSquareRoundEB',
+              color: '#fca652',
+            }}>
             다음
           </Text>
         </TouchableOpacity>
@@ -98,10 +100,7 @@ class Startinfo extends Component {
                 this.setState({height: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              cm
-            </Text>
+            <Text style={styles.unit}>cm</Text>
           </View>
           <View style={styles.textGroup}>
             <TextInput
@@ -111,10 +110,7 @@ class Startinfo extends Component {
                 this.setState({weight: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              kg
-            </Text>
+            <Text style={styles.unit}>kg</Text>
           </View>
           <View style={styles.textGroup}>
             <TextInput
@@ -124,10 +120,7 @@ class Startinfo extends Component {
                 this.setState({age: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              세
-            </Text>
+            <Text style={styles.unit}>세</Text>
           </View>
         </View>
         <View style={styles.location}>
@@ -201,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Startinfo);
+export default connect(mapStateToProps, mapDispatchToProps)(StartInfo);

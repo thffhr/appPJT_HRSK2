@@ -28,15 +28,14 @@ const mapStateToProps = (state) => ({
 class Community extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      articles: [],
-      selected: {id: null, image: null},
-      modalData: '',
-      modalVisible: false,
-      userData: {},
-    };
   }
+  state = {
+    articles: [],
+    selected: {id: null, image: null},
+    modalData: '',
+    modalVisible: false,
+    userData: {},
+  };
   componentDidMount() {
     this.getAllArticles();
   }

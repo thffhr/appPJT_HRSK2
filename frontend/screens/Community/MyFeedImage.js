@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
-import { connect } from 'react-redux';
-import { serverUrl } from '../../constants';
+import React, {Component} from 'react';
+import {View, TouchableOpacity, Image, StyleSheet, Text} from 'react-native';
+import {connect} from 'react-redux';
+import {serverUrl} from '../../constants';
 
-export default class MyFeedImage extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class MyFeedImage extends Component {
   constructor(props) {
     super(props);
-  };
+  }
   state = {
     selected: {id: null, image: null},
   };
@@ -23,9 +27,7 @@ export default class MyFeedImage extends Component {
       <View style={styles.pictureBox}>
         {this.props.articles.map((article) => {
           const borderColor =
-            article.id === this.state.selected.id
-              ? '#FCA652'
-              : 'transparent';
+            article.id === this.state.selected.id ? '#FCA652' : 'transparent';
           return (
             <TouchableOpacity
               style={[styles.imgBtn, {borderColor: borderColor}]}
@@ -41,9 +43,9 @@ export default class MyFeedImage extends Component {
           );
         })}
       </View>
-    )
+    );
   }
-};
+}
 
 const styles = StyleSheet.create({
   // my articles
@@ -63,3 +65,5 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
+export default connect(mapStateToProps)(MyFeedImage);

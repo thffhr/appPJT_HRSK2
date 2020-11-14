@@ -48,7 +48,10 @@ class MyCarousel extends Component {
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={{fontSize: 18}}>{food[1]}kcal</Text>
-                      <Text style={{fontSize: 18, marginLeft: 30, marginRight: 10}}>{food[3]} 인분</Text>
+                      <Text
+                        style={{fontSize: 18, marginLeft: 30, marginRight: 10}}>
+                        {food[3]} 인분
+                      </Text>
                     </View>
                   </View>
                 );

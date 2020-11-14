@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
@@ -102,7 +102,11 @@ class StartSex extends Component {
               style={styles.selectsex}
             /> */}
             <Text
-              style={{fontSize: W * 0.1,  fontFamily: 'NanumSquareRoundEB', color: 'gray'}}>
+              style={{
+                fontSize: W * 0.1,
+                fontFamily: 'NanumSquareRoundEB',
+                color: 'gray',
+              }}>
               남
             </Text>
           </TouchableOpacity>

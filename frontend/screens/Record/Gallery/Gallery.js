@@ -11,16 +11,21 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
 import {serverUrl} from '../../../constants';
 
 const {width, height} = Dimensions.get('screen');
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 let today = new Date();
 let year = today.getFullYear(); // 년도
 let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
 
-export default class Gallery extends Component {
+class Gallery extends Component {
   constructor(props) {
     super(props);
 
@@ -226,3 +231,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
+export default connect(mapStateToProps)(Gallery);
