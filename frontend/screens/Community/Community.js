@@ -194,7 +194,6 @@ class Community extends Component {
               {this.state.articles.map((article, idx) => {
                 return (
                   <View style={styles.article} key={article.id}>
-                    {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
                     <View style={styles.writer}>
                       <View>
                         <TouchableOpacity
@@ -230,46 +229,49 @@ class Community extends Component {
                         </TouchableOpacity>
                       </View>
                       {/* 여기에 북마크, 삭제 등등 추가 */}
-                      <View style={{flexDirection: 'column'}}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            var articlesOption = Array.from(
-                              {length: this.state.articles.length},
-                              () => false,
-                            );
-                            if (this.state.articlesOption[idx]) {
-                              this.setState({
-                                articlesOption: articlesOption,
-                              });
-                            } else {
-                              articlesOption[idx] = true;
-                              this.setState({
-                                articlesOption: articlesOption,
-                              });
-                            }
-                          }}>
-                          <Icon
-                            name="ellipsis-vertical"
-                            style={{marginRight: 40, fontSize: 20}}></Icon>
-                        </TouchableOpacity>
-                        <View
-                          style={{
-                            backgroundColor: 'white',
-                            position: 'absolute',
-                            top: 20,
-                            right: 50,
-                            borderColor: 'black',
-                            borderRadius: 5,
-                            borderWidth: 1,
-                          }}>
-                          {this.state.articlesOption[idx] && (
-                            <TouchableOpacity
-                              onPress={() => this.delArticle(article.id)}>
-                              <Text style={{padding: 10}}>삭제</Text>
-                            </TouchableOpacity>
-                          )}
+                      {this.props.user.username == article.user.username && (
+                        <View style={{flexDirection: 'column'}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              var articlesOption = Array.from(
+                                {length: this.state.articles.length},
+                                () => false,
+                              );
+                              if (this.state.articlesOption[idx]) {
+                                this.setState({
+                                  articlesOption: articlesOption,
+                                });
+                              } else {
+                                articlesOption[idx] = true;
+                                this.setState({
+                                  articlesOption: articlesOption,
+                                });
+                              }
+                            }}>
+                            <Icon
+                              name="ellipsis-vertical"
+                              style={{marginRight: 40, fontSize: 20}}></Icon>
+                          </TouchableOpacity>
+                          <View
+                            style={{
+                              backgroundColor: 'white',
+                              position: 'absolute',
+                              top: 20,
+                              right: 50,
+                              borderColor: 'black',
+                              borderRadius: 5,
+                              borderWidth: 1,
+                              zIndex: 2,
+                            }}>
+                            {this.state.articlesOption[idx] && (
+                              <TouchableOpacity
+                                onPress={() => this.delArticle(article.id)}>
+                                <Text style={{padding: 10}}>삭제</Text>
+                              </TouchableOpacity>
+                            )}
+                          </View>
                         </View>
-                      </View>
+                      )}
                     </View>
                     {/* </View> */}
                     {/* <View style={styles.tags}>
