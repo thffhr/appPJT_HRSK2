@@ -112,9 +112,6 @@ class UserFeed extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
         <Modal
           animationType="fade"
           transparent={true}
@@ -178,7 +175,6 @@ class UserFeed extends Component {
               <Text
                 style={{
                   fontSize: 20,
-                  marginLeft: 5,
                   fontFamily: 'NanumSquareRoundEB',
                 }}>
                 {this.state.userData.username}
@@ -262,22 +258,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fca652',
-    elevation: 5,
-    flexDirection: 'row',
-  },
-  haru: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    fontFamily: 'BMJUA',
-    marginLeft: 15,
-  },
-
   articleBelow: {
     marginLeft: '5%',
   },
@@ -287,7 +267,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   imgBox: {},
   profileImg: {
@@ -298,9 +279,8 @@ const styles = StyleSheet.create({
   cntBox: {},
   cntContent: {
     textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'NanumBarunGothicBold',
-    marginTop: 3,
+    fontSize: 17,
+    fontFamily: 'NanumSquareRoundR',
   },
 
   // my articles
@@ -325,13 +305,13 @@ const styles = StyleSheet.create({
 
   // follow
   followBtn: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     paddingVertical: 10,
   },
   followTxt: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'NanumBarunGothicBold',
+    fontFamily: 'NanumSquareRoundEB',
     textAlign: 'center',
   },
   follow: {

@@ -353,10 +353,8 @@ class MyDatePicker extends Component {
             <Text
               style={{
                 fontSize: 20,
-                fontWeight: 'bold',
-                fontFamily: 'BMHANNAAir',
+                fontFamily: 'NanumSquareRoundEB',
                 color: '#F39C12',
-                marginRight: 20,
               }}>
               확인
             </Text>
@@ -386,6 +384,7 @@ class MyDatePicker extends Component {
                 },
                 dateText: {
                   fontSize: 17,
+                  fontFamily: 'NanumSquareRoundEB',
                 },
               }}
               onDateChange={(date) => {
@@ -397,8 +396,10 @@ class MyDatePicker extends Component {
               // label='시간을 선택하세요.'
               data={this.state.mealTimeDrop}
               value={this.state.dropVal}
+              style={{fontFamily: 'NanumSquareRoundEB', fontSize: 17}}
               containerStyle={styles.dropdown}
               pickerStyle={styles.dropdownPicker}
+              itemTextStyle={{fontFamily: 'NanumSquareRoundEB'}}
               dropdownOffset={{top: 10}}
               onChangeText={(value) => {
                 this.setState({dropVal: value});
@@ -567,7 +568,7 @@ class MyDatePicker extends Component {
                                 style={{
                                   fontSize: 20,
                                   fontWeight: 'bold',
-                                  fontFamily: 'BMHANNAAir',
+                                  fontFamily: 'NanumSquareRoundEB',
                                   color: '#232323',
                                 }}>
                                 {foodData['DESC_KOR']}
@@ -576,7 +577,7 @@ class MyDatePicker extends Component {
                                 style={{
                                   fontSize: 17,
                                   fontWeight: 'normal',
-                                  fontFamily: 'BMHANNAAir',
+                                  fontFamily: 'NanumSquareRoundEB',
                                   color: '#232323',
                                   marginLeft: 10,
                                   marginTop: 6,
@@ -601,7 +602,7 @@ class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               탄수화물:{' '}
@@ -613,7 +614,7 @@ class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               단백질:{' '}
@@ -625,7 +626,7 @@ class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               지방:{' '}
@@ -680,7 +681,7 @@ class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 20,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundB',
                                 color: '#232323',
                                 marginTop: 2,
                               }}>
@@ -704,10 +705,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffbe6',
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
   },
   navbar: {
-    padding: 5,
+    marginVertical: 5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',

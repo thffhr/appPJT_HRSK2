@@ -119,7 +119,7 @@ class FoodInput extends Component {
     return (
       <View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text>영역선택</Text>
+          <Text style={{fontFamily: 'NanumSquareRoundB'}}>영역선택</Text>
           {this.props.image !== null && (
             <TouchableOpacity onPress={this.cropImg}>
               <Image
@@ -141,22 +141,34 @@ class FoodInput extends Component {
                 alignItems: 'center',
                 padding: 20,
               }}>
-              <Text style={{color: '#BEBEBE'}}>사진없음</Text>
+              <Text style={{color: '#BEBEBE', fontFamily: 'NanumSquareRoundR'}}>
+                사진없음
+              </Text>
             </View>
           )}
         </View>
         <View>
-          <Text>음식이름</Text>
+          <Text style={{fontFamily: 'NanumSquareRoundB'}}>음식이름</Text>
           <TextInput
             style={[
               styles.inputArea,
-              {width: W * 0.7, backgroundColor: '#fff'},
+              {
+                width: W * 0.7,
+                backgroundColor: '#fff',
+                fontFamily: 'NanumSquareRoundR',
+              },
             ]}
             placeholder="음식이름을 입력하세요."
             onChangeText={this.recommend}
             value={this.state.foodInfo ? this.state.foodInfo.DESC_KOR : ''}
           />
-          <Text style={{color: '#BEBEBE', fontSize: 12, marginTop: 10}}>
+          <Text
+            style={{
+              color: '#BEBEBE',
+              fontSize: 12,
+              marginTop: 10,
+              fontFamily: 'NanumSquareRoundL',
+            }}>
             음식을 검색하면 영양정보가 자동으로 등록됩니다.
           </Text>
           {/* 여기에 추천 검색어가 뜨도록 */}
@@ -195,7 +207,11 @@ class FoodInput extends Component {
               <TextInput
                 style={[
                   styles.inputArea,
-                  {width: W * 0.4, backgroundColor: '#EAEAEA'},
+                  {
+                    width: W * 0.4,
+                    backgroundColor: '#EAEAEA',
+                    fontFamily: 'NanumSquareRoundR',
+                  },
                 ]}
                 onChangeText={(text) =>
                   this.changeNum(text, this.state.foodInfo.NUTR_CONT1)
@@ -213,7 +229,11 @@ class FoodInput extends Component {
               <TextInput
                 style={[
                   styles.inputArea,
-                  {width: W * 0.4, backgroundColor: '#EAEAEA'},
+                  {
+                    width: W * 0.4,
+                    backgroundColor: '#EAEAEA',
+                    fontFamily: 'NanumSquareRoundR',
+                  },
                 ]}
                 placeholder="탄수화물"
                 value={
@@ -228,7 +248,11 @@ class FoodInput extends Component {
               <TextInput
                 style={[
                   styles.inputArea,
-                  {width: W * 0.4, backgroundColor: '#EAEAEA'},
+                  {
+                    width: W * 0.4,
+                    backgroundColor: '#EAEAEA',
+                    fontFamily: 'NanumSquareRoundR',
+                  },
                 ]}
                 placeholder="단백질"
                 value={
@@ -243,7 +267,11 @@ class FoodInput extends Component {
               <TextInput
                 style={[
                   styles.inputArea,
-                  {width: W * 0.4, backgroundColor: '#EAEAEA'},
+                  {
+                    width: W * 0.4,
+                    backgroundColor: '#EAEAEA',
+                    fontFamily: 'NanumSquareRoundR',
+                  },
                 ]}
                 placeholder="지방"
                 value={
@@ -267,14 +295,14 @@ class FoodInput extends Component {
             onPress={() => {
               this.isUpdate();
             }}>
-            <Text>저장</Text>
+            <Text style={styles.buttonTxt}>저장</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={{...styles.FImodalButton, backgroundColor: '#FCA652'}}
             onPress={() => {
               this.close(false);
             }}>
-            <Text>취소</Text>
+            <Text style={styles.buttonTxt}>취소</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -302,12 +330,18 @@ const styles = StyleSheet.create({
   labeltxt: {
     marginVertical: H * 0.03,
     marginRight: 10,
+    fontFamily: 'NanumSquareRoundB',
   },
   FImodalButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 100,
     marginHorizontal: 20,
+  },
+  buttonTxt: {
+    fontSize: 15,
+    fontFamily: 'NanumSquareRoundEB',
+    color: '#fff',
   },
 });
 

@@ -98,13 +98,13 @@ class Update extends Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.headerBox}>
-          <View style={styles.guideBox}>
+          <View>
             <Text style={styles.mainComment}>회원 정보 수정</Text>
             <Text style={styles.subComment}>
               기존 회원 정보를 수정할 수 있습니다.
             </Text>
           </View>
-          <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
+          <TouchableOpacity onPress={this.onUpdate}>
             <Text style={styles.updateText}>수정</Text>
           </TouchableOpacity>
         </View>
@@ -323,7 +323,7 @@ class Update extends Component {
               </View>
             </View>
             <View style={styles.infoBox}>
-              <Text>
+              <Text style={{fontFamily: 'NanumSquareRoundL'}}>
                 사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.
               </Text>
             </View>
@@ -354,8 +354,11 @@ const styles = StyleSheet.create({
   userInfo: {
     borderRadius: 10,
     width: '80%',
-    elevation: 5,
-    backgroundColor: '#e0e0e0',
+    // elevation: 5,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    marginVertical: 10,
   },
   infoBox: {
     flexDirection: 'row',
@@ -366,10 +369,11 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: W * 0.05,
-    fontWeight: 'bold',
+    fontFamily: 'NanumSquareRoundB',
   },
   infoValue: {
-    fontSize: W * 0.06,
+    fontSize: W * 0.05,
+    fontFamily: 'NanumSquareRoundR',
   },
   infoInput: {
     fontSize: W * 0.032,
@@ -400,17 +404,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'black',
   },
-  updateBtn: {
-    position: 'absolute',
-    right: W * 0.03,
-    top: W * 0.03,
-  },
   updateText: {
     fontSize: 25,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
   },
   inputBox: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   radioBox: {
     flexDirection: 'row',
@@ -424,12 +424,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 10,
   },
-  guideBox: {},
   mainComment: {
     fontSize: 25,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
   },
-  subComment: {},
+  subComment: {
+    fontFamily: 'NanumSquareRoundL',
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Update);

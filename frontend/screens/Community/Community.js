@@ -143,15 +143,13 @@ class Community extends Component {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text
-                  style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>
+                  style={{
+                    marginBottom: 5,
+                    fontSize: 20,
+                    fontFamily: 'NanumSquareRoundEB',
+                  }}>
                   레시피
                 </Text>
-                <TouchableHighlight
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                  }}>
-                  <Icon name="close-outline" style={{fontSize: 25}}></Icon>
-                </TouchableHighlight>
               </View>
               <View style={{margin: 10, alignContent: 'center'}}>
                 {/* {this.state.modalData !== '' &&
@@ -175,50 +173,50 @@ class Community extends Component {
         <ScrollView>
           <View style={{width: '100%'}}>
             <View style={styles.articles}>
-              {this.state.articles.map((article) => {
-                console.log('아티클: ', article);
-                return (
-                  <View style={styles.article} key={article.id}>
-                    <View style={styles.writer}>
-                      <View>
-                        <TouchableOpacity
-                          style={styles.userBtn}
-                          onPress={() => {
-                            this.props.navigation.push('UserFeed', {
-                              username: article.user.username,
-                            });
-                          }}>
-                          {article.user.profileImage && (
-                            <Image
-                              style={styles.writerImg}
-                              source={{
-                                uri: `${serverUrl}gallery${article.user.profileImage}`,
-                              }}
-                            />
-                          )}
-                          {!article.user.profileImage && (
-                            <Image
-                              style={styles.writerImg}
-                              source={require('../../assets/images/default-profile.png')}
-                            />
-                          )}
-
-                          <Text
-                            style={{
-                              marginLeft: 10,
-                              fontSize: 20,
-                              fontWeight: 'bold',
+              {this.state.articles &&
+                this.state.articles.map((article) => {
+                  return (
+                    <View style={styles.article} key={article.id}>
+                      <View style={styles.writer}>
+                        <View>
+                          <TouchableOpacity
+                            style={styles.userBtn}
+                            onPress={() => {
+                              this.props.navigation.push('UserFeed', {
+                                username: article.user.username,
+                              });
                             }}>
-                            {article.user.username}
-                          </Text>
-                        </TouchableOpacity>
+                            {article.user.profileImage && (
+                              <Image
+                                style={styles.writerImg}
+                                source={{
+                                  uri: `${serverUrl}gallery${article.user.profileImage}`,
+                                }}
+                              />
+                            )}
+                            {!article.user.profileImage && (
+                              <Image
+                                style={styles.writerImg}
+                                source={require('../../assets/images/default-profile.png')}
+                              />
+                            )}
+
+                            <Text
+                              style={{
+                                marginLeft: 10,
+                                fontSize: 20,
+                                fontFamily: 'NanumSquareRoundEB',
+                              }}>
+                              {article.user.username}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        {/* 여기에 북마크, 삭제 등등 추가 */}
+                        <Icon
+                          name="ellipsis-vertical"
+                          style={{marginRight: 40, fontSize: 20}}></Icon>
                       </View>
-                      {/* 여기에 북마크, 삭제 등등 추가 */}
-                      <Icon
-                        name="ellipsis-vertical"
-                        style={{marginRight: 40, fontSize: 20}}></Icon>
-                    </View>
-                    {/* <View style={styles.tags}>
+                      {/* <View style={styles.tags}>
                         {article.tags.map((tag) => {
                           return (
                             <Text
@@ -229,122 +227,125 @@ class Community extends Component {
                           );
                         })}
                       </View> */}
-                    <Image
-                      style={styles.articleImg}
-                      source={{
-                        uri: `${serverUrl}gallery` + article.image,
-                      }}
-                    />
-                    <View style={styles.articleBelow}>
-                      <View style={styles.articleBtns}>
-                        <TouchableOpacity
-                          style={{marginRight: 10}}
-                          onPress={() => this.onLikeBtn(article)}>
-                          {article.isliked && (
+                      <Image
+                        style={styles.articleImg}
+                        source={{
+                          uri: `${serverUrl}gallery` + article.image,
+                        }}
+                      />
+                      <View style={styles.articleBelow}>
+                        <View style={styles.articleBtns}>
+                          <TouchableOpacity
+                            style={{marginRight: 10}}
+                            onPress={() => this.onLikeBtn(article)}>
+                            {article.isliked && (
+                              <Icon
+                                name="heart"
+                                style={{fontSize: 40, color: 'red'}}
+                              />
+                            )}
+                            {!article.isliked && (
+                              <Icon
+                                name="heart-outline"
+                                style={{fontSize: 40}}
+                              />
+                            )}
+                          </TouchableOpacity>
+                          {article.canComment && (
+                            <TouchableOpacity
+                              style={{marginRight: 10}}
+                              onPress={() => {
+                                this.props.navigation.push('Comment', {
+                                  articleId: article.id,
+                                });
+                              }}>
+                              <Icon
+                                name="chatbubble-ellipses-outline"
+                                style={{fontSize: 40}}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {article.recipe !== '' && (
+                            <TouchableOpacity
+                              style={{marginRight: 10}}
+                              onPress={() => {
+                                this.setModalVisible(true, article.recipe);
+                              }}>
+                              <Icon name="list-circle" style={{fontSize: 40}} />
+                            </TouchableOpacity>
+                          )}
+                          {article.recipe === '' && (
+                            <TouchableOpacity
+                              style={{marginRight: 10}}
+                              onPress={() => {
+                                alert('레시피가 없습니다');
+                              }}>
+                              <Icon
+                                name="list-circle-outline"
+                                style={{fontSize: 40}}
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          {article.num_of_like > 0 && (
                             <Icon
                               name="heart"
-                              style={{fontSize: 40, color: 'red'}}
+                              style={{
+                                fontSize: 20,
+                                color: 'red',
+                                marginRight: 5,
+                              }}
                             />
                           )}
-                          {!article.isliked && (
-                            <Icon name="heart-outline" style={{fontSize: 40}} />
+                          {article.num_of_like === 0 && (
+                            <Icon
+                              name="heart-outline"
+                              style={{fontSize: 20, marginRight: 5}}
+                            />
                           )}
-                        </TouchableOpacity>
-                        {article.canComment && (
-                          <TouchableOpacity
-                            style={{marginRight: 10}}
-                            onPress={() => {
-                              this.props.navigation.push('Comment', {
-                                articleId: article.id,
-                              });
-                            }}>
-                            <Icon
-                              name="chatbubble-ellipses-outline"
-                              style={{fontSize: 40}}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {article.recipe !== '' && (
-                          <TouchableOpacity
-                            style={{marginRight: 10}}
-                            onPress={() => {
-                              this.setModalVisible(true, article.recipe);
-                            }}>
-                            <Icon name="list-circle" style={{fontSize: 40}} />
-                          </TouchableOpacity>
-                        )}
-                        {article.recipe === '' && (
-                          <TouchableOpacity
-                            style={{marginRight: 10}}
-                            onPress={() => {
-                              alert('레시피가 없습니다');
-                            }}>
-                            <Icon
-                              name="list-circle-outline"
-                              style={{fontSize: 40}}
-                            />
-                          </TouchableOpacity>
-                        )}
+                          {article.num_of_like > 2 && (
+                            <Text style={styles.likeText}>
+                              {article.user_1.username}외{' '}
+                              {article.num_of_like - 1}
+                              명이 좋아합니다.
+                            </Text>
+                          )}
+                          {article.num_of_like === 2 && article.isliked && (
+                            <Text style={styles.likeText}>
+                              {article.user_1.username}님과 회원님이 좋아합니다.
+                            </Text>
+                          )}
+                          {article.num_of_like === 2 && !article.isliked && (
+                            <Text style={styles.likeText}>
+                              {article.user_1.username}님과{' '}
+                              {article.user_2.username}님이 좋아합니다.
+                            </Text>
+                          )}
+                          {article.num_of_like === 1 && article.isliked && (
+                            <Text style={styles.likeText}>
+                              회원님이 좋아합니다.
+                            </Text>
+                          )}
+                          {article.num_of_like === 1 && !article.isliked && (
+                            <Text style={styles.likeText}>
+                              {article.user_1.username}님이 좋아합니다.
+                            </Text>
+                          )}
+                          {article.num_of_like === 0 && (
+                            <Text style={styles.likeText}>
+                              이 게시물에 첫 좋아요를 눌러주세요!
+                            </Text>
+                          )}
+                        </View>
+                        <Text style={styles.articleContent}>
+                          {article.content}
+                        </Text>
                       </View>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        {article.num_of_like > 0 && (
-                          <Icon
-                            name="heart"
-                            style={{
-                              fontSize: 20,
-                              color: 'red',
-                              marginRight: 5,
-                            }}
-                          />
-                        )}
-                        {article.num_of_like === 0 && (
-                          <Icon
-                            name="heart-outline"
-                            style={{fontSize: 20, marginRight: 5}}
-                          />
-                        )}
-                        {article.num_of_like > 2 && (
-                          <Text style={styles.likeText}>
-                            {article.user_1.username}외{' '}
-                            {article.num_of_like - 1}
-                            명이 좋아합니다.
-                          </Text>
-                        )}
-                        {article.num_of_like === 2 && article.isliked && (
-                          <Text style={styles.likeText}>
-                            {article.user_1.username}님과 회원님이 좋아합니다.
-                          </Text>
-                        )}
-                        {article.num_of_like === 2 && !article.isliked && (
-                          <Text style={styles.likeText}>
-                            {article.user_1.username}님과{' '}
-                            {article.user_2.username}님이 좋아합니다.
-                          </Text>
-                        )}
-                        {article.num_of_like === 1 && article.isliked && (
-                          <Text style={styles.likeText}>
-                            회원님이 좋아합니다.
-                          </Text>
-                        )}
-                        {article.num_of_like === 1 && !article.isliked && (
-                          <Text style={styles.likeText}>
-                            {article.user_1.username}님이 좋아합니다.
-                          </Text>
-                        )}
-                        {article.num_of_like === 0 && (
-                          <Text style={styles.likeText}>
-                            이 게시물에 첫 좋아요를 눌러주세요!
-                          </Text>
-                        )}
-                      </View>
-                      <Text style={styles.articleContent}>
-                        {article.content}
-                      </Text>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
             </View>
           </View>
         </ScrollView>
@@ -399,10 +400,9 @@ const styles = StyleSheet.create({
     marginHorizontal: '5%',
   },
   likeText: {
-    marginBottom: 10,
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'center',
-    fontFamily: 'BMHANNA',
+    fontFamily: 'NanumSquareRoundEB',
   },
   tags: {
     marginBottom: 10,
@@ -414,6 +414,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     marginBottom: 10,
+  },
+  articleContent: {
+    fontSize: 20,
+    fontFamily: 'NanumSquareRoundR',
   },
   createArticle: {
     position: 'absolute',
@@ -434,10 +438,6 @@ const styles = StyleSheet.create({
   menuItem: {
     marginHorizontal: 20,
     marginVertical: 10,
-  },
-  menutTxt: {
-    color: '#000000',
-    fontSize: 20,
   },
   centeredView: {
     flex: 1,

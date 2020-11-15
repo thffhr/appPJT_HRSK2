@@ -128,7 +128,7 @@ class Comment extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   delReply = (commentId, i) => {
@@ -196,7 +196,13 @@ class Comment extends Component {
                               });
                             }
                           }}>
-                          <Text style={{color: btnColor}}>답글 달기</Text>
+                          <Text
+                            style={{
+                              color: btnColor,
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 달기
+                          </Text>
                         </TouchableOpacity>
                       </View>
                       {!comment.replys && (
@@ -204,7 +210,12 @@ class Comment extends Component {
                           onPress={() => {
                             this.getReply(comment.id, i);
                           }}>
-                          <Text>답글 보기</Text>
+                          <Text
+                            style={{
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 보기
+                          </Text>
                         </TouchableOpacity>
                       )}
                       {comment.replys && (
@@ -212,7 +223,12 @@ class Comment extends Component {
                           onPress={() => {
                             this.delReply(comment.id, i);
                           }}>
-                          <Text>답글 접기</Text>
+                          <Text
+                            style={{
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 접기
+                          </Text>
                         </TouchableOpacity>
                       )}
                       {comment.replys &&
@@ -312,20 +328,22 @@ const styles = StyleSheet.create({
   },
   commentContent: {
     fontSize: 16,
-    fontFamily: 'NanumBarunGothicBold',
+    fontFamily: 'NanumSquareRoundB',
   },
   commentData: {
     flexDirection: 'row',
   },
   cmdData: {
     marginRight: 7,
-    fontFamily: 'NanumBarunGothicBold',
+    fontSize: 13,
+    fontFamily: 'NanumSquareRoundL',
   },
   inputArea: {
     backgroundColor: '#fff',
+    fontFamily: 'NanumSquareRoundEB',
   },
   inputBtn: {
-    backgroundColor: '#fca652',
+    backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,

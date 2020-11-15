@@ -40,7 +40,6 @@ def create(request):
 
         #음식이 없으면 recipe 안생김
         for food in request.data['foods']:  # key가 food에
-            print(food)
             new_recipe = Recipe()
             s = ""
             for text in request.data['foods'][food]:
@@ -49,7 +48,6 @@ def create(request):
             new_recipe.foodname = food
             new_recipe.article = nnew_article
             new_recipe.save()
-            # print(new_article)
             # if (new_recipe.is_valid(raise_exception=True)):  
             #     new_recipe.save(article = new_article)
 
@@ -215,7 +213,6 @@ def commentsAll(request, article_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_comment(request, article_id):
-    print('데이터:', request.data)
     article = get_object_or_404(models.Article, pk=article_id)
     new_comment = serializers.CommentSerializer(data=request.data)
     if new_comment.is_valid(raise_exception=True):

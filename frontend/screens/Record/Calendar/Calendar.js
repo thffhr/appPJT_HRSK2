@@ -223,7 +223,12 @@ class Calendar extends Component {
               this.state.selectedDate.date,
             ) && (
               <View style={styles.dateBox}>
-                <Text style={{fontSize: 20, marginBottom: 10}}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    marginBottom: 10,
+                    fontFamily: 'NanumSquareRoundR',
+                  }}>
                   {this.state.selectedDate.date.split('-')[0]}년{' '}
                   {this.state.selectedDate.date.split('-')[1]}월{' '}
                   {this.state.selectedDate.date.split('-')[2]}일
@@ -234,8 +239,18 @@ class Calendar extends Component {
                     if (key !== '총합' && value !== 0) {
                       return (
                         <View style={styles.macroBox} key={i}>
-                          <Text style={styles.macroTxt}>{key}</Text>
-                          <Text style={styles.macroTxt}>
+                          <Text
+                            style={[
+                              styles.macroTxt,
+                              {fontFamily: 'NanumSquareRoundB'},
+                            ]}>
+                            {key}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.macroTxt,
+                              {fontFamily: 'NanumSquareRoundB'},
+                            ]}>
                             {value.toFixed(2)}
                             {'   '}kcal
                           </Text>
@@ -243,13 +258,19 @@ class Calendar extends Component {
                       );
                     } else if (key === '총합') {
                       return (
-                        <View
-                          style={[styles.macroBox, {fontWeight: 'bold'}]}
-                          key={i}>
-                          <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                        <View style={styles.macroBox} key={i}>
+                          <Text
+                            style={[
+                              styles.macroTxt,
+                              {fontFamily: 'NanumSquareRoundEB'},
+                            ]}>
                             {key}
                           </Text>
-                          <Text style={[styles.macroTxt, {fontWeight: 'bold'}]}>
+                          <Text
+                            style={[
+                              styles.macroTxt,
+                              {fontFamily: 'NanumSquareRoundEB'},
+                            ]}>
                             {value.toFixed(2)}
                             {'   '}kcal
                           </Text>
