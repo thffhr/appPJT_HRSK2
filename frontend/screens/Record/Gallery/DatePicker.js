@@ -841,4 +841,4 @@ const styles = StyleSheet.create({
   // }
 });
 
-export default connect(mapStateToProps)(DatePicker);
+export default connect(mapStateToProps)(MyDatePicker);
