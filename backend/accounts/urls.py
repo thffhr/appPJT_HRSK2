@@ -13,10 +13,11 @@ urlpatterns = [
     path('need/', views.need, name='need'),
     path('need/info/', views.need_info, name='need_info'),
     # path('config/', views.config, name='config'),
-    path('delete/<str:username>', views.userdelete, name='userdelete'),
+    path('delete/<str:username>/', views.userdelete, name='userdelete'),
     path('pimg/update/', views.update_profileImage, name='profileImage'),
     path('pimg/delete/', views.del_profile, name='delProfile'),
     # path('recommend/<str:username>/', views.recommend, name='recommend'),
     path('getbasal/', views.get_basal, name='getbasal'),
-    path('bestusers/', views.getBestUsers, name='getBestUsers')
+    path('bestusers/', views.getBestUsers, name='getBestUsers'),
+    # path('plususers/', views.getPlusUsers, name='getPlusUsers')
 ]

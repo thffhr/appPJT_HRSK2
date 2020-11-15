@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
@@ -86,7 +86,7 @@ class StartSex extends Component {
         <Text
           style={{
             fontSize: W * 0.06,
-            fontWeight: 'bold',
+            fontFamily: 'NanumSquareRoundEB',
             color: 'gray',
             marginBottom: H * 0.04,
             marginTop: H * 0.02,
@@ -97,12 +97,12 @@ class StartSex extends Component {
           <TouchableOpacity
             style={[styles.selectbox1, {backgroundColor: this.state.malecolor}]}
             onPress={this.setMale}>
-            {/* <Image
-              source={require('../../assets/images/male.png')}
-              style={styles.selectsex}
-            /> */}
             <Text
-              style={{fontSize: W * 0.1, fontWeight: 'bold', color: 'gray'}}>
+              style={{
+                fontSize: W * 0.1,
+                fontFamily: 'NanumSquareRoundEB',
+                color: 'gray',
+              }}>
               남
             </Text>
           </TouchableOpacity>
@@ -112,19 +112,16 @@ class StartSex extends Component {
               {backgroundColor: this.state.femalecolor},
             ]}
             onPress={this.setFemale}>
-            {/* <Image
-              source={require('../../assets/images/female.png')}
-              style={styles.selectsex}
-            /> */}
             <Text
               style={{fontSize: W * 0.1, fontWeight: 'bold', color: 'gray'}}>
               여
             </Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.location}>
-          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
+          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
         </View>
       </View>
@@ -140,8 +137,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fbfbe6',
   },
   image: {
-    // width: W * 0.6,
-    // height: W * 0.6,
     width: '100%',
     height: '100%',
   },
@@ -163,10 +158,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  // selectsex: {
-  //   width: W * 0.15,
-  //   height: W * 0.15,
-  // },
   next: {
     position: 'absolute',
     right: W * 0.03,

@@ -9,9 +9,13 @@
 import React, {Component} from 'react';
 import {NavigationContainer, StackRouter} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+} from '@react-navigation/drawer';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import SplashScreen from 'react-native-splash-screen';
 
@@ -45,35 +49,37 @@ import Analysis from './screens/Analysis/Analysis';
 import CustomDrawerContent from './components/CustomDrawerContent';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Provider } from 'react-redux';
-import { store } from './src/store/index';
-
+import {Provider} from 'react-redux';
+import {store} from './src/store/index';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const TopTab = createMaterialTopTabNavigator();
 const tapOptions = {
-  activeTintColor: '#fca652',
-  inactiveTintColor:'gray',
-  style:{
-    backgroundColor:'#fbfbe6',
-    borderBottomWidth: 1,
-    borderBottomColor: 'darkgray',
-  
+  activeTintColor: '#f39c12',
+  inactiveTintColor: '#bebebe',
+  style: {
+    backgroundColor: '#fbfbe6',
   },
   indicatorStyle: {
-    borderBottomColor: '#fca652',
-    borderBottomWidth: 5,
+    borderBottomColor: '#f39c12',
+    borderBottomWidth: 3,
   },
-}
+  labelStyle: {
+    fontSize: 20,
+    fontFamily: 'NanumSquareRoundEB',
+  },
+};
 
 // Stack
 function CommunityStack() {
   return (
-    <Stack.Navigator initialRouteName="Community" screenOptions={{
-      headerShown: false,
-    }}>
+    <Stack.Navigator
+      initialRouteName="Community"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen
         name="Community"
         component={Community}
@@ -105,14 +111,16 @@ function CommunityStack() {
         options={{title: '게시물작성'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 function RecordStack() {
   return (
-    <Stack.Navigator initialRouteName="Record" screenOptions={{
-      headerShown: false,
-    }}>
+    <Stack.Navigator
+      initialRouteName="Record"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen
         name="Record"
         component={RecordTaps}
@@ -123,21 +131,23 @@ function RecordStack() {
         component={DetailImage}
         options={{title: '상세 이미지'}}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="MyDatePicker"
         component={MyDatePicker}
         options={{title: '날짜 선택'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 function RankStack() {
   return (
-    <Stack.Navigator initialRouteName="RankTabs" screenOptions={{
-      headerShown: false,
-    }}>
-      <Stack.Screen 
+    <Stack.Navigator
+      initialRouteName="RankTabs"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen
         name="RankTabs"
         component={RankTabs}
         option={{title: '랭킹 탭스'}}
@@ -153,14 +163,16 @@ function RankStack() {
         options={{title: '유저 피드'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 function AcccountStack() {
   return (
-    <Stack.Navigator initialRouteName="Login" screenOptions={{
-      headerShown: false,
-    }}>
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen
         name="Login"
         component={Login}
@@ -182,14 +194,16 @@ function AcccountStack() {
         options={{title: '정보입력'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 function ProfileScreen() {
   return (
-    <Stack.Navigator initialRouteName="Profile" screenOptions={{
-      headerShown: false,
-    }}>
+    <Stack.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen
         name="Profile"
         component={Profile}
@@ -206,25 +220,27 @@ function ProfileScreen() {
 
 function AnalysisScreen() {
   return (
-    <Stack.Navigator initialRouteName="Analysis" screenOptions={{
-      headerShown: false,
-    }}>
-      <Stack.Screen 
+    <Stack.Navigator
+      initialRouteName="Analysis"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen
         name="Analysis"
         component={Analysis}
         options={{title: '내 분석'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 // Tab
 function TapNavigator() {
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
       initialRouteName="기록"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
           if (route.name === '커뮤니티') {
@@ -246,24 +262,26 @@ function TapNavigator() {
         inactiveTintColor: '#fad499',
         style: {
           backgroundColor: '#f39c12',
+          paddingVertical: 5,
         },
-      }}
-    >
+        labelStyle: {
+          fontSize: 15,
+        },
+      }}>
       <Tab.Screen name="기록" component={RecordStack} />
       <Tab.Screen name="커뮤니티" component={CommunityStack} />
       <Tab.Screen name="추천" component={RankStack} />
       <Tab.Screen name="분석" component={AnalysisScreen} />
     </Tab.Navigator>
-  )
+  );
 }
 
 function RankTabs() {
   return (
-    <TopTab.Navigator 
+    <TopTab.Navigator
       initialRouteName="BestArticle"
       tabBarPosition="top"
-      tabBarOptions={tapOptions}
-    >
+      tabBarOptions={tapOptions}>
       <TopTab.Screen name="식단" component={BestArticle} />
       <TopTab.Screen name="팔로워" component={BestUser} />
     </TopTab.Navigator>
@@ -272,21 +290,23 @@ function RankTabs() {
 
 function FeedScreen() {
   return (
-    <Stack.Navigator initialRouteName="MyFeed" screenOptions={{
-      headerShown: false,
-    }}>
-      <Stack.Screen 
+    <Stack.Navigator
+      initialRouteName="MyFeed"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen
         name="MyFeed"
         component={MyFeed}
         options={{title: '내 피드'}}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="MyFeedDetail"
         component={MyFeedDetail}
         options={{title: '내 피드 디테일'}}
       />
     </Stack.Navigator>
-  )
+  );
 }
 
 function RecordTaps() {
@@ -294,67 +314,68 @@ function RecordTaps() {
     <TopTab.Navigator
       initialRouteName="BestArticle"
       tabBarPosition="top"
-      tabBarOptions={tapOptions}
-    >
-      <TopTab.Screen name="사진" component={Gallery}/>
-      <TopTab.Screen name="기록" component={Record}/>
-      <TopTab.Screen name="달력" component={Calendar}/>
+      tabBarOptions={tapOptions}>
+      <TopTab.Screen name="사진" component={Gallery} />
+      <TopTab.Screen name="기록" component={Record} />
+      <TopTab.Screen name="달력" component={Calendar} />
     </TopTab.Navigator>
-  )
+  );
 }
 
 // Drawer
 // function DrawerStack(props) {
 class DrawerStack extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-  };
+  }
   render() {
     return (
       <>
-        <Drawer.Navigator 
-          initialRouteName="메뉴" 
-          drawerPosition="right" 
-          drawerContent={() => <CustomDrawerContent navigation={this.props.navigation}/>}
+        <Drawer.Navigator
+          initialRouteName="메뉴"
+          drawerPosition="right"
+          drawerContent={() => (
+            <CustomDrawerContent navigation={this.props.navigation} />
+          )}
           screenOptions={{
             headerShown: false,
           }}
           // drawerIcon={{foucsed: true, color: 'red', size: 20}}
           hideStatusBar={true}
-          statusBarAnimation={true}
-        >
+          statusBarAnimation={true}>
           <Drawer.Screen name="메뉴" component={TapNavigator} />
-          <Drawer.Screen name="내 정보" component={ProfileScreen}/>
+          <Drawer.Screen name="내 정보" component={ProfileScreen} />
           <Drawer.Screen name="내 피드" component={FeedScreen} />
           {/* <Drawer.Screen name="커스텀" component={CustomDrawerContent} /> */}
         </Drawer.Navigator>
       </>
-    )
+    );
   }
 }
 
 const stackApp = createStackNavigator();
 // export default function App() {
 export default class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-
-  };
+  }
   componentDidMount() {
-    SplashScreen.hide(); 
-  };
+    SplashScreen.hide();
+  }
   render() {
     return (
-      <Provider store={store} >
+      <Provider store={store}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="로그인" screenOptions={{
-            headerShown: false,
-          }}>
+          <Stack.Navigator
+            initialRouteName="로그인"
+            screenOptions={{
+              headerShown: false,
+            }}>
             <stackApp.Screen name="로그인" component={AcccountStack} />
             <stackApp.Screen name="drawer" component={DrawerStack} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     );
-  }  
+  }
 }

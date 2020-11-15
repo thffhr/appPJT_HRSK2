@@ -15,6 +15,11 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 class CreateSelect extends Component {
   constructor(props) {
@@ -78,11 +83,10 @@ class CreateSelect extends Component {
   }
 
   getAllPictures = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/myImgs/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -101,7 +105,12 @@ class CreateSelect extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.onNext}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: '#fff'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'NanumSquareRoundEB',
+              color: '#fff',
+            }}>
             다음
           </Text>
           <Icon name="chevron-forward" size={26} color={'#fff'}></Icon>
@@ -192,8 +201,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    // fontWeight: 'bold',
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     color: '#fff',
   },
   next: {
@@ -230,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateSelect;
+export default connect(mapStateToProps)(CreateSelect);

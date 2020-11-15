@@ -3,7 +3,7 @@ from .models import Menu
 from .models import Menu2food
 from .models import Food
 
-from .serializers import MenuSerializer, FoodSerializer
+from .serializers import MenuSerializer, FoodSerializer, Menu2foodSerializer
 from accounts.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -32,7 +32,7 @@ def getMenuInfo(request):
         np_data = np.fromstring(decoded_data,np.uint8)
         img = cv2.imdecode(np_data,cv2.IMREAD_UNCHANGED)
 
-        net = cv2.dnn.readNet("yolov4_2000.weights", "yolov4.cfg")
+        net = cv2.dnn.readNet("yolov4_19000.weights", "yolov4.cfg")
         classes = []
         with open("food30.names", "rt",encoding = "UTF8") as f:
             classes = [line.strip() for line in f.readlines()]
@@ -81,7 +81,18 @@ def getMenuInfo(request):
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
         # Non Maximum Suppression (겹쳐있는 박스 중 confidence 가 가장 높은 박스를 선택)
-        indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.3, 0.3)
+        #indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.3, 0.3)
+        class_list = list(set(class_ids))
+        idxx = []
+        indexes=[]
+        for i in range(len(class_list)):
+            max_v=0
+            for j in range(len(class_ids)):
+                if class_ids[j] == class_list[i]:
+                    if max_v < confidences[j]:
+                        max_v = confidences[j]
+                        idxx.append(j)
+            indexes.append(idxx[len(idxx)-1])    
         # 최종적으로 indexes에 음식에 매치된 번호가 들어감 boxes에는 검출돤 하나의 음식에 대한 좌표
         font = cv2.FONT_HERSHEY_PLAIN
         det_foods = []
@@ -123,6 +134,13 @@ def getMenuInfo(request):
         Foods_lst.append(food_obj)
     return Response(Foods_lst)
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def learnNewFood(request):
+#     print(request)
+#     #learncheck로 학습해야되는건지 아닌지 확인 가능(학습해야되면 true)
+#     return Response('데이터 왔당')
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def saveMenu(request):
@@ -139,24 +157,45 @@ def saveMenu(request):
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
+    print(request.data['learnCheck'])
+    learncheck = request.data['learnCheck'][:-1].split(',')
     foodLo = []
+    print('1-----', request.data['foodLo'])
     if len(request.data['foodLo']) > 1:
+        print('2-----', request.data['foodLo'][:-1].split('/'))
         for lo in request.data['foodLo'][:-1].split('/'):
-            foodLo.append(list(map(float, lo[:-1].split(','))))
+            if lo != '' :
+                print('3-----', lo)
+                foodLo.append(list(map(float, lo[:-1].split(','))))
+            else:
+                foodLo.append([])
+    print('4-----', foodLo)
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
+        print(foodName[i])
         try:
             foods = get_object_or_404(Food, DESC_KOR=foodName[i])
         except:
             foods = Food.objects.filter(DESC_KOR=foodName[i])[0]
+            print(foods)
         # new_food.food 는 같은 이름 찾아서 넣어야댐
         if foodLo != []:
             new_food.location = foodLo[i]  # 좌표값
+        print(foods)
         new_food.image = new_menu
         new_food.food = foods
         new_food.value = int(foodVal[i])
         new_food.save()
+        if learncheck[i] == 'True':
+            print(new_menu.image)
+            file = open("data/"+foodName[i]+".txt", 'w')
+            file.writelines(str(new_menu.image)+'\n')
+            vstr = ""
+            for a in foodLo[i]:
+                vstr = vstr + str(a) + " "
+            file.writelines(vstr)
+            file.close()
     return Response("파일을 저장했습니다.")
 
 
@@ -216,7 +255,7 @@ def getChart(request, date):
                         D += float(menu2food.food.NUTR_CONT3)*menu2food.value
                     if menu2food.food.NUTR_CONT4:
                         G += float(menu2food.food.NUTR_CONT4)*menu2food.value
-                    Send['TotalCal'] += int(menu2food.food.NUTR_CONT1) * \
+                    Send['TotalCal'] += float(menu2food.food.NUTR_CONT1) * \
                         menu2food.value
                 total = T+D+G
                 if T > 0:
@@ -293,8 +332,8 @@ def getCalendar(request):
             MenusDict[target][3] += tot
         elif menu.mealTime == '야식':
             MenusDict[target][4] += tot
-
-    MenusDict[target][5] += sum(MenusDict[target][:5])
+        MenusDict[target][5] += tot
+    print(MenusDict)
     return Response(MenusDict)
 
 
@@ -307,9 +346,31 @@ def getFood(request, menu_id):
         food = menu2food.food
         serializer = FoodSerializer(food)
         value = menu2food.value
-        if menu2food.location:
+        if menu2food.location != '[]':
             location = list(map(float, menu2food.location[1:-1].split(', ')))
         else:
             location = 'null'
         lst.append([serializer.data, value, location, menu2food.id])
     return Response(lst)
+
+
+@api_view(['POST'])
+def readFood(request, menu_id):
+    menu = get_object_or_404(Menu, id=menu_id)
+    menu2foods = Menu2food.objects.filter(image=menu)
+    lst = dict()
+    for menu2food in menu2foods:
+        food = menu2food.food
+        serializer = FoodSerializer(food)
+        lst[serializer.data['DESC_KOR']] = []
+    return Response(lst)
+
+
+@api_view(['POST'])
+def updateM2F(request, menu2food_id):
+    menu2food = get_object_or_404(Menu2food, id=menu2food_id)
+    new_food = get_object_or_404(Food, id=request.data['foodId'])
+    up_menu2food = Menu2foodSerializer(menu2food, data=request.data)
+    if up_menu2food.is_valid(raise_exception=True):
+        up_menu2food.save(food=new_food)
+        return Response(up_menu2food.data)

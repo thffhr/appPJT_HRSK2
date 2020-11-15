@@ -7,20 +7,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
-import {AsyncStorage} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
-import { login } from '../../src/action/user';
-// import {store} from '../../src/store/index';
+import {connect} from 'react-redux';
+import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
 class Login extends Component {
   constructor(props) {
@@ -30,14 +29,14 @@ class Login extends Component {
       username: '',
       password: '',
     };
-  };
+  }
   async componentDidMount() {
     const token = await AsyncStorage.getItem('auth-token');
     const username = await AsyncStorage.getItem('username');
     if (token) {
       var data = {
         token: token,
-      }
+      };
       // profile
       await fetch(`${serverUrl}accounts/profile/${username}/`, {
         method: 'GET',
@@ -47,7 +46,7 @@ class Login extends Component {
       })
         .then((response) => response.json())
         .then((response) => {
-          data = Object.assign(data, response)
+          data = Object.assign(data, response);
         })
         .catch((err) => {
           console.error(err);
@@ -60,7 +59,7 @@ class Login extends Component {
         }),
       );
     }
-  };
+  }
   handleEmail = (text) => {
     this.setState({username: text});
   };
@@ -76,13 +75,13 @@ class Login extends Component {
       },
     })
       .then((response) => response.json())
-      .then(async(response) => {
+      .then(async (response) => {
         if (response.key) {
           AsyncStorage.setItem('auth-token', response.key);
           AsyncStorage.setItem('username', this.state.username);
           var userData = {
             token: response.key,
-          }
+          };
           // profile
           await fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
             method: 'GET',
@@ -92,7 +91,7 @@ class Login extends Component {
           })
             .then((response) => response.json())
             .then((response) => {
-              userData = Object.assign(userData, response)
+              userData = Object.assign(userData, response);
             })
             .catch((err) => {
               console.error(err);
@@ -144,11 +143,17 @@ class Login extends Component {
         </View>
         <View style={styles.findBox}>
           <TouchableOpacity style={styles.findBtn} color="transparent">
-            <Text style={{fontSize: W * 0.035}}>아이디 찾기</Text>
+            <Text
+              style={{fontSize: W * 0.035, fontFamily: 'NanumBarunGothicBold'}}>
+              아이디 찾기
+            </Text>
           </TouchableOpacity>
           <Text style={{fontSize: W * 0.03}}>|</Text>
           <TouchableOpacity style={styles.findBtn}>
-            <Text style={{fontSize: W * 0.035}}>비밀번호 찾기</Text>
+            <Text
+              style={{fontSize: W * 0.035, fontFamily: 'NanumBarunGothicBold'}}>
+              비밀번호 찾기
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.signupBox}>
@@ -157,6 +162,7 @@ class Login extends Component {
               textAlign: 'center',
               marginBottom: H * 0.01,
               fontSize: W * 0.035,
+              fontFamily: 'NanumBarunGothicBold',
             }}>
             가입이 되어 있지 않으신가요?
           </Text>
@@ -166,6 +172,7 @@ class Login extends Component {
                 color: 'blue',
                 textDecorationLine: 'underline',
                 fontSize: W * 0.035,
+                fontFamily: 'NanumBarunGothicBold',
               }}>
               회원가입
             </Text>
@@ -202,6 +209,7 @@ const styles = StyleSheet.create({
     width: W * 0.7,
     height: W * 0.1,
     fontSize: W * 0.04,
+    fontFamily: 'NanumBarunGothicBold',
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
@@ -225,7 +233,7 @@ const styles = StyleSheet.create({
   loginBtnText: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumBarunGothicBold',
   },
   findBox: {
     flexDirection: 'row',

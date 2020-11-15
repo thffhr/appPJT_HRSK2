@@ -9,8 +9,9 @@ import {
   TouchableHighlight,
   Alert,
   TextInput,
+  Image,
+  AsyncStorage,
 } from 'react-native';
-import {AsyncStorage, Image} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,7 +19,6 @@ import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 
-const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
@@ -84,7 +84,8 @@ class Profile extends Component {
       },
     })
       .then(() => {
-        (user.profileImage = null), this.setModalVisible(visible);
+        user.profileImage = null;
+        this.setModalVisible(visible);
         this.props.login(user);
       })
       .catch((err) => {
@@ -118,9 +119,9 @@ class Profile extends Component {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.key) {
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.key) {
           this.onDelete();
           this.setState({
             secessionModal: visible,
@@ -154,13 +155,13 @@ class Profile extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerBox}>
-          <View style={styles.guideBox}>
+          <View>
             <Text style={styles.mainComment}>회원정보</Text>
             <Text style={styles.subComment}>
               가입 시 입력한 정보를 확인할 수 있습니다.
             </Text>
           </View>
-          <TouchableOpacity onPress={this.onUpdate} style={styles.updateBtn}>
+          <TouchableOpacity onPress={this.onUpdate}>
             <Text style={styles.updateText}>수정</Text>
           </TouchableOpacity>
         </View>
@@ -169,7 +170,11 @@ class Profile extends Component {
           animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}>
-          <View style={styles.centeredView}>
+          <TouchableOpacity
+            style={styles.centeredView}
+            onPress={() => {
+              this.setModalVisible(!this.state.modalVisible);
+            }}>
             <View style={styles.modalView}>
               <TouchableHighlight
                 onPress={() => {
@@ -183,16 +188,8 @@ class Profile extends Component {
                 }}>
                 <Text style={styles.modalText}>프로필 사진 삭제</Text>
               </TouchableHighlight>
-
-              <TouchableOpacity
-                style={styles.openButton}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text style={styles.textStyle}>닫기</Text>
-              </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
 
         <Modal
@@ -293,13 +290,13 @@ class Profile extends Component {
               <Text style={styles.infoValue}>{this.props.user.weight}</Text>
             </View>
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>기초대사량</Text>
+              <Text style={styles.infoTitle}>활동대사량</Text>
               <Text style={styles.infoValue}>
                 {this.props.user.basal_metabolism} kcal
               </Text>
             </View>
             <View style={styles.infoBox}>
-              <Text>
+              <Text style={{fontFamily: 'NanumSquareRoundL'}}>
                 사용자가 입력한 정보를 토대로 기초 대사량이 계산됩니다.
               </Text>
             </View>
@@ -349,8 +346,10 @@ const styles = StyleSheet.create({
   userInfo: {
     borderRadius: 10,
     width: '80%',
-    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
     backgroundColor: '#fff',
+    marginVertical: 10,
   },
   infoItem: {
     marginTop: H * 0.02,
@@ -372,18 +371,21 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: W * 0.05,
-    fontWeight: 'bold',
+    fontFamily: 'NanumSquareRoundB',
   },
   infoValue: {
     fontSize: W * 0.05,
+    fontFamily: 'NanumSquareRoundR',
   },
   deleteBtn: {
     marginTop: H * 0.02,
   },
   delText: {
     color: '#34495E',
-    fontFamily: 'BMHANNAAir',
+    fontFamily: 'NanumSquareRoundB',
     fontSize: W * 0.06,
+    borderBottomWidth: 1,
+    borderBottomColor: '#34495E',
   },
   // header
   headerBox: {
@@ -392,16 +394,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 10,
   },
-  guideBox: {},
   mainComment: {
     fontSize: 25,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
   },
-  subComment: {},
-  updateBtn: {},
+  subComment: {
+    fontFamily: 'NanumSquareRoundL',
+  },
   updateText: {
     fontSize: 25,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
   },
   // image modal
   centeredView: {
@@ -433,17 +435,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     elevation: 2,
   },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   modalText: {
-    marginBottom: 15,
+    marginVertical: 10,
     textAlign: 'center',
     fontSize: 20,
+    fontFamily: 'NanumSquareRoundB',
   },
-
   // secession modal
   secessionCenteredView: {
     flex: 1,
@@ -472,34 +469,30 @@ const styles = StyleSheet.create({
   },
   secessionTextStyle: {
     color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
-  },
-  secessionModalText: {
-    marginBottom: 25,
-    textAlign: 'center',
+    fontFamily: 'NanumSquareRoundB',
   },
   passwordInput: {
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 10,
-    width: '80%',
+    borderRadius: 6,
+    width: '90%',
     marginVertical: 20,
   },
   secessionModalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
   secessionTitle: {
     fontSize: 20,
+    fontFamily: 'NanumSquareRoundR',
     marginHorizontal: 10,
   },
   secessionIcon: {
-    fontSize: 30,
+    fontSize: 20,
     marginHorizontal: 10,
   },
   secessionModalBody: {

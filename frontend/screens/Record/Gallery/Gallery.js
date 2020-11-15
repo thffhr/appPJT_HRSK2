@@ -11,16 +11,21 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
 import {serverUrl} from '../../../constants';
 
 const {width, height} = Dimensions.get('screen');
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 let today = new Date();
 let year = today.getFullYear(); // 년도
 let month = today.getMonth() + 1; // 월
 let date = today.getDate(); // 날짜
 
-export default class Gallery extends Component {
+class Gallery extends Component {
   constructor(props) {
     super(props);
 
@@ -36,19 +41,20 @@ export default class Gallery extends Component {
     this.onGallery();
   }
   onGallery = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/myImgs/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
       .then((response) => {
-        this.setState({
-          pictures: response,
-          selected: {id: response[0].id, image: response[0].image},
-        });
+        if (response.length) {
+          this.setState({
+            pictures: response,
+            selected: {id: response[0].id, image: response[0].image},
+          });
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -140,8 +146,17 @@ export default class Gallery extends Component {
                     />
                   )}
                   {!picture.image && (
-                    <View style={{width: '100%', height: '100%', backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
-                      <Icon name='fast-food-outline' style={{fontSize: 80, color: '#fff'}}></Icon>
+                    <View
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#FAD499',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Icon
+                        name="fast-food-outline"
+                        style={{fontSize: 80, color: '#fff'}}></Icon>
                     </View>
                   )}
                   {/* 뱃지 */}
@@ -215,3 +230,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
+export default connect(mapStateToProps)(Gallery);

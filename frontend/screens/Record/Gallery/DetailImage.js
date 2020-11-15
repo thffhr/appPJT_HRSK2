@@ -14,10 +14,16 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CommonActions} from '@react-navigation/native';
 import {serverUrl} from '../../../constants';
+import FoodInput from '../FoodInput/FoodInput';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
-export default class DetatilImage extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class DetatilImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,10 +38,13 @@ export default class DetatilImage extends Component {
         menu_id: this.props.route.params.imageId,
       },
       modalVisible: false,
+      InputModalVisible: false,
+      onDelmodalVisible: false,
       colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
     };
   }
   componentDidMount = async () => {
+    console.log(this.state.picture);
     this.getFood();
     const token = await AsyncStorage.getItem('auth-token');
     this.setState({
@@ -62,6 +71,11 @@ export default class DetatilImage extends Component {
       onCaption: !this.state.onCaption,
     });
   };
+  setonDelModalVisible = (visible) => {
+    this.setState({
+      onDelmodalVisible: visible,
+    });
+  };
   onDelete = async () => {
     fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
       method: 'POST',
@@ -69,7 +83,6 @@ export default class DetatilImage extends Component {
         Authorization: `Token ${this.state.token}`,
       },
     }).then(() => {
-      alert('삭제되었습니다.');
       this.props.navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -142,10 +155,83 @@ export default class DetatilImage extends Component {
       })
       .catch((err) => console.error(err));
   };
+  // 나중에 여기에 이미지도 넣어줘야 함
+  sendFood(food, id) {
+    this.setState({
+      sendFood: {
+        DESC_KOR: food['DESC_KOR'],
+        SERVING_SIZE: food['SERVING_SIZE'],
+        NUTR_CONT1: food['NUTR_CONT1'],
+        NUTR_CONT2: food['NUTR_CONT2'],
+        NUTR_CONT3: food['NUTR_CONT3'],
+        NUTR_CONT4: food['NUTR_CONT4'],
+      },
+    });
+    this.setFIModalVisible(true, id);
+  }
+  setFIModalVisible(tf, id) {
+    console.log(this.state.sendFood);
+    this.setState({
+      InputModalVisible: tf,
+      updateFoodId: id,
+    });
+    if (id < 0) {
+      this.setState({
+        sendFood: {},
+      });
+    }
+  }
+  isUpdate(update, foodInfo) {
+    if (update) {
+      var newFoodInfo = new FormData();
+      newFoodInfo.append('image', this.state.image);
+      newFoodInfo.append('foodId', foodInfo.id);
+      newFoodInfo.append('location', []);
+      newFoodInfo.append('value', 1);
+      fetch(`${serverUrl}gallery/updateM2F/${this.state.updateFoodId}/`, {
+        method: 'POST',
+        body: newFoodInfo,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.error(err));
+      this.setFIModalVisible(false, this.state.updateFoodId);
+      this.getFood();
+    } else {
+      var newFoodInfo = new FormData();
+      // newFoodInfo.append('image', this.state.image)
+      newFoodInfo.append('menuId', this.state.imageId);
+      newFoodInfo.append('foodId', foodInfo.id);
+      newFoodInfo.append('location', []);
+      newFoodInfo.append('value', 1);
+      console.log(newFoodInfo);
+      fetch(`${serverUrl}gallery/addM2F/`, {
+        method: 'POST',
+        body: newFoodInfo,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${this.state.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.error(err));
+      this.setFIModalVisible(false, -1);
+      this.getFood();
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
-        {/* 식단 삭제 확인용 모달 */}
+        {/* 음식 삭제 확인용 모달 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -173,7 +259,7 @@ export default class DetatilImage extends Component {
               marginTop: 22,
             }}>
             <View style={styles.modalView}>
-              <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
+              <Text style={{marginBottom: 20}}>음식을 삭제하시겠습니까?</Text>
               <View style={{flexDirection: 'row'}}>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
@@ -193,6 +279,93 @@ export default class DetatilImage extends Component {
             </View>
           </View>
         </Modal>
+        {/* 식단삭제 확인용 모달 */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.onDelmodalVisible}>
+          <View
+            style={{
+              width: '100%',
+              height: height,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}></View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.onDelmodalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 22,
+            }}>
+            <View style={styles.modalView}>
+              <Text style={{marginBottom: 20}}>식단을 삭제하시겠습니까?</Text>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.onDelete();
+                  }}>
+                  <Text style={styles.textStyle}>삭제</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={{...styles.modalButton, backgroundColor: '#FCA652'}}
+                  onPress={() => {
+                    this.setonDelmodalVisible(!this.state.onDelmodalVisible);
+                  }}>
+                  <Text style={styles.textStyle}>취소</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </View>
+        </Modal>
+        {/* 식단수정 */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.InputModalVisible}>
+          <View
+            style={{
+              width: '100%',
+              height: height,
+              backgroundColor: 'black',
+              opacity: 0.5,
+            }}></View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.InputModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <View style={styles.FImodalView}>
+              <FoodInput
+                image={this.state.image === null ? null : this.state.image}
+                food={this.state.sendFood}
+                isUpdate={(update, foodInfo) => this.isUpdate(update, foodInfo)}
+                close={(tf) =>
+                  this.setFIModalVisible(tf, this.state.updateFoodId)
+                }
+              />
+            </View>
+          </View>
+        </Modal>
 
         <View style={styles.detailArea}>
           <View style={styles.detailHeader}>
@@ -207,6 +380,11 @@ export default class DetatilImage extends Component {
               </Text>
             </View>
             <View style={styles.iconBox}>
+              <Icon
+                style={styles.onCaption}
+                onPress={() => this.setFIModalVisible(true, -1)}
+                name="add"
+              />
               {!this.state.onCaption && (
                 <Icon
                   style={styles.onCaption}
@@ -223,7 +401,7 @@ export default class DetatilImage extends Component {
               )}
               <Icon
                 name="trash"
-                onPress={this.onDelete}
+                onPress={() => this.setonDelModalVisible(true)}
                 style={styles.onCaption}
               />
             </View>
@@ -239,8 +417,17 @@ export default class DetatilImage extends Component {
                 />
               )}
               {!this.state.image && (
-                <View style={{width: width, height: width, backgroundColor: '#FAD499', justifyContent: 'center', alignItems: 'center'}}>
-                  <Icon name='fast-food-outline' style={{fontSize: 200, color: '#fff'}}></Icon>
+                <View
+                  style={{
+                    width: width,
+                    height: width,
+                    backgroundColor: '#FAD499',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Icon
+                    name="fast-food-outline"
+                    style={{fontSize: 200, color: '#fff'}}></Icon>
                 </View>
               )}
               {this.state.onCaption &&
@@ -250,36 +437,36 @@ export default class DetatilImage extends Component {
                   const color = this.state.colors[i];
                   return (
                     <>
-                    {food[2] !== 'null' && (
-                      <View
-                      style={{
-                        position: 'absolute',
-                        left: food[2][0] * k,
-                        top: food[2][1] * k,
-                        width: food[2][2] * k,
-                        height: food[2][3] * k,
-                        borderWidth: 2,
-                        borderColor: color,
-                      }}
-                      key={i}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                        }}>
-                        <Text
+                      {food[2] !== 'null' && (
+                        <View
                           style={{
-                            backgroundColor: color,
-                            padding: 4,
-                            borderBottomRightRadius: 4,
-                            borderBottomLeftRadius: 4,
-                            borderTopRightRadius: 4,
-                            fontWeight: 'bold',
-                          }}>
-                          {food[0]['DESC_KOR']}
-                        </Text>
-                      </View>
-                    </View>
-                    )}
+                            position: 'absolute',
+                            left: food[2][0] * k,
+                            top: food[2][1] * k,
+                            width: food[2][2] * k,
+                            height: food[2][3] * k,
+                            borderWidth: 2,
+                            borderColor: color,
+                          }}
+                          key={i}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                            }}>
+                            <Text
+                              style={{
+                                backgroundColor: color,
+                                padding: 4,
+                                borderBottomRightRadius: 4,
+                                borderBottomLeftRadius: 4,
+                                borderTopRightRadius: 4,
+                                fontWeight: 'bold',
+                              }}>
+                              {food[0]['DESC_KOR']}
+                            </Text>
+                          </View>
+                        </View>
+                      )}
                     </>
                   );
                 })}
@@ -328,9 +515,12 @@ export default class DetatilImage extends Component {
                             ({food[0]['SERVING_SIZE'] * food[1]} g)
                           </Text>
                         </View>
-                        <Icon
-                          name="create-outline"
-                          style={{fontSize: 20}}></Icon>
+                        <TouchableOpacity
+                          onPress={() => this.sendFood(food[0], food[3])}>
+                          <Icon
+                            name="create-outline"
+                            style={{fontSize: 20}}></Icon>
+                        </TouchableOpacity>
                       </View>
                       <View
                         style={{
@@ -433,7 +623,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   imageBody: {
-    marginBottom: 60,
+    marginBottom: 70,
   },
   image: {
     width: width,
@@ -484,4 +674,24 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginHorizontal: 20,
   },
+  FImodalView: {
+    width: width * 0.85,
+    // height: height*0.8,
+    margin: 20,
+    backgroundColor: '#FFFBE6',
+    borderRadius: 5,
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
 });
+
+export default connect(mapStateToProps)(DetatilImage);

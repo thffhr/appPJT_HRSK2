@@ -11,35 +11,38 @@ import {
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
+
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
 
 class Comment extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      articleId: this.props.route.params.articleId,
-      comments: [],
-      myComment: {
-        content: '',
-      },
-      selectedReply: {
-        flag: false,
-        commentId: null,
-      },
-    };
   }
-
+  state = {
+    articleId: this.props.route.params.articleId,
+    comments: [],
+    myComment: {
+      content: '',
+    },
+    selectedReply: {
+      flag: false,
+      commentId: null,
+    },
+    username: this.props.user.username,
+  };
   createComment = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     if (this.state.myComment.content) {
       fetch(`${serverUrl}articles/${this.state.articleId}/create_comment/`, {
         method: 'POST',
         body: JSON.stringify(this.state.myComment),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
@@ -57,8 +60,7 @@ class Comment extends Component {
         });
     }
   };
-  createReply = async (co) => {
-    const token = await AsyncStorage.getItem('auth-token');
+  createReply = () => {
     if (this.state.myComment.content) {
       fetch(
         `${serverUrl}articles/${this.state.selectedReply.commentId}/create_reply/`,
@@ -67,7 +69,7 @@ class Comment extends Component {
           body: JSON.stringify(this.state.myComment),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
+            Authorization: `Token ${this.props.user.token}`,
           },
         },
       )
@@ -87,11 +89,8 @@ class Comment extends Component {
     }
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     // you might want to do the I18N setup here
-    this.setState({
-      username: await AsyncStorage.getItem('username'),
-    });
     this.getComments();
   }
 
@@ -109,7 +108,7 @@ class Comment extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   getReply = (commentId, i) => {
@@ -129,7 +128,7 @@ class Comment extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
   delReply = (commentId, i) => {
@@ -197,7 +196,13 @@ class Comment extends Component {
                               });
                             }
                           }}>
-                          <Text style={{color: btnColor}}>답글 달기</Text>
+                          <Text
+                            style={{
+                              color: btnColor,
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 달기
+                          </Text>
                         </TouchableOpacity>
                       </View>
                       {!comment.replys && (
@@ -205,7 +210,12 @@ class Comment extends Component {
                           onPress={() => {
                             this.getReply(comment.id, i);
                           }}>
-                          <Text>답글 보기</Text>
+                          <Text
+                            style={{
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 보기
+                          </Text>
                         </TouchableOpacity>
                       )}
                       {comment.replys && (
@@ -213,7 +223,12 @@ class Comment extends Component {
                           onPress={() => {
                             this.delReply(comment.id, i);
                           }}>
-                          <Text>답글 접기</Text>
+                          <Text
+                            style={{
+                              fontFamily: 'NanumSquareRoundR',
+                            }}>
+                            답글 접기
+                          </Text>
                         </TouchableOpacity>
                       )}
                       {comment.replys &&
@@ -313,26 +328,29 @@ const styles = StyleSheet.create({
   },
   commentContent: {
     fontSize: 16,
-    fontFamily: 'BMEULJROTTF',
+    fontFamily: 'NanumSquareRoundB',
   },
   commentData: {
     flexDirection: 'row',
   },
   cmdData: {
     marginRight: 7,
+    fontSize: 13,
+    fontFamily: 'NanumSquareRoundL',
   },
   inputArea: {
     backgroundColor: '#fff',
+    fontFamily: 'NanumSquareRoundEB',
   },
   inputBtn: {
-    backgroundColor: '#fca652',
+    backgroundColor: '#e0e0e0',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
   },
   inputTxt: {
     color: '#fff',
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     fontSize: 20,
   },
   writerImg: {
@@ -342,4 +360,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Comment;
+export default connect(mapStateToProps)(Comment);

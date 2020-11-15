@@ -13,20 +13,24 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
 
-export default class MyFeedDetail extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class MyFeedDetail extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      article: this.props.route.params.article,
-      profileImage: null,
-      modalData: '',
-      modalVisible: false,
-    };
   }
+  state = {
+    article: this.props.route.params.article,
+    profileImage: null,
+    modalData: '',
+    modalVisible: false,
+  };
   onBack = () => {
     this.props.navigation.navigate('Community');
   };
@@ -99,7 +103,7 @@ export default class MyFeedDetail extends Component {
                 style={{
                   marginLeft: 10,
                   fontSize: 20,
-                  fontWeight: 'bold',
+                  fontFamily: 'NanumSquareRoundEB',
                 }}>
                 {this.state.article.user.username}
               </Text>
@@ -116,12 +120,11 @@ export default class MyFeedDetail extends Component {
                 <TouchableOpacity
                   style={{marginRight: 10}}
                   onPress={async () => {
-                    const token = await AsyncStorage.getItem('auth-token');
                     fetch(`${serverUrl}articles/articleLikeBtn/`, {
                       method: 'POST',
                       body: JSON.stringify({articleId: this.state.article.id}),
                       headers: {
-                        Authorization: `Token ${token}`,
+                        Authorization: `Token ${this.props.user.token}`,
                         'Content-Type': 'application/json',
                       },
                     })
@@ -296,10 +299,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 20,
     textAlign: 'center',
+    fontFamily: 'NanumBarunGothicBold',
   },
   articleContent: {
     fontSize: 20,
     fontFamily: 'BMEULJROTTF',
+    fontFamily: 'NanumBarunGothicBold',
   },
 
   // modal
@@ -326,7 +331,9 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'NanumBarunGothicBold',
     textAlign: 'center',
   },
 });
+
+export default connect(mapStateToProps)(MyFeedDetail);

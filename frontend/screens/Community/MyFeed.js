@@ -1,8 +1,19 @@
-import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, View, Image, Text, TouchableOpacity, Modal, Dimensions, TouchableHighlight } from 'react-native';
+import React, {Component} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+  TouchableHighlight,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { connect } from 'react-redux';
-import { serverUrl } from '../../constants';
+import {connect} from 'react-redux';
+import {serverUrl} from '../../constants';
 import MyFeedImage from './MyFeedImage';
 
 const {width, height} = Dimensions.get('screen');
@@ -12,9 +23,9 @@ const mapStateToProps = (state) => ({
 });
 
 class MyFeed extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-  };
+  }
   state = {
     myArticles: [],
     modalData: '',
@@ -26,7 +37,7 @@ class MyFeed extends Component {
   };
   componentDidMount() {
     this.getMyArticles();
-  };
+  }
   setModalVisible = (visible, recipe) => {
     if (visible) {
       this.setState({
@@ -59,7 +70,7 @@ class MyFeed extends Component {
       btn2Color: '#FFFBE6',
       btn3Color: '#FFFBE6',
       active: 'btn1',
-    })
+    });
   };
   onBtn2 = () => {
     this.setState({
@@ -67,7 +78,7 @@ class MyFeed extends Component {
       btn2Color: '#F39C12',
       btn3Color: '#FFFBE6',
       active: 'btn2',
-    })
+    });
   };
   onBtn3 = () => {
     this.setState({
@@ -75,7 +86,7 @@ class MyFeed extends Component {
       btn2Color: '#FFFBE6',
       btn3Color: '#F39C12',
       active: 'btn3',
-    })
+    });
   };
   render() {
     return (
@@ -87,9 +98,7 @@ class MyFeed extends Component {
                 <Image
                   style={styles.profileImg}
                   source={{
-                    uri:
-                      `${serverUrl}gallery` +
-                      this.props.user.profileImage,
+                    uri: `${serverUrl}gallery` + this.props.user.profileImage,
                   }}
                 />
               )}
@@ -101,8 +110,8 @@ class MyFeed extends Component {
               )}
               <Text
                 style={{
+                  fontFamily: 'NanumSquareRoundEB',
                   fontSize: 20,
-                  marginLeft: 5,
                 }}>
                 {this.props.user.username}
               </Text>
@@ -127,34 +136,33 @@ class MyFeed extends Component {
             </View>
           </View>
           <View style={styles.btnGroup}>
-              <TouchableHighlight
-                style={[styles.btnBtn, {borderBottomColor: this.state.btn1Color}]}
-                onPress={this.onBtn1}
-              >
-                <Icon name="grid" style={styles.btnIcon}/>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[styles.btnBtn, {borderBottomColor: this.state.btn2Color}]}
-                onPress={this.onBtn2}
-              >
-                <Icon name="heart"  style={styles.btnIcon}/>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[styles.btnBtn, {borderBottomColor: this.state.btn3Color}]}
-                onPress={this.onBtn3}
-              >
-                <Icon name="bookmarks"  style={styles.btnIcon}/>
-              </TouchableHighlight>
+            <TouchableHighlight
+              style={[styles.btnBtn, {borderBottomColor: this.state.btn1Color}]}
+              onPress={this.onBtn1}>
+              <Icon name="grid" style={styles.btnIcon} />
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={[styles.btnBtn, {borderBottomColor: this.state.btn2Color}]}
+              onPress={this.onBtn2}>
+              <Icon name="heart" style={styles.btnIcon} />
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={[styles.btnBtn, {borderBottomColor: this.state.btn3Color}]}
+              onPress={this.onBtn3}>
+              <Icon name="bookmarks" style={styles.btnIcon} />
+            </TouchableHighlight>
           </View>
           {this.state.active === 'btn1' && (
-            <MyFeedImage articles={this.state.myArticles} navigation={this.props.navigation}/>
+            <MyFeedImage
+              articles={this.state.myArticles}
+              navigation={this.props.navigation}
+            />
           )}
         </ScrollView>
       </SafeAreaView>
-    )
+    );
   }
-};
-
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -166,7 +174,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   imgBox: {},
   profileImg: {
@@ -177,7 +186,8 @@ const styles = StyleSheet.create({
   cntBox: {},
   cntContent: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 17,
+    fontFamily: 'NanumSquareRoundR',
   },
   // btn
   btnGroup: {
@@ -200,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(MyFeed); 
+export default connect(mapStateToProps)(MyFeed);

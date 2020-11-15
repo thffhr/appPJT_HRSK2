@@ -13,30 +13,33 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const {width, height} = Dimensions.get('screen');
 
-export default class UserFeed extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class UserFeed extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      userArticles: [],
-      username: this.props.route.params.username,
-      userData: {},
-      selected: {id: null, image: null},
-      isFollow: false,
-      myName: null,
-      modalData: '',
-      modalVisible: false,
-    };
   }
+  state = {
+    userArticles: [],
+    username: this.props.route.params.username,
+    myName: this.props.user.username,
+    userData: {},
+    selected: {id: null, image: null},
+    isFollow: false,
+    myName: null,
+    modalData: '',
+    modalVisible: false,
+  };
   componentDidMount() {
     this.getUserArticles();
   }
   getUserArticles = async () => {
-    const myName = await AsyncStorage.getItem('username');
-    const Token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}articles/read/${this.state.username}/`, {
       method: 'GET',
     })
@@ -44,7 +47,6 @@ export default class UserFeed extends Component {
       .then((response) => {
         this.setState({
           userArticles: response,
-          myName: myName,
         });
       })
       .catch((err) => {
@@ -65,7 +67,7 @@ export default class UserFeed extends Component {
     fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${Token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -76,14 +78,13 @@ export default class UserFeed extends Component {
       })
       .catch((err) => console.error(err));
   };
-  onFollow = async () => {
-    const Token = await AsyncStorage.getItem('auth-token');
+  onFollow = () => {
     fetch(
       `${serverUrl}accounts/profile/${this.state.userData.username}/follow/`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Token ${Token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       },
     )
@@ -111,9 +112,6 @@ export default class UserFeed extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View>
         <Modal
           animationType="fade"
           transparent={true}
@@ -177,7 +175,7 @@ export default class UserFeed extends Component {
               <Text
                 style={{
                   fontSize: 20,
-                  marginLeft: 5,
+                  fontFamily: 'NanumSquareRoundEB',
                 }}>
                 {this.state.userData.username}
               </Text>
@@ -260,25 +258,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  navbar: {
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderBottomColor: 'gray',
-    // borderBottomWidth: 2,
-    backgroundColor: '#fca652',
-    elevation: 5,
-    flexDirection: 'row',
-  },
-  haru: {
-    fontSize: 30,
-    // fontWeight: 'bold',
-    color: '#FFFFFF',
-    fontFamily: 'BMJUA',
-    marginLeft: 15,
-  },
-
   articleBelow: {
     marginLeft: '5%',
   },
@@ -288,7 +267,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   imgBox: {},
   profileImg: {
@@ -299,12 +279,12 @@ const styles = StyleSheet.create({
   cntBox: {},
   cntContent: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 17,
+    fontFamily: 'NanumSquareRoundR',
   },
 
   // my articles
   pictureBox: {
-    // width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderTopWidth: 1,
@@ -325,18 +305,13 @@ const styles = StyleSheet.create({
 
   // follow
   followBtn: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     paddingVertical: 10,
-    // borderRadius: 10,
-    // backgroundColor: '#000000',
-    // flexDirection: 'row',
   },
   followTxt: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'BMJUA',
+    fontFamily: 'NanumSquareRoundEB',
     textAlign: 'center',
   },
   follow: {
@@ -388,7 +363,9 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'NanumBarunGothicBold',
     textAlign: 'center',
   },
 });
+
+export default connect(mapStateToProps)(UserFeed);

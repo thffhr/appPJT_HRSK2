@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  AsyncStorage,
   Modal,
   TouchableHighlight,
   Alert,
@@ -21,32 +20,6 @@ export default class Camera extends Component {
     // avatarSource: '',
     selectedCameraModal: false,
   };
-  // onCamera = () => {
-  //   const options = {
-  //     title: 'Select Avatar',
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: 'images',
-  //       allowsEditing: true,
-  //     },
-  //   };
-
-  //   ImagePicker.showImagePicker(options, (response) => {
-  //     console.log('Response = ', response);
-
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error: ', response.error);
-  //     } else {
-  //       const source = {uri: response.uri};
-  //       this.setState({
-  //         avatarSource: source,
-  //       });
-  //       this.props.onCamera(response);
-  //     }
-  //   });
-  // };
   visibleModal = (visible) => {
     this.setState({
       selectedCameraModal: visible,
@@ -71,7 +44,11 @@ export default class Camera extends Component {
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
-          <View style={styles.centeredView}>
+          <TouchableOpacity
+            style={styles.centeredView}
+            onPress={() => {
+              this.visibleModal(!this.state.selectedCameraModal);
+            }}>
             <View style={styles.delmodalView}>
               <TouchableHighlight
                 onPress={() => {
@@ -95,16 +72,8 @@ export default class Camera extends Component {
                 }}>
                 <Text style={styles.modalText}>앨범에서 가져오기</Text>
               </TouchableHighlight>
-
-              <TouchableOpacity
-                style={styles.openButton}
-                onPress={() => {
-                  this.visibleModal(!this.state.selectedCameraModal);
-                }}>
-                <Text style={styles.textStyle}>닫기</Text>
-              </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
 
         <TouchableOpacity
@@ -118,7 +87,9 @@ export default class Camera extends Component {
             alignItems: 'center',
           }}
           onPress={() => this.visibleModal(!this.state.selectedCameraModal)}>
-          <Text>사진을 추가해보세요.</Text>
+          <Text style={{fontFamily: 'NanumSquareRoundR'}}>
+            사진을 추가해보세요.
+          </Text>
         </TouchableOpacity>
       </>
     );
@@ -176,5 +147,6 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     fontSize: 20,
+    fontFamily: 'NanumSquareRoundB',
   },
 });

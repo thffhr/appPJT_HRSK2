@@ -18,12 +18,16 @@ import {CommonActions, TabRouter} from '@react-navigation/native';
 import {Dropdown} from 'react-native-material-dropdown';
 import {serverUrl} from '../../../constants';
 import FoodInput from '../FoodInput/FoodInput';
-
+import {connect} from 'react-redux';
 import Camera from '../../Camera/Camera';
 
 const {width, height} = Dimensions.get('window');
 
-export default class MyDatePicker extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class MyDatePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -55,6 +59,7 @@ export default class MyDatePicker extends Component {
       colors: ['#FFA7A7', '#FFE08C', '#B7F0B1', '#B2CCFF', '#D1B2FF'],
       badgeColors: ['#2ECC71', '#3498DB', '#8E44AD', '#F1C40F', '#F312A4'],
       foodsLst: [],
+      sendFood: {},
     };
   }
   componentDidMount = async () => {
@@ -133,33 +138,19 @@ export default class MyDatePicker extends Component {
     }
     this.setdelModalVisible(false, -1);
   }
-  // food 추가
-  addFoodInfo(foodInfo) {
-    var newFoodInfo = {};
-    newFoodInfo['location'] = [];
-    newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
-    newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
-    newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
-    newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
-    newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
-    newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
-    newFoodInfo['value'] = 1;
-    // console.log(newFoodInfo)
-    const temp = this.state.foodsLst.concat(newFoodInfo);
-    // console.log(temp)
-    this.setState({
-      foodsLst: temp,
-      nowView: newFoodInfo['DESC_KOR'],
-    });
-    this.setFIModalVisible(false);
-  }
-  setFIModalVisible(tf) {
+  setFIModalVisible(tf, idx) {
     this.setState({
       foodInputData: {
         ...this.state.foodInputData,
         modalVisible: tf,
+        updateFoodIdx: idx,
       },
     });
+    if (idx < 0) {
+      this.setState({
+        sendFood: {},
+      });
+    }
   }
   // food 보기
   changeView(foodName) {
@@ -168,16 +159,76 @@ export default class MyDatePicker extends Component {
     });
   }
   // food 수정
-  foodInput() {}
+  // 보낼 food 정보들
+  sendFood(food, idx) {
+    this.setState({
+      sendFood: {
+        DESC_KOR: food['DESC_KOR'],
+        SERVING_SIZE: food['SERVING_SIZE'],
+        NUTR_CONT1: food['NUTR_CONT1'],
+        NUTR_CONT2: food['NUTR_CONT2'],
+        NUTR_CONT3: food['NUTR_CONT3'],
+        NUTR_CONT4: food['NUTR_CONT4'],
+        location: food['location'],
+      },
+    });
+    this.setFIModalVisible(true, idx);
+  }
+  isUpdate(update, foodInfo, location) {
+    // update일 경우
+    if (update) {
+      var newFoodInfo = {};
+      newFoodInfo['location'] = this.state.sendFood['location'];
+      newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
+      newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
+      newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
+      newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
+      newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
+      newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
+      newFoodInfo['value'] = 1;
+      newFoodInfo['learnCheck'] = false;
+      const temp = this.state.foodsLst;
+      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo);
+      this.setState({
+        foodsLst: temp,
+        nowView: newFoodInfo['DESC_KOR'],
+      });
+      this.setFIModalVisible(false, this.state.updateFoodIdx);
+    } else {
+      // create일 경우
+      var newFoodInfo = {};
+      if (location == []) {
+        newFoodInfo['learnCheck'] = true;
+      } else {
+        newFoodInfo['learnCheck'] = false;
+      }
+      newFoodInfo['location'] = location;
+      newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
+      newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
+      newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
+      newFoodInfo['NUTR_CONT2'] = foodInfo.NUTR_CONT2;
+      newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
+      newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
+      newFoodInfo['value'] = 1;
+      const temp = this.state.foodsLst.concat(newFoodInfo);
+      this.setState({
+        foodsLst: temp,
+        nowView: newFoodInfo['DESC_KOR'],
+      });
+      this.setFIModalVisible(false, this.state.updateFoodIdx);
+    }
+  }
   // 사진 저장
   onCamera() {
     let foodName = '';
     let foodLo = '';
     let foodVal = '';
+    let learnCheck = '';
     if (this.state.foodsLst) {
       for (var foodObject of this.state.foodsLst) {
         foodName += foodObject.DESC_KOR + ',';
         foodVal += foodObject.value + ',';
+        learnCheck += foodObject.learnCheck + ',';
         for (var location of foodObject.location) {
           foodLo += location + ',';
         }
@@ -185,8 +236,10 @@ export default class MyDatePicker extends Component {
       }
     }
     var data = new FormData();
+    data.append('learnCheck', learnCheck);
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
+    console.log('저장할때 위치', foodLo);
     data.append('foodVal', foodVal);
     if (this.state.image !== null) {
       data.append('data', this.state.image.data);
@@ -215,6 +268,14 @@ export default class MyDatePicker extends Component {
       })
       .catch((error) => console.error(error));
   }
+  // CropImg
+  // onCropImg(tf) {
+  //   if (tf) {
+  //     this.props.navigation.push('CropImg', {
+  //       image: this.props.image,
+  //     });
+  //   }
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -296,8 +357,12 @@ export default class MyDatePicker extends Component {
             <View style={styles.FImodalView}>
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
-                saveFoodInfo={(foodInfo) => this.addFoodInfo(foodInfo)}
-                close={(tf) => this.setFIModalVisible(tf)}
+                food={this.state.sendFood}
+                isUpdate={(update, foodInfo, location) =>
+                  this.isUpdate(update, foodInfo, location)
+                }
+                close={(tf) => this.setFIModalVisible(tf, -1)}
+                // onCropImg={(tf) => this.onCropImg(tf)}
               />
             </View>
           </View>
@@ -308,10 +373,8 @@ export default class MyDatePicker extends Component {
             <Text
               style={{
                 fontSize: 20,
-                fontWeight: 'bold',
-                fontFamily: 'BMHANNAAir',
+                fontFamily: 'NanumSquareRoundEB',
                 color: '#F39C12',
-                marginRight: 20,
               }}>
               확인
             </Text>
@@ -341,6 +404,7 @@ export default class MyDatePicker extends Component {
                 },
                 dateText: {
                   fontSize: 17,
+                  fontFamily: 'NanumSquareRoundEB',
                 },
               }}
               onDateChange={(date) => {
@@ -352,8 +416,10 @@ export default class MyDatePicker extends Component {
               // label='시간을 선택하세요.'
               data={this.state.mealTimeDrop}
               value={this.state.dropVal}
+              style={{fontFamily: 'NanumSquareRoundEB', fontSize: 17}}
               containerStyle={styles.dropdown}
               pickerStyle={styles.dropdownPicker}
+              itemTextStyle={{fontFamily: 'NanumSquareRoundEB'}}
               dropdownOffset={{top: 10}}
               onChangeText={(value) => {
                 this.setState({dropVal: value});
@@ -366,7 +432,6 @@ export default class MyDatePicker extends Component {
             )}
             {this.state.image !== null && (
               <View>
-                {/* 음식사진 */}
                 <Image
                   style={styles.image}
                   source={{
@@ -437,7 +502,8 @@ export default class MyDatePicker extends Component {
                   zIndex: 1,
                   height: '100%',
                 }}>
-                <TouchableOpacity onPress={() => this.setFIModalVisible(true)}>
+                <TouchableOpacity
+                  onPress={() => this.setFIModalVisible(true, -1)}>
                   <Icon
                     name="add-outline"
                     style={{
@@ -521,7 +587,7 @@ export default class MyDatePicker extends Component {
                                 style={{
                                   fontSize: 20,
                                   fontWeight: 'bold',
-                                  fontFamily: 'BMHANNAAir',
+                                  fontFamily: 'NanumSquareRoundEB',
                                   color: '#232323',
                                 }}>
                                 {foodData['DESC_KOR']}
@@ -530,7 +596,7 @@ export default class MyDatePicker extends Component {
                                 style={{
                                   fontSize: 17,
                                   fontWeight: 'normal',
-                                  fontFamily: 'BMHANNAAir',
+                                  fontFamily: 'NanumSquareRoundEB',
                                   color: '#232323',
                                   marginLeft: 10,
                                   marginTop: 6,
@@ -540,9 +606,12 @@ export default class MyDatePicker extends Component {
                               </Text>
                             </View>
                             {/* food 수정 */}
-                            <Icon
-                              name="create-outline"
-                              style={{fontSize: 20}}></Icon>
+                            <TouchableOpacity
+                              onPress={() => this.sendFood(foodData, i)}>
+                              <Icon
+                                name="create-outline"
+                                style={{fontSize: 20}}></Icon>
+                            </TouchableOpacity>
                           </View>
                           <View
                             style={{
@@ -552,7 +621,7 @@ export default class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               탄수화물:{' '}
@@ -564,7 +633,7 @@ export default class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               단백질:{' '}
@@ -576,7 +645,7 @@ export default class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundL',
                                 color: '#7F7F7F',
                               }}>
                               지방:{' '}
@@ -631,7 +700,7 @@ export default class MyDatePicker extends Component {
                             <Text
                               style={{
                                 fontSize: 20,
-                                fontFamily: 'BMHANNAAir',
+                                fontFamily: 'NanumSquareRoundB',
                                 color: '#232323',
                                 marginTop: 2,
                               }}>
@@ -657,7 +726,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffbe6',
   },
   navbar: {
-    padding: 5,
+    marginVertical: 5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -673,7 +742,7 @@ const styles = StyleSheet.create({
     height: width,
   },
   imageBody: {
-    marginBottom: 60,
+    marginBottom: 70,
   },
   // badge
   tagBtn: {
@@ -694,8 +763,6 @@ const styles = StyleSheet.create({
   // mealTime modal
   centeredView: {
     position: 'absolute',
-    top: 72,
-    right: -10,
     marginTop: 22,
   },
   // mealTmodalView: {
@@ -790,3 +857,5 @@ const styles = StyleSheet.create({
   //   textAlign: "center"
   // }
 });
+
+export default connect(mapStateToProps)(MyDatePicker);

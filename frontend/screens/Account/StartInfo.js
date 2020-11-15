@@ -5,33 +5,30 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  width,
   AsyncStorage,
   Image,
   Dimensions,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import { NavigationActions } from 'react-navigation';
 import {serverUrl} from '../../constants';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
 const mapStateToProps = (state) => ({
-  user: state.userReducer.user
-})
+  user: state.userReducer.user,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-})
+});
 
-class Startinfo extends Component {
+class StartInfo extends Component {
   constructor(props) {
     super(props);
-
-  };
+  }
   state = {
     height: null,
     weight: null,
@@ -64,14 +61,30 @@ class Startinfo extends Component {
         routes: [{name: 'drawer'}],
       }),
     );
-    
+  };
+  onActive = (active) => {
+    var ans = null;
+    if (active === 'high') {
+      ans = 'high';
+    } else if (active === 'normal') {
+      ans = 'normal';
+    } else {
+      ans = 'low';
+    }
+    this.setState({
+      active: ans,
+    });
   };
   render() {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.infoNext}>
           <Text
-            style={{fontSize: W * 0.05, fontWeight: 'bold', color: '#fca652'}}>
+            style={{
+              fontSize: W * 0.05,
+              fontFamily: 'NanumSquareRoundEB',
+              color: '#fca652',
+            }}>
             다음
           </Text>
         </TouchableOpacity>
@@ -82,7 +95,7 @@ class Startinfo extends Component {
         <Text
           style={{
             fontSize: 25,
-            fontFamily: 'BMHANNA',
+            fontFamily: 'NanumSquareRoundEB',
             color: 'darkgray',
             textAlign: 'center',
             marginVertical: W * 0.05,
@@ -94,46 +107,72 @@ class Startinfo extends Component {
             <TextInput
               style={styles.inputArea}
               placeholder="키"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({height: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              cm
-            </Text>
+            <Text style={styles.unit}>cm</Text>
           </View>
           <View style={styles.textGroup}>
             <TextInput
               style={styles.inputArea}
               placeholder="몸무게"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({weight: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              kg
-            </Text>
+            <Text style={styles.unit}>kg</Text>
           </View>
           <View style={styles.textGroup}>
             <TextInput
               style={styles.inputArea}
               placeholder="나이"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({age: text});
               }}
             />
-            <Text
-              style={styles.unit}>
-              세
-            </Text>
+            <Text style={styles.unit}>세</Text>
+          </View>
+
+          <View style={styles.activeArea}>
+            <Text style={styles.activeText}>활동량</Text>
+            <TouchableOpacity
+              style={
+                this.state.active === 'high'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('high')}>
+              <Text style={styles.activeText}>상</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.active === 'normal'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('normal')}>
+              <Text style={styles.activeText}>중</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.active === 'low'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('low')}>
+              <Text style={styles.activeText}>하</Text>
+            </TouchableOpacity>
           </View>
         </View>
+
         <View style={styles.location}>
           <View style={styles.ncircle}></View>
-          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
+          <View style={styles.ycircle}></View>
         </View>
       </View>
     );
@@ -161,9 +200,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputArea: {
-    width: W * 0.5,
+    width: W * 0.6,
     height: W * 0.1,
     fontSize: W * 0.04,
+    fontFamily: 'NanumBarunGothicBold',
     borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 5,
@@ -175,9 +215,28 @@ const styles = StyleSheet.create({
   unit: {
     marginTop: W * 0.04,
     fontSize: W * 0.045,
+    fontFamily: 'NanumBarunGothicBold',
     color: 'gray',
     marginLeft: 5,
   },
+  activeArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: W * 0.05,
+  },
+  activeBox: {
+    backgroundColor: '#FAD499',
+  },
+  unActiveBox: {
+    backgroundColor: 'transparent',
+  },
+  activeText: {
+    width: W * 0.155,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'NanumSquareRoundR',
+  },
+
   location: {
     position: 'absolute',
     top: H * 0.9,
@@ -199,4 +258,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Startinfo);
+export default connect(mapStateToProps, mapDispatchToProps)(StartInfo);

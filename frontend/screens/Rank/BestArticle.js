@@ -14,13 +14,18 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../constants';
+import {connect} from 'react-redux';
 
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
-export default class BestArticle extends Component {
+const mapStateToProps = (state) => ({
+  user: state.userReducer.user,
+});
+
+class BestArticle extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       articles: [
@@ -42,12 +47,12 @@ export default class BestArticle extends Component {
       BestArticle: [],
       modalData: '',
       modalVisible: false,
-    }
-  };
+    };
+  }
 
   componentDidMount() {
     this.getArticles();
-  };
+  }
   setModalVisible = (visible, recipe) => {
     if (visible) {
       this.setState({
@@ -82,9 +87,6 @@ export default class BestArticle extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View> */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -106,29 +108,47 @@ export default class BestArticle extends Component {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{marginBottom: 5, fontSize: 19, fontWeight: 'bold'}}>레시피</Text>
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Icon name="close-outline" style={{fontSize: 25,}}></Icon>
-              </TouchableHighlight>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text
+                  style={{
+                    marginBottom: 5,
+                    fontSize: 19,
+                    fontFamily: 'NanumSquareRoundEB',
+                  }}>
+                  레시피
+                </Text>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <Icon name="close-outline" style={{fontSize: 25}}></Icon>
+                </TouchableHighlight>
               </View>
-              <View style={{margin:10, alignContent: 'center'}}>
-              {this.state.modalData
-                .split('|')
-                .filter((word) => word)
-                .map((line, i) => {
-                  return (
-                    <View style={{flexDirection: 'row', marginVertical: 3}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 17}}>{i + 1}. </Text>
-                    <Text style={{fontSize: 17}}>
-                      {line}
-                    </Text>
-                    </View>
-                  );
-                })}
+              <View style={{margin: 10, alignContent: 'center'}}>
+                {this.state.modalData
+                  .split('|')
+                  .filter((word) => word)
+                  .map((line, i) => {
+                    return (
+                      <View style={{flexDirection: 'row', marginVertical: 3}}>
+                        <Text
+                          style={{
+                            fontFamily: 'NanumBarunGothicBold',
+                            fontSize: 17,
+                          }}>
+                          {i + 1}.{' '}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: 'NanumBarunGothicBold',
+                            fontSize: 17,
+                          }}>
+                          {line}
+                        </Text>
+                      </View>
+                    );
+                  })}
               </View>
             </View>
           </View>
@@ -149,7 +169,8 @@ export default class BestArticle extends Component {
                               uri: `${serverUrl}gallery` + article.image,
                             }}
                           />
-                          <View style={{flexDirection: 'row', marginLeft: '5%'}}>
+                          <View
+                            style={{flexDirection: 'row', marginLeft: '5%'}}>
                             <Icon
                               name="heart"
                               style={{fontSize: 20, color: 'red'}}
@@ -157,7 +178,7 @@ export default class BestArticle extends Component {
                             <Text
                               style={{
                                 fontSize: 15,
-                                fontFamily: 'BMDOHYEON',
+                                fontFamily: 'NanumSquareRoundEB',
                                 marginVertical: '3%',
                               }}>
                               {' '}
@@ -167,7 +188,7 @@ export default class BestArticle extends Component {
                           <Text
                             style={{
                               fontSize: 15,
-                              fontFamily: 'BMDOHYEON',
+                              fontFamily: 'NanumSquareRoundEB',
                               marginLeft: '5%',
                             }}>
                             {article.user.username}
@@ -276,10 +297,7 @@ export default class BestArticle extends Component {
                             />
                           )}
                           {!article.isliked && (
-                            <Icon
-                              name="heart-outline"
-                              style={{fontSize: 40}}
-                            />
+                            <Icon name="heart-outline" style={{fontSize: 40}} />
                           )}
                         </TouchableOpacity>
                         {article.canComment && (
@@ -381,7 +399,7 @@ export default class BestArticle extends Component {
           </View>
         </ScrollView>
       </SafeAreaView>
-    )
+    );
   }
 }
 
@@ -399,10 +417,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fca652',
   },
-  haru: {
-    fontSize: 30,
-    fontFamily: 'BMJUA',
-    color: '#fff',
+  likeText: {
+    marginBottom: 10,
+    fontSize: 20,
+    textAlign: 'center',
+    fontFamily: 'NanumSquareRoundEB',
   },
   rankArea: {
     width: '100%',
@@ -428,7 +447,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginBottom: 10,
     color: '#696969',
-    fontFamily: 'BMDOHYEON',
+    fontFamily: 'NanumSquareRoundEB',
   },
   //articles
   articles: {
@@ -482,7 +501,7 @@ const styles = StyleSheet.create({
   },
   articleContent: {
     fontSize: 20,
-    fontFamily: 'HANNAAir',
+    fontFamily: 'NanumSquareRoundR',
     marginBottom: 30,
   },
   articleImg: {
@@ -513,5 +532,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+});
 
-})
+export default connect(mapStateToProps)(BestArticle);
