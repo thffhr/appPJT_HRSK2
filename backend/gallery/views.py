@@ -157,6 +157,7 @@ def saveMenu(request):
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
+    learncheck = request.data['learncheck'][:-1].split(',')
     foodLo = []
     print('1-----', request.data['foodLo'])
     if len(request.data['foodLo']) > 1:
@@ -171,17 +172,29 @@ def saveMenu(request):
     # menu2food에 값넣기
     for i in range(len(foodName)):
         new_food = Menu2food()
+        print(foodName[i])
         try:
             foods = get_object_or_404(Food, DESC_KOR=foodName[i])
         except:
             foods = Food.objects.filter(DESC_KOR=foodName[i])[0]
+            print(foods)
         # new_food.food 는 같은 이름 찾아서 넣어야댐
         if foodLo != []:
             new_food.location = foodLo[i]  # 좌표값
+        print(foods)
         new_food.image = new_menu
         new_food.food = foods
         new_food.value = int(foodVal[i])
         new_food.save()
+        if learncheck[i] == 'True':
+            print(new_menu.image)
+            file = open("data/"+foodName[i]+".txt", 'w')
+            file.writelines(str(new_menu.image)+'\n')
+            vstr = ""
+            for a in foodLo[i]:
+                vstr = vstr + str(a) + " "
+            file.writelines(vstr)
+            file.close()
     return Response("파일을 저장했습니다.")
 
 
