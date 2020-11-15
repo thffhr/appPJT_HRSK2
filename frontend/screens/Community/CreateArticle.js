@@ -162,6 +162,7 @@ class CreateArticle extends Component {
         <ScrollView>
           <View style={styles.block}>
             <TextInput
+              style={{fontFamily: 'NanumSquareRoundR'}}
               placeholder="내용을 입력하세요"
               onChangeText={(text) => {
                 this.setState({
@@ -192,8 +193,15 @@ class CreateArticle extends Component {
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <Text style={{fontSize: 20}}>태그 추가</Text>
-              <Text style={{color: 'gray', marginLeft: 15}}>
+              <Text style={{fontSize: 20, fontFamily: 'NanumSquareRoundB'}}>
+                태그 추가
+              </Text>
+              <Text
+                style={{
+                  color: 'gray',
+                  marginLeft: 15,
+                  fontFamily: 'NanumSquareRoundR',
+                }}>
                 태그를 추가해보세요.
               </Text>
             </View>
@@ -201,12 +209,20 @@ class CreateArticle extends Component {
               {this.state.articleInfo.tags.map((value, idx) => {
                 return (
                   <View key={idx} style={styles.tagBox}>
-                    <Text style={{color: '#fff', fontSize: 18}}>#</Text>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: 18,
+                        fontFamily: 'NanumSquareRoundB',
+                      }}>
+                      #
+                    </Text>
                     <Text
                       style={{
                         color: '#fff',
                         fontSize: 18,
                         paddingHorizontal: 5,
+                        fontFamily: 'NanumSquareRoundB',
                       }}>
                       {value}
                     </Text>
@@ -280,7 +296,9 @@ class CreateArticle extends Component {
           <View style={styles.switchBlock}>
             <View>
               <Text style={styles.fs1}>레시피 추가</Text>
-              <Text>하단에 레시피 입력창이 생성됩니다.</Text>
+              <Text style={{fontFamily: 'NanumSquareRoundL'}}>
+                하단에 레시피 입력창이 생성됩니다.
+              </Text>
             </View>
             <Switch
               onValueChange={() => this.RtoggleSwitch(!this.state.RswitchValue)}
@@ -531,6 +549,9 @@ const styles = StyleSheet.create({
     height: 40,
     minWidth: 40,
     maxWidth: 100,
+  },
+  fs1: {
+    fontFamily: 'NanumSquareRoundB',
   },
 });
 
