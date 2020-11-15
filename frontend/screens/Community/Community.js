@@ -173,9 +173,9 @@ class Community extends Component {
           <View style={{width: '100%'}}>
             <View style={styles.articles}>
               {this.state.articles.map((article) => {
+                console.log('##########', article.image);
                 return (
                   <View style={styles.article} key={article.id}>
-                    {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> */}
                     <View style={styles.writer}>
                       <View>
                         <TouchableOpacity

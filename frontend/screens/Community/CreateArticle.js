@@ -38,12 +38,6 @@ class CreateArticle extends Component {
       canSearch: true,
       tags: [],
     },
-    tempArticleInfo: {
-      foods: {
-        칼국수: ['밀'],
-        닭가슴살: [],
-      },
-    },
     recipeInput: '',
     activeRecipe: '칼국수',
     count: 1,
@@ -149,6 +143,7 @@ class CreateArticle extends Component {
     return result;
   }
   render() {
+    console.log('1111', this.state.articleInfo.tags);
     return (
       <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.createArticle}>
@@ -176,6 +171,7 @@ class CreateArticle extends Component {
                     image: this.state.articleInfo.image,
                     canComment: this.state.articleInfo.canComment,
                     canSearch: this.state.articleInfo.canSearch,
+                    tags: this.state.articleInfo.tags,
                   },
                 });
               }}
