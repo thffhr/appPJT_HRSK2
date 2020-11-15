@@ -26,7 +26,7 @@ SECRET_KEY = 'sp*v7csxdt$$r!dqs_i_4_nx3k28-6f=05!c(wm^u^)sc@#4mk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'j3a410.p.ssafy.io', '10.0.2.2']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'k3a307.p.ssafy.io', '10.0.2.2']
 
 
 # Application definition
@@ -171,5 +171,5 @@ MEDIA_URL = '/media/'  # 항상 / 로 끝나도록 설정
 # 업로드된 파일을 저장할 디렉토리 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# FORCE_SCRIPT_NAME = '/api'
+FORCE_SCRIPT_NAME = '/api'
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20242880
