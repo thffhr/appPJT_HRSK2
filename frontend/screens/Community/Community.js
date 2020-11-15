@@ -49,7 +49,6 @@ class Community extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log('@@@@@@@@', response);
         this.setState({
           articles: response,
         });
@@ -135,7 +134,11 @@ class Community extends Component {
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
-          <View style={styles.centeredView}>
+          <TouchableOpacity
+            style={styles.centeredView}
+            onPress={() => {
+              this.setModalVisible(!this.state.modalVisible);
+            }}>
             <View style={styles.modalView}>
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -167,13 +170,13 @@ class Community extends Component {
                     })} */}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
         <ScrollView>
           <View style={{width: '100%'}}>
             <View style={styles.articles}>
               {this.state.articles.map((article) => {
-                console.log('##########', article.image);
+                console.log('아티클: ', article);
                 return (
                   <View style={styles.article} key={article.id}>
                     <View style={styles.writer}>
@@ -215,7 +218,6 @@ class Community extends Component {
                         name="ellipsis-vertical"
                         style={{marginRight: 40, fontSize: 20}}></Icon>
                     </View>
-                    {/* </View> */}
                     {/* <View style={styles.tags}>
                         {article.tags.map((tag) => {
                           return (
@@ -271,7 +273,7 @@ class Community extends Component {
                             <Icon name="list-circle" style={{fontSize: 40}} />
                           </TouchableOpacity>
                         )}
-                        {!article.recipe && (
+                        {article.recipe === '' && (
                           <TouchableOpacity
                             style={{marginRight: 10}}
                             onPress={() => {
@@ -436,6 +438,27 @@ const styles = StyleSheet.create({
   menutTxt: {
     color: '#000000',
     fontSize: 20,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 

@@ -744,8 +744,6 @@ const styles = StyleSheet.create({
   // mealTime modal
   centeredView: {
     position: 'absolute',
-    top: 72,
-    right: -10,
     marginTop: 22,
   },
   // mealTmodalView: {

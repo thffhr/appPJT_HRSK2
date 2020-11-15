@@ -24,20 +24,19 @@ const mapStateToProps = (state) => ({
 class BestUser extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      BestUser: [],
-      isFollow: false,
-      myName: null,
-      userData: {},
-      username: [],
-    };
   }
-
+  state = {
+    BestUser: [],
+    isFollow: false,
+    myName: null,
+    userData: {},
+    username: [],
+    myName: this.props.user.username,
+  };
   componentDidMount() {
     this.getDatas();
   }
-  getDatas = async () => {
+  getDatas = () => {
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -46,7 +45,6 @@ class BestUser extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log(response);
         this.setState({
           BestUser: response,
         });
@@ -54,34 +52,29 @@ class BestUser extends Component {
       .catch((err) => {
         console.log(err);
       });
-    fetch(`${serverUrl}accounts/plususers/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        // console.log(response);
-        this.setState({
-          PlusUser: response,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    const myName = await AsyncStorage.getItem('username');
-    const Token = await AsyncStorage.getItem('auth-token');
+    // fetch(`${serverUrl}accounts/plususers/`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     // console.log(response);
+    //     this.setState({
+    //       PlusUser: response,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log('top');
-        console.log(response);
         this.setState({
           userData: response,
-          myName: myName,
         });
       })
       .catch((err) => {
@@ -90,7 +83,7 @@ class BestUser extends Component {
     fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${Token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -98,19 +91,16 @@ class BestUser extends Component {
         this.setState({
           isFollow: response,
         });
-        console.log(response);
       })
       .catch((err) => console.error(err));
   };
-  onFollow = async () => {
-    console.log(this.state.isFollow);
-    const Token = await AsyncStorage.getItem('auth-token');
+  onFollow = () => {
     fetch(
       `${serverUrl}accounts/profile/${this.state.userData.username}/follow/`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Token ${Token}`,
+          Authorization: `Token ${this.props.suer.token}`,
         },
       },
     )
