@@ -32,13 +32,9 @@ class Result():
 
 @api_view(['GET'])
 def profile(request, username):
-    # user = get_object_or_404(User, uid=user_id)
-    # articles = Article.objects.filter(user=user.id)
     user = get_object_or_404(User, username=username)
     serializer = UserSerializer(user)
-
     return Response(serializer.data)
-    # return Response(context)
 
 
 @api_view(['PATCH'])
@@ -61,7 +57,6 @@ def need(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def need_info(request):
-    print(request.data)
     user = get_object_or_404(User, id=request.user.id)
     save_data = request.data
     if user.sex == 'male':
@@ -130,7 +125,6 @@ def update_profileImage(request):
     save_data = {}
     save_data['profileImage'] = new_profileImg
     user = request.user
-    print('이름:', user.username)
     serializer = UserSerializer(user, data=save_data, partial=True)
     if serializer.is_valid(raise_exception=True):
         serializer.save()
@@ -157,7 +151,6 @@ def userdelete(request, username):
     user = get_object_or_404(User, username=username)
     if request.method == 'POST':
         user.delete()
-        # request.user.delete()
         return Response('탈퇴하였습니다.')
 
 

@@ -87,9 +87,6 @@ class BestArticle extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <View style={styles.navbar}>
-          <Text style={styles.haru}>하루세끼</Text>
-        </View> */}
         <Modal
           animationType="fade"
           transparent={true}

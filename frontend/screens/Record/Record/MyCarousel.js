@@ -43,13 +43,29 @@ class MyCarousel extends Component {
                       marginBottom: 10,
                     }}
                     key={i}>
-                    <Text style={{fontSize: 18, marginLeft: 10}}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: 'NanumSquareRoundEB',
+                        marginLeft: 10,
+                      }}>
                       {food[0]}
                     </Text>
                     <View style={{flexDirection: 'row'}}>
-                      <Text style={{fontSize: 18}}>{food[1]}kcal</Text>
                       <Text
-                        style={{fontSize: 18, marginLeft: 30, marginRight: 10}}>
+                        style={{
+                          fontSize: 18,
+                          fontFamily: 'NanumSquareRoundEB',
+                        }}>
+                        {food[1]}kcal
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: 'NanumSquareRoundEB',
+                          marginLeft: 30,
+                          marginRight: 10,
+                        }}>
                         {food[3]} 인분
                       </Text>
                     </View>
@@ -84,15 +100,15 @@ class MyCarousel extends Component {
               strokeCap={'butt'}
             />
             <View style={{marginTop: 20, marginLeft: 20}}>
-              <Text>
+              <Text style={{fontFamily: 'NanumSquareRoundB'}}>
                 <Icon name="ellipse" style={{color: '#FBC02D'}}></Icon>
                 탄수화물 {item[0].toFixed(1)}%
               </Text>
-              <Text>
+              <Text style={{fontFamily: 'NanumSquareRoundB'}}>
                 <Icon name="ellipse" style={{color: '#FFEB3B'}}></Icon>
                 단백질 {item[1].toFixed(1)}%
               </Text>
-              <Text>
+              <Text style={{fontFamily: 'NanumSquareRoundB'}}>
                 <Icon name="ellipse" style={{color: '#FFF59D'}}></Icon>
                 지방 {item[2].toFixed(1)}%
               </Text>

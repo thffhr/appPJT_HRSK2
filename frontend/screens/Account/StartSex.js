@@ -97,10 +97,6 @@ class StartSex extends Component {
           <TouchableOpacity
             style={[styles.selectbox1, {backgroundColor: this.state.malecolor}]}
             onPress={this.setMale}>
-            {/* <Image
-              source={require('../../assets/images/male.png')}
-              style={styles.selectsex}
-            /> */}
             <Text
               style={{
                 fontSize: W * 0.1,
@@ -116,19 +112,16 @@ class StartSex extends Component {
               {backgroundColor: this.state.femalecolor},
             ]}
             onPress={this.setFemale}>
-            {/* <Image
-              source={require('../../assets/images/female.png')}
-              style={styles.selectsex}
-            /> */}
             <Text
               style={{fontSize: W * 0.1, fontWeight: 'bold', color: 'gray'}}>
               여
             </Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.location}>
-          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
+          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
         </View>
       </View>
@@ -144,8 +137,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fbfbe6',
   },
   image: {
-    // width: W * 0.6,
-    // height: W * 0.6,
     width: '100%',
     height: '100%',
   },
@@ -167,10 +158,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  // selectsex: {
-  //   width: W * 0.15,
-  //   height: W * 0.15,
-  // },
   next: {
     position: 'absolute',
     right: W * 0.03,

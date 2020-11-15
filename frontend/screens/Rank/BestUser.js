@@ -24,20 +24,19 @@ const mapStateToProps = (state) => ({
 class BestUser extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      BestUser: [],
-      isFollow: false,
-      myName: null,
-      userData: {},
-      username: [],
-    };
   }
-
+  state = {
+    BestUser: [],
+    isFollow: false,
+    myName: null,
+    userData: {},
+    username: [],
+    myName: this.props.user.username,
+  };
   componentDidMount() {
     this.getDatas();
   }
-  getDatas = async () => {
+  getDatas = () => {
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -46,71 +45,62 @@ class BestUser extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        // console.log(response);
         this.setState({
           BestUser: response,
         });
       })
       .catch((err) => {
-        console.log(err);
-      });
-    fetch(`${serverUrl}accounts/plususers/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        // console.log(response);
-        this.setState({
-          PlusUser: response,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    const myName = await AsyncStorage.getItem('username');
-    const Token = await AsyncStorage.getItem('auth-token');
-    fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log('top');
-        console.log(response);
-        this.setState({
-          userData: response,
-          myName: myName,
-        });
-      })
-      .catch((err) => {
         console.error(err);
       });
-    fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${Token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({
-          isFollow: response,
-        });
-        console.log(response);
-      })
-      .catch((err) => console.error(err));
+    // fetch(`${serverUrl}accounts/plususers/`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     // console.log(response);
+    //     this.setState({
+    //       PlusUser: response,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
+    //   method: 'GET',
+    // })
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     this.setState({
+    //       userData: response,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
+    // fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
+    //   method: 'POST',
+    //   headers: {
+    //     Authorization: `Token ${this.props.user.token}`,
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     this.setState({
+    //       isFollow: response,
+    //     });
+    //   })
+    //   .catch((err) => console.error(err));
   };
-  onFollow = async () => {
-    console.log(this.state.isFollow);
-    const Token = await AsyncStorage.getItem('auth-token');
+  onFollow = () => {
     fetch(
       `${serverUrl}accounts/profile/${this.state.userData.username}/follow/`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Token ${Token}`,
+          Authorization: `Token ${this.props.suer.token}`,
         },
       },
     )
@@ -139,19 +129,22 @@ class BestUser extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView>
-          {/* <Text style={styles.miniTitle}>추천친구 </Text>
-          <View style={styles.Box2}>
-            {this.state.PlusUser.map((user) => {
+          <View style={styles.box}>
+            <Text style={styles.subTitle}>추천친구</Text>
+            <ScrollView
+              style={styles.commandBox}
+              horizontal={true}></ScrollView>
+            {/* {this.state.PlusUser.map((user) => {
               <Text>{user.username}</Text>;
-            })}
-          </View> */}
-          <Text style={styles.miniTitle}>주간 랭킹</Text>
-          <View style={styles.weeklyBox}>
-            {this.state.BestUser.map((user, i) => {
-              return (
-                <View style={styles.rankingBox}>
-                  <View style={styles.userBtn}>
-                    {/* <Text style={styles.ranking}>{i + 1}</Text> */}
+            })} */}
+          </View>
+
+          <View style={styles.box}>
+            <Text style={styles.subTitle}>주간 랭킹</Text>
+            <View style={styles.weeklyBox}>
+              {this.state.BestUser.map((user, i) => {
+                return (
+                  <View style={styles.rankingBox}>
                     {this.state.profileImage ? (
                       <Image
                         style={styles.profileImg}
@@ -162,10 +155,7 @@ class BestUser extends Component {
                     ) : (
                       <Image
                         style={styles.profileImg}
-                        source={{
-                          uri:
-                            'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png',
-                        }}
+                        source={require('../../assets/images/default-profile.png')}
                       />
                     )}
                     <Text
@@ -180,56 +170,32 @@ class BestUser extends Component {
                     <Text style={styles.followCnt}>
                       {user.num_of_followers}
                     </Text>
-                    {this.state.myName !== user.username && (
-                      <View style={styles.followBtn}>
-                        {/* {!this.state.isFollow ? (
-                          <TouchableOpacity
-                            style={styles.follow}
-                            onPress={this.onFollow}>
-                            <Text style={styles.followTxt}>팔로우</Text>
-                          </TouchableOpacity>
-                        ) : (
-                          <TouchableOpacity
-                            style={styles.following}
-                            onPress={this.onFollow}>
-                            <Text style={styles.followingTxt}>팔로잉</Text>
-                          </TouchableOpacity>
-                        )} */}
-                        {/* <TouchableOpacity
-                          style={styles.follow}
-                          onPress={(e) => {
-                            this.props.navigation.push('UserFeed', {
-                              username: user.username,
-                            });
-                          }}>
-                          <Text style={styles.followTxt}>더보기</Text>
-                        </TouchableOpacity> */}
-                        {i == 0 && (
-                          <View>
-                            <Icon name="medal" style={styles.rank1}></Icon>
-                          </View>
-                        )}
-                        {i == 1 && (
-                          <View>
-                            <Icon name="medal" style={styles.rank2}></Icon>
-                          </View>
-                        )}
-                        {i == 2 && (
-                          <View>
-                            <Icon name="medal" style={styles.rank3}></Icon>
-                          </View>
-                        )}
-                        {i >= 3 && (
-                          <View>
-                            <Icon name="medal" style={styles.rank4}></Icon>
-                          </View>
-                        )}
-                      </View>
-                    )}
+                    <View style={styles.followBtn}>
+                      {i == 0 && (
+                        <View>
+                          <Icon name="medal" style={styles.rank1}></Icon>
+                        </View>
+                      )}
+                      {i == 1 && (
+                        <View>
+                          <Icon name="medal" style={styles.rank2}></Icon>
+                        </View>
+                      )}
+                      {i == 2 && (
+                        <View>
+                          <Icon name="medal" style={styles.rank3}></Icon>
+                        </View>
+                      )}
+                      {i >= 3 && (
+                        <View>
+                          <Icon name="medal" style={styles.rank4}></Icon>
+                        </View>
+                      )}
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -240,27 +206,37 @@ class BestUser extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fbfbe6',
-    width: '100%',
     flex: 1,
-    paddingTop: 20,
+  },
+  commandBox: {
+    alignSelf: 'center',
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 6,
+    backgroundColor: '#fff',
+    paddingBottom: W * 0.2,
+  },
+  box: {
+    marginVertical: 15,
+    marginHorizontal: 20,
   },
   rankingBox: {
     flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  userBtn: {
-    flexDirection: 'row',
-    marginTop: '10%',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    // marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  weeklyBox: {
+    width: '100%',
   },
   ranking: {
-    // marginRight: '5%',
     fontSize: W * 0.1,
     fontFamily: 'NanumSquareRoundEB',
     width: W * 0.1,
   },
   followUser: {
-    // marginRight: '5%',
     fontSize: W * 0.06,
     fontFamily: 'NanumSquareRoundEB',
     width: W * 0.5,
@@ -269,32 +245,22 @@ const styles = StyleSheet.create({
     borderRadius: W * 0.15,
     width: W * 0.13,
     height: W * 0.13,
-    // marginRight: '5%',
   },
-  miniTitle: {
+  subTitle: {
     fontSize: W * 0.06,
     fontFamily: 'NanumSquareRoundEB',
-    margin: 20,
-  },
-  Box2: {
-    alignSelf: 'center',
-    width: '90%',
-    borderRadius: 10,
-    elevation: 5,
-    backgroundColor: '#fff',
-    paddingBottom: W * 0.1,
-    marginBottom: '10%',
+    marginVertical: 10,
   },
   followUser: {
     fontSize: W * 0.06,
-    fontFamily: 'NanumSquareRoundEB',
+    fontFamily: 'NanumSquareRoundB',
     marginLeft: 20,
     minWidth: W * 0.25,
     maxWidth: W * 0.25,
   },
   followCnt: {
     fontSize: W * 0.06,
-    fontFamily: 'NanumSquareRoundEB',
+    fontFamily: 'NanumSquareRoundB',
     marginLeft: 20,
     minWidth: W * 0.15,
     maxWidth: W * 0.15,

@@ -87,7 +87,9 @@ export default class Camera extends Component {
             alignItems: 'center',
           }}
           onPress={() => this.visibleModal(!this.state.selectedCameraModal)}>
-          <Text>사진을 추가해보세요.</Text>
+          <Text style={{fontFamily: 'NanumSquareRoundR'}}>
+            사진을 추가해보세요.
+          </Text>
         </TouchableOpacity>
       </>
     );
@@ -145,5 +147,6 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     fontSize: 20,
+    fontFamily: 'NanumSquareRoundB',
   },
 });

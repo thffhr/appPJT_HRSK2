@@ -5,13 +5,11 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  width,
   AsyncStorage,
   Image,
   Dimensions,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import {NavigationActions} from 'react-navigation';
 import {serverUrl} from '../../constants';
 import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
@@ -64,6 +62,19 @@ class StartInfo extends Component {
       }),
     );
   };
+  onActive = (active) => {
+    var ans = null;
+    if (active === 'high') {
+      ans = 'high';
+    } else if (active === 'normal') {
+      ans = 'normal';
+    } else {
+      ans = 'low';
+    }
+    this.setState({
+      active: ans,
+    });
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -96,6 +107,7 @@ class StartInfo extends Component {
             <TextInput
               style={styles.inputArea}
               placeholder="키"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({height: text});
               }}
@@ -106,6 +118,7 @@ class StartInfo extends Component {
             <TextInput
               style={styles.inputArea}
               placeholder="몸무게"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({weight: text});
               }}
@@ -116,17 +129,50 @@ class StartInfo extends Component {
             <TextInput
               style={styles.inputArea}
               placeholder="나이"
+              keyboardType="number-pad"
               onChangeText={(text) => {
                 this.setState({age: text});
               }}
             />
             <Text style={styles.unit}>세</Text>
           </View>
+
+          <View style={styles.activeArea}>
+            <Text style={styles.activeText}>활동량</Text>
+            <TouchableOpacity
+              style={
+                this.state.active === 'high'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('high')}>
+              <Text style={styles.activeText}>상</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.active === 'normal'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('normal')}>
+              <Text style={styles.activeText}>중</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.active === 'low'
+                  ? styles.activeBox
+                  : styles.unActiveBox
+              }
+              onPress={() => this.onActive('low')}>
+              <Text style={styles.activeText}>하</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
         <View style={styles.location}>
           <View style={styles.ncircle}></View>
-          <View style={styles.ycircle}></View>
           <View style={styles.ncircle}></View>
+          <View style={styles.ycircle}></View>
         </View>
       </View>
     );
@@ -154,7 +200,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputArea: {
-    width: W * 0.5,
+    width: W * 0.6,
     height: W * 0.1,
     fontSize: W * 0.04,
     fontFamily: 'NanumBarunGothicBold',
@@ -173,6 +219,24 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginLeft: 5,
   },
+  activeArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: W * 0.05,
+  },
+  activeBox: {
+    backgroundColor: '#FAD499',
+  },
+  unActiveBox: {
+    backgroundColor: 'transparent',
+  },
+  activeText: {
+    width: W * 0.155,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'NanumSquareRoundR',
+  },
+
   location: {
     position: 'absolute',
     top: H * 0.9,

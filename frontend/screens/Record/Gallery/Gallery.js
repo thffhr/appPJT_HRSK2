@@ -41,11 +41,10 @@ class Gallery extends Component {
     this.onGallery();
   }
   onGallery = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
     fetch(`${serverUrl}gallery/myImgs/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())

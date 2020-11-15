@@ -476,7 +476,12 @@ class Record extends Component {
                             <Icon
                               name="restaurant-outline"
                               style={{fontSize: 20, marginTop: 2}}></Icon>
-                            <Text style={{fontSize: 20, marginLeft: 5}}>
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                marginLeft: 5,
+                                fontFamily: 'NanumSquareRoundEB',
+                              }}>
                               {MenuKey}
                             </Text>
                           </View>
@@ -556,8 +561,9 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   chartDaybox: {
-    width: '50%',
+    width: '70%',
     borderWidth: 1,
+    borderColor: '#bebebe',
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
@@ -565,6 +571,7 @@ const styles = StyleSheet.create({
   chartDaytxt: {
     fontSize: 20,
     margin: 10,
+    fontFamily: 'NanumSquareRoundEB',
   },
   calbox: {
     marginTop: 20,

@@ -112,7 +112,6 @@ class MyFeed extends Component {
                 style={{
                   fontFamily: 'NanumSquareRoundEB',
                   fontSize: 20,
-                  marginLeft: 5,
                 }}>
                 {this.props.user.username}
               </Text>
@@ -175,7 +174,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
   },
   imgBox: {},
   profileImg: {
@@ -185,10 +185,9 @@ const styles = StyleSheet.create({
   },
   cntBox: {},
   cntContent: {
-    fontFamily: 'NanumBarunGothicBold',
-    marginBottom: 3,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 17,
+    fontFamily: 'NanumSquareRoundR',
   },
   // btn
   btnGroup: {
