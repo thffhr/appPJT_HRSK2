@@ -170,11 +170,11 @@ class MyDatePicker extends Component {
         NUTR_CONT3: food['NUTR_CONT3'],
         NUTR_CONT4: food['NUTR_CONT4'],
         location: food['location'],
-      },
-    });
-    this.setFIModalVisible(true, idx);
-  }
-  isUpdate(update, foodInfo) {
+      }
+    })
+    this.setFIModalVisible(true, idx)
+  };
+  isUpdate(update, foodInfo, location) {
     // update일 경우
     if (update) {
       var newFoodInfo = {};
@@ -186,8 +186,9 @@ class MyDatePicker extends Component {
       newFoodInfo['NUTR_CONT3'] = foodInfo.NUTR_CONT3;
       newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
       newFoodInfo['value'] = 1;
-      const temp = this.state.foodsLst;
-      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo);
+      newFoodInfo['learnCheck'] = false;
+      const temp = this.state.foodsLst
+      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo)
       this.setState({
         foodsLst: temp,
         nowView: newFoodInfo['DESC_KOR'],
@@ -196,7 +197,12 @@ class MyDatePicker extends Component {
     } else {
       // create일 경우
       var newFoodInfo = {};
-      newFoodInfo['location'] = [];
+      if (location == []) {
+        newFoodInfo['learnCheck'] = true;
+      } else {
+        newFoodInfo['learnCheck'] = false;
+      }
+      newFoodInfo['location'] = location;
       newFoodInfo['DESC_KOR'] = foodInfo.DESC_KOR;
       newFoodInfo['SERVING_SIZE'] = foodInfo.SERVING_SIZE;
       newFoodInfo['NUTR_CONT1'] = foodInfo.NUTR_CONT1;
@@ -258,7 +264,15 @@ class MyDatePicker extends Component {
         );
       })
       .catch((error) => console.error(error));
-  }
+  };
+  // CropImg
+  // onCropImg(tf) {
+  //   if (tf) {
+  //     this.props.navigation.push('CropImg', {
+  //       image: this.props.image,
+  //     });
+  //   }
+  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -341,8 +355,9 @@ class MyDatePicker extends Component {
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
-                isUpdate={(update, foodInfo) => this.isUpdate(update, foodInfo)}
+                isUpdate={(update, foodInfo, location)=>this.isUpdate(update, foodInfo, location)}
                 close={(tf) => this.setFIModalVisible(tf, -1)}
+                // onCropImg={(tf) => this.onCropImg(tf)}
               />
             </View>
           </View>
@@ -411,7 +426,6 @@ class MyDatePicker extends Component {
             )}
             {this.state.image !== null && (
               <View>
-                {/* 음식사진 */}
                 <Image
                   style={styles.image}
                   source={{
@@ -704,7 +718,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fffbe6',
-    paddingHorizontal: 20,
   },
   navbar: {
     padding: 5,
