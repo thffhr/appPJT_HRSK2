@@ -49,8 +49,13 @@ class Community extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        const articlesOption = Array.from(
+          {length: response.length},
+          () => false,
+        );
         this.setState({
           articles: response,
+          articlesOption: articlesOption,
         });
       })
       .catch((err) => {
@@ -68,6 +73,20 @@ class Community extends Component {
       });
     }
     this.setState({modalVisible: visible});
+  };
+  delArticle = (articleId) => {
+    fetch(`${serverUrl}articles/${articleId}/delete/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then(() => {
+        this.getAllArticles();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   onLikeBtn = (article) => {
     fetch(`${serverUrl}articles/articleLikeBtn/`, {
@@ -216,6 +235,51 @@ class Community extends Component {
                           name="ellipsis-vertical"
                           style={{marginRight: 40, fontSize: 20}}></Icon>
                       </View>
+                      {/* 여기에 북마크, 삭제 등등 추가 */}
+                      {this.props.user.username == article.user.username && (
+                        <View style={{flexDirection: 'column'}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              var articlesOption = Array.from(
+                                {length: this.state.articles.length},
+                                () => false,
+                              );
+                              if (this.state.articlesOption[idx]) {
+                                this.setState({
+                                  articlesOption: articlesOption,
+                                });
+                              } else {
+                                articlesOption[idx] = true;
+                                this.setState({
+                                  articlesOption: articlesOption,
+                                });
+                              }
+                            }}>
+                            <Icon
+                              name="ellipsis-vertical"
+                              style={{marginRight: 40, fontSize: 20}}></Icon>
+                          </TouchableOpacity>
+                          <View
+                            style={{
+                              backgroundColor: 'white',
+                              position: 'absolute',
+                              top: 20,
+                              right: 50,
+                              borderColor: 'black',
+                              borderRadius: 5,
+                              borderWidth: 1,
+                              zIndex: 2,
+                            }}>
+                            {this.state.articlesOption[idx] && (
+                              <TouchableOpacity
+                                onPress={() => this.delArticle(article.id)}>
+                                <Text style={{padding: 10}}>삭제</Text>
+                              </TouchableOpacity>
+                            )}
+                          </View>
+                        </View>
+                      )}
+                      {/* </View> */}
                       {/* <View style={styles.tags}>
                         {article.tags.map((tag) => {
                           return (
