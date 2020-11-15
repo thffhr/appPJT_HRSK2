@@ -193,7 +193,7 @@ class Community extends Component {
           <View style={{width: '100%'}}>
             <View style={styles.articles}>
               {this.state.articles &&
-                this.state.articles.map((article) => {
+                this.state.articles.map((article, idx) => {
                   return (
                     <View style={styles.article} key={article.id}>
                       <View style={styles.writer}>

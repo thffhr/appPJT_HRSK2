@@ -170,10 +170,10 @@ class MyDatePicker extends Component {
         NUTR_CONT3: food['NUTR_CONT3'],
         NUTR_CONT4: food['NUTR_CONT4'],
         location: food['location'],
-      }
-    })
-    this.setFIModalVisible(true, idx)
-  };
+      },
+    });
+    this.setFIModalVisible(true, idx);
+  }
   isUpdate(update, foodInfo, location) {
     // update일 경우
     if (update) {
@@ -187,8 +187,8 @@ class MyDatePicker extends Component {
       newFoodInfo['NUTR_CONT4'] = foodInfo.NUTR_CONT4;
       newFoodInfo['value'] = 1;
       newFoodInfo['learnCheck'] = false;
-      const temp = this.state.foodsLst
-      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo)
+      const temp = this.state.foodsLst;
+      this.state.foodsLst.splice(this.state.updateFoodIdx, 1, newFoodInfo);
       this.setState({
         foodsLst: temp,
         nowView: newFoodInfo['DESC_KOR'],
@@ -223,10 +223,12 @@ class MyDatePicker extends Component {
     let foodName = '';
     let foodLo = '';
     let foodVal = '';
+    let learnCheck = '';
     if (this.state.foodsLst) {
       for (var foodObject of this.state.foodsLst) {
         foodName += foodObject.DESC_KOR + ',';
         foodVal += foodObject.value + ',';
+        learnCheck += foodObject.learnCheck + ',';
         for (var location of foodObject.location) {
           foodLo += location + ',';
         }
@@ -234,6 +236,7 @@ class MyDatePicker extends Component {
       }
     }
     var data = new FormData();
+    data.append('learnCheck', learnCheck);
     data.append('foodName', foodName);
     data.append('foodLo', foodLo);
     console.log('저장할때 위치', foodLo);
@@ -264,7 +267,7 @@ class MyDatePicker extends Component {
         );
       })
       .catch((error) => console.error(error));
-  };
+  }
   // CropImg
   // onCropImg(tf) {
   //   if (tf) {
@@ -355,7 +358,9 @@ class MyDatePicker extends Component {
               <FoodInput
                 image={this.state.image === null ? null : this.state.image}
                 food={this.state.sendFood}
-                isUpdate={(update, foodInfo, location)=>this.isUpdate(update, foodInfo, location)}
+                isUpdate={(update, foodInfo, location) =>
+                  this.isUpdate(update, foodInfo, location)
+                }
                 close={(tf) => this.setFIModalVisible(tf, -1)}
                 // onCropImg={(tf) => this.onCropImg(tf)}
               />

@@ -157,7 +157,8 @@ def saveMenu(request):
     new_menu.save()  # insert
     foodName = request.data['foodName'][:-1].split(',')
     foodVal = request.data['foodVal'][:-1].split(',')
-    learncheck = request.data['learncheck'][:-1].split(',')
+    print(request.data['learnCheck'])
+    learncheck = request.data['learnCheck'][:-1].split(',')
     foodLo = []
     print('1-----', request.data['foodLo'])
     if len(request.data['foodLo']) > 1:
