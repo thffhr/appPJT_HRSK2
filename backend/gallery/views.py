@@ -134,6 +134,13 @@ def getMenuInfo(request):
         Foods_lst.append(food_obj)
     return Response(Foods_lst)
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def learnNewFood(request):
+#     print(request)
+#     #learncheck로 학습해야되는건지 아닌지 확인 가능(학습해야되면 true)
+#     return Response('데이터 왔당')
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def saveMenu(request):

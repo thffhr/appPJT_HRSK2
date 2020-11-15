@@ -27,6 +27,7 @@ export default class FoodInput extends Component {
       update: false,
       foodInfo: this.props.food,
       modalVisible: false,
+      location: [],
     };
   }
   componentDidMount = async () => {
@@ -98,7 +99,7 @@ export default class FoodInput extends Component {
     });
   }
   isUpdate() {
-    this.props.isUpdate(this.state.update, this.state.foodInfo)
+    this.props.isUpdate(this.state.update, this.state.foodInfo, this.state.location)
   }
   close(tf) {
     this.props.close(tf);
@@ -107,6 +108,12 @@ export default class FoodInput extends Component {
     this.setState({
       modalVisible: tf,
     });
+  };
+  putLocation(location) {
+    this.setModalVisible(false)
+    this.setState({
+      location: location,
+    })
   };
   render() {
     return (
@@ -146,7 +153,10 @@ export default class FoodInput extends Component {
                   }}
                 ></Icon>
               </TouchableHighlight>
-              <CropImg image={this.props.image === null ? null : this.props.image} />
+              <CropImg
+                image={this.props.image === null ? null : this.props.image}
+                sendLocation={(location)=>this.putLocation(location)}
+                />
             </View>
           </View>
         </Modal>
