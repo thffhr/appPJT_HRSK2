@@ -318,9 +318,7 @@ class DetatilImage extends Component {
                 </TouchableHighlight>
                 <TouchableHighlight
                   style={{...styles.modalButton, backgroundColor: '#FCA652'}}
-                  onPress={() => {
-                    this.setonDelmodalVisible(!this.state.onDelmodalVisible);
-                  }}>
+                  onPress={() => this.setonDelModalVisible(false)}>
                   <Text style={styles.textStyle}>취소</Text>
                 </TouchableHighlight>
               </View>
