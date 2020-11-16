@@ -230,10 +230,6 @@ class Community extends Component {
                             </Text>
                           </TouchableOpacity>
                         </View>
-                        {/* 여기에 북마크, 삭제 등등 추가 */}
-                        <Icon
-                          name="ellipsis-vertical"
-                          style={{marginRight: 40, fontSize: 20}}></Icon>
                       </View>
                       {/* 여기에 북마크, 삭제 등등 추가 */}
                       {this.props.user.username == article.user.username && (
