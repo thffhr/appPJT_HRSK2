@@ -407,6 +407,7 @@ class MyDatePicker extends Component {
                   fontFamily: 'NanumSquareRoundEB',
                 },
               }}
+              // 날짜 형식 바꾸기
               onDateChange={(date) => {
                 this.setState({date: date});
               }}

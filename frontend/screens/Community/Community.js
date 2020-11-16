@@ -232,7 +232,7 @@ class Community extends Component {
                         </View>
                       </View>
                       {/* 여기에 북마크, 삭제 등등 추가 */}
-                      {this.props.user.username == article.user.username && (
+                      {this.props.user.username === article.user.username && (
                         <View style={{flexDirection: 'column'}}>
                           <TouchableOpacity
                             onPress={() => {
