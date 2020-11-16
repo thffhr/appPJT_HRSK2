@@ -443,8 +443,8 @@ class DetatilImage extends Component {
                             position: 'absolute',
                             left: food[2][0] * k,
                             top: food[2][1] * k,
-                            width: food[2][2] * k,
-                            height: food[2][3] * k,
+                            width: (food[2][2] - food[2][0]) * k,
+                            height: (food[2][3] - food[2][1]) * k,
                             borderWidth: 2,
                             borderColor: color,
                           }}
