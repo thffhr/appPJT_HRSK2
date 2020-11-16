@@ -407,6 +407,7 @@ class MyDatePicker extends Component {
                   fontFamily: 'NanumSquareRoundEB',
                 },
               }}
+              // 날짜 형식 바꾸기
               onDateChange={(date) => {
                 this.setState({date: date});
               }}
@@ -452,8 +453,14 @@ class MyDatePicker extends Component {
                               position: 'absolute',
                               left: foodData['location'][0] * k,
                               top: foodData['location'][1] * k,
-                              width: foodData['location'][2] * k,
-                              height: foodData['location'][3] * k,
+                              width:
+                                (foodData['location'][2] -
+                                  foodData['location'][0]) *
+                                k,
+                              height:
+                                (foodData['location'][3] -
+                                  foodData['location'][1]) *
+                                k,
                               borderWidth: 2,
                               borderColor: color,
                             }}

@@ -13,7 +13,7 @@ import json
 import base64
 from django.core.files.base import ContentFile
 import os
-# import random
+import random
 # from rest_framework.serializers import ModelSerializer
 
 # from django.views.decorators.csrf import csrf_exempt
@@ -215,6 +215,25 @@ def getBestUsers(request):
     print(lst)
     return Response(lst)
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getRecommendUsers(request):
+    users = User.objects.all()
+    max_idx = len(users)-1
+    recommend_users = []
+    check = []
+    cnt = 0
+    while cnt < 5:
+        select = random.randint(0,max_idx)
+        user = users[select]
+        if (select not in check) and (user != request.user):
+            serializer = UserSerializer(user)
+            recommend_users.append(serializer.data)
+            check.append(select)
+        cnt += 1
+    return Response(recommend_users)
+    
 
 # @api_view(['POST'])
 # def getPlusUsers(request):

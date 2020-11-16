@@ -26,6 +26,7 @@ class BestUser extends Component {
     super(props);
   }
   state = {
+    recommendUsers: [],
     BestUser: [],
     isFollow: false,
     myName: null,
@@ -37,6 +38,20 @@ class BestUser extends Component {
     this.getDatas();
   }
   getDatas = () => {
+    fetch(`${serverUrl}accounts/recommendusers/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${this.props.user.token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({
+          recommendUsers: response,
+        });
+      })
+      .catch((err) => console.error(err));
+
     fetch(`${serverUrl}accounts/bestusers/`, {
       method: 'POST',
       headers: {
@@ -131,9 +146,41 @@ class BestUser extends Component {
         <ScrollView>
           <View style={styles.box}>
             <Text style={styles.subTitle}>추천친구</Text>
-            <ScrollView
-              style={styles.commandBox}
-              horizontal={true}></ScrollView>
+            <ScrollView style={styles.recommendBox} horizontal={true}>
+              {this.state.recommendUsers.map((obj, idx) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.recommendItem}
+                    onPress={() => {
+                      this.props.navigation.push('UserFeed', {
+                        username: obj.username,
+                      });
+                    }}>
+                    {obj.profileImage && (
+                      <Image
+                        style={styles.writerImg}
+                        source={{
+                          uri: `${serverUrl}gallery${obj.profileImage}`,
+                        }}
+                      />
+                    )}
+                    {!obj.profileImage && (
+                      <Image
+                        style={styles.writerImg}
+                        source={require('../../assets/images/default-profile.png')}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontFamily: 'NanumSquareRoundEB',
+                        textAlign: 'center',
+                      }}>
+                      {obj.username}{' '}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
             {/* {this.state.PlusUser.map((user) => {
               <Text>{user.username}</Text>;
             })} */}
@@ -208,14 +255,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fbfbe6',
     flex: 1,
   },
-  commandBox: {
+  recommendBox: {
     alignSelf: 'center',
     width: '100%',
     borderWidth: 1,
     borderColor: '#e0e0e0',
     borderRadius: 6,
     backgroundColor: '#fff',
-    paddingBottom: W * 0.2,
+    marginVertical: W * 0.05,
   },
   box: {
     marginVertical: 15,
@@ -315,6 +362,14 @@ const styles = StyleSheet.create({
   rank4: {
     fontSize: W * 0.1,
     color: 'transparent',
+  },
+  writerImg: {
+    borderRadius: 50,
+    width: 40,
+    height: 40,
+  },
+  recommendItem: {
+    margin: W * 0.05,
   },
 });
 

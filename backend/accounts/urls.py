@@ -19,5 +19,6 @@ urlpatterns = [
     # path('recommend/<str:username>/', views.recommend, name='recommend'),
     path('getbasal/', views.get_basal, name='getbasal'),
     path('bestusers/', views.getBestUsers, name='getBestUsers'),
+    path('recommendusers/', views.getRecommendUsers, name='getRecommendUsers'),
     # path('plususers/', views.getPlusUsers, name='getPlusUsers')
 ]
