@@ -8,8 +8,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 
 # Create your views here.
-
-
 @api_view(['POST'])
 def searchFood(request):
     def make_pi(N):
@@ -63,7 +61,6 @@ def searchFood(request):
     lst.sort(key=lambda x: (x[0], x[1]))
     response = []  # (찾은 위치, 음식 이름, 음식 객체)
     for idx, name, food in lst[:10]:
-        print(food.DESC_KOR)
         serializer = serializers.FoodSerializer(food)
         response.append(serializer.data)
     return Response(response)

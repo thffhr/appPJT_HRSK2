@@ -15,7 +15,6 @@ import {connect} from 'react-redux';
 import {login} from '../../src/action/user';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const {width, height} = Dimensions.get('screen');
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 

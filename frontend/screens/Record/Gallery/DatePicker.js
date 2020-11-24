@@ -62,11 +62,9 @@ class MyDatePicker extends Component {
       sendFood: {},
     };
   }
-  componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  componentDidMount = () => {
     const dropVal = this.state.mealTimeDrop[0].value;
     this.setState({
-      token: token,
       dropVal: dropVal,
     });
   };
@@ -82,7 +80,7 @@ class MyDatePicker extends Component {
       body: data,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -255,7 +253,7 @@ class MyDatePicker extends Component {
       body: data,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then(() => {
@@ -268,14 +266,6 @@ class MyDatePicker extends Component {
       })
       .catch((error) => console.error(error));
   }
-  // CropImg
-  // onCropImg(tf) {
-  //   if (tf) {
-  //     this.props.navigation.push('CropImg', {
-  //       image: this.props.image,
-  //     });
-  //   }
-  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -555,11 +545,6 @@ class MyDatePicker extends Component {
                             )}
                           </>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity
-                    onPress={this.setdelModalVisible(true, i)}
-                    style={{position: 'absolute', right: 2, top: 5,}}>
-                      <Icon name='remove-circle' style={{fontSize: 20}}></Icon>
-                    </TouchableOpacity> */}
                       </View>
                     );
                   })}
@@ -772,22 +757,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     marginTop: 22,
   },
-  // mealTmodalView: {
-  //   margin: 20,
-  //   backgroundColor: "white",
-  //   borderRadius: 20,
-  //   paddingHorizontal: 20,
-  //   paddingVertical: 15,
-  //   alignItems: "center",
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 3.84,
-  //   elevation: 5
-  // },
   openButton: {
     borderRadius: 20,
     paddingVertical: 10,
@@ -799,7 +768,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  //delete modal 삭제하시겠습니까?
   //modal
   delmodalView: {
     width: '60%',
@@ -857,12 +825,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: '68%',
     top: '19%',
-    // right: 0,
   },
-  // modalText: {
-  //   marginBottom: 15,
-  //   textAlign: "center"
-  // }
 });
 
 export default connect(mapStateToProps)(MyDatePicker);

@@ -67,47 +67,6 @@ class BestUser extends Component {
       .catch((err) => {
         console.error(err);
       });
-    // fetch(`${serverUrl}accounts/plususers/`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((response) => {
-    //     // console.log(response);
-    //     this.setState({
-    //       PlusUser: response,
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // fetch(`${serverUrl}accounts/profile/${this.state.username}/`, {
-    //   method: 'GET',
-    // })
-    //   .then((response) => response.json())
-    //   .then((response) => {
-    //     this.setState({
-    //       userData: response,
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
-    // fetch(`${serverUrl}accounts/profile/${this.state.username}/isfollow/`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: `Token ${this.props.user.token}`,
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((response) => {
-    //     this.setState({
-    //       isFollow: response,
-    //     });
-    //   })
-    //   .catch((err) => console.error(err));
   };
   onFollow = () => {
     fetch(

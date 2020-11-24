@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -28,17 +27,14 @@ const mapStateToProps = (state) => ({
 class FoodInput extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      update: false,
-      foodInfo: this.props.food,
-      modalVisible: false,
-      location: [],
-    };
   }
-  componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
-    console.log('확인', this.props.image.data);
+  state = {
+    update: false,
+    foodInfo: this.props.food,
+    modalVisible: false,
+    location: [],
+  };
+  componentDidMount = () => {
     //여기서 props 가 있는지 없는지에 따라서 분기 해줘야 함
     if (Object.values(this.props.food).length > 0) {
       this.setState({
@@ -46,7 +42,6 @@ class FoodInput extends Component {
       });
     }
     this.setState({
-      token: token,
       showRecommend: false,
     });
   };
@@ -63,7 +58,7 @@ class FoodInput extends Component {
       body: data,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -105,7 +100,11 @@ class FoodInput extends Component {
     });
   }
   isUpdate() {
-    this.props.isUpdate(this.state.update, this.state.foodInfo, this.state.location)
+    this.props.isUpdate(
+      this.state.update,
+      this.state.foodInfo,
+      this.state.location,
+    );
   }
   close(tf) {
     this.props.close(tf);
@@ -116,11 +115,11 @@ class FoodInput extends Component {
     });
   };
   putLocation(location) {
-    this.setModalVisible(false)
+    this.setModalVisible(false);
     this.setState({
       location: location,
-    })
-  };
+    });
+  }
   render() {
     return (
       <View>
@@ -147,7 +146,7 @@ class FoodInput extends Component {
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Icon
-                  name='close'
+                  name="close"
                   style={{
                     alignItems: 'flex-end',
                     fontSize: 30,
@@ -156,23 +155,22 @@ class FoodInput extends Component {
                     // fontWeight: 'bold',
                     // fontFamily: 'BMHANNAAir',
                     color: '#F39C12',
-                  }}
-                ></Icon>
+                  }}></Icon>
               </TouchableHighlight>
               <CropImg
                 image={this.props.image === null ? null : this.props.image}
-                sendLocation={(location)=>this.putLocation(location)}
-                />
+                sendLocation={(location) => this.putLocation(location)}
+              />
             </View>
           </View>
         </Modal>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={{fontFamily: 'NanumSquareRoundB'}}>영역선택</Text>
           {this.props.image !== null && (
-            <TouchableOpacity onPress={() => {
-              // this.onCropImg(true)
-              this.setModalVisible(!this.state.modalVisible);
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+              }}>
               <Image
                 style={{height: 100, width: 100}}
                 source={{
@@ -405,12 +403,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  // modalButton: {
-  //   paddingHorizontal: 20,
-  //   paddingVertical: 10,
-  //   borderRadius: 100,
-  //   marginHorizontal: 20,
-  // },
   buttonTxt: {
     fontSize: 15,
     fontFamily: 'NanumSquareRoundEB',

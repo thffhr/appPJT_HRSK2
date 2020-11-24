@@ -24,16 +24,15 @@ const mapDispatchToProps = (dispatch) => ({
 class Signup extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      signupData: {
-        username: '',
-        email: '',
-        password1: '',
-        password2: '',
-      },
-    };
   }
+  state = {
+    signupData: {
+      username: '',
+      email: '',
+      password1: '',
+      password2: '',
+    },
+  };
   onSignup = () => {
     fetch(`${serverUrl}rest-auth/signup/`, {
       method: 'POST',
