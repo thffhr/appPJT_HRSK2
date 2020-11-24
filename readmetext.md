@@ -99,10 +99,10 @@ python manage.py runserver 8080
 
 Team: 이상한 나라의 앨리스
 * [박세진](https://lab.ssafy.com/psj8532)은 FrontEnd 구현을 도왔습니다.
-* [전성환](https://lab.ssafy.com/logbug1004)은 DB 설계 및 BackEnd 구현을 도왔습니다.
+* [전성환](https://lab.ssafy.com/jeonsung02)은 DB 설계 및 BackEnd 구현을 도왔습니다.
 * [김성현](https://lab.ssafy.com/tjdgus2319)은 ML 훈련 및 레시피 기능을 도왔습니다.
 * [이솔](https://lab.ssafy.com/tedy55)은 디자인 통합 및 내 기록 기능을 도왔습니다.
-* [이태정](https://lab.ssafy.com/bellnuite)은 시스템 아키텍처 및 추천페이지를 도왔습니다.
+* [이태정](https://lab.ssafy.com/taehee7590)은 시스템 아키텍처 및 추천페이지를 도왔습니다.
 
 
 ***
@@ -111,7 +111,7 @@ Team: 이상한 나라의 앨리스
 ```
 MIT License
 
-Copyright (c) 2020 s03-webmobile2-sub3
+Copyright (c) 2020 s03-final
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -130,5 +130,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 
 ```
