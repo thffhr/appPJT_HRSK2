@@ -24,9 +24,9 @@
 ## Tech Stack
 
 <div>
-    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/CSS3_logo_and_wordmark.svg/330px-CSS3_logo_and_wordmark.svg.png" alt="AngularJS" /></a>&nbsp;&nbsp;
+    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/ngx-flicking/README.md"><img width="45" src="https://www.manhattanmobile.com/wp-content/uploads/2018/08/react-native-workshop-1024x538.jpg" alt="AngularJS" /></a>&nbsp;&nbsp;
     <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://t1.daumcdn.net/cfile/tistory/998EBC4E5B5350CC32" alt="Vue.js" /></a>&nbsp;&nbsp;
-    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://naver.github.io/egjs-flicking/images/vue.svg" alt="Vue.js" /></a>
+    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://t1.daumcdn.net/cfile/tistory/9987444D5AA3751837" alt="Vue.js" /></a>
 </div>
 
 
