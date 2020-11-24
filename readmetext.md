@@ -44,14 +44,14 @@ pip install -r requirements.txt
 ## Usage
 
 ```sh
-yarn serve
+python manage.py runserver 8080
 ```
 
 
 ## 📖 Documentation
 
 
-* 웰컴페이지 / 로그인 / 회원가입
+* 로그인 / 회원가입
 
 <div>
 	<img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2FKakaoTalk_20200820_181146142.gif?alt=media&token=379ba17d-e6bd-441b-a8ac-77bb4466687c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -68,7 +68,7 @@ yarn serve
     <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2FKakaoTalk_20200820_185711169.gif?alt=media&token=bf9cdbfe-366f-4e05-a1c1-f452bb033b84">
 </div>
 
-* 원하는 키워드로 게시물을 찾을 수 있고 내정보를 수정 할 수 있습니다.
+* 촬영한 사진을 
 
 <div>
     <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2F%EA%B2%80%EC%83%89.gif?alt=media&token=3b58ae9d-13fd-478a-994f-5ac11532b01c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -89,9 +89,9 @@ yarn serve
 
 
 ## 🌐 Supported Browsers
-|<img width="40" src="https://simpleicons.org/icons/internetexplorer.svg" alt="IE" />|<img width="40" src="https://simpleicons.org/icons/googlechrome.svg" alt="Chrome" />|<img width="40" src="https://simpleicons.org/icons/apple.svg" alt="iOS" />|<img width="40" src="https://simpleicons.org/icons/android.svg" alt="Android">|
-|:---:|:---:|:---:|:---:|
-|10+|Latest|7+|4+|
+|<img width="40" src="https://simpleicons.org/icons/android.svg" alt="Android">|
+|:---:|
+|4+|
 
 
 
