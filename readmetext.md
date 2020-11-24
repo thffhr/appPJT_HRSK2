@@ -32,8 +32,7 @@
 
 <div>
     <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://4.bp.blogspot.com/-brgnjo5GUa0/WLhXuAwnQII/AAAAAAAAD88/oxL3WK0wiU8zRVDAKyt1sUo37VZLo3BrQCLcB/s200/Android%2BLogo.png" alt="Vue.js" /></a>&nbsp;&nbsp;
-    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://media.vlpt.us/post-images/velopert/654650b0-b351-11e8-9696-f1fffe8a36f1/redux.png" alt="Vue.js" /></a>&nbsp;&nbsp;
-    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1200px-Unofficial_JavaScript_logo_2.svg.png" alt="Vue.js" /></a>&nbsp;&nbsp;
+    <a href="https://github.com/naver/egjs-flicking/blob/master/packages/vue-flicking/README.md"><img width="45" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiwsw2zjytYQGtiLA4ZdKwANVx-PuYKxa2eg&usqp=CAU" alt="Vue.js" /></a>&nbsp;&nbsp;
 </div>
 
 ## Install
