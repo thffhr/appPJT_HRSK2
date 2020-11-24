@@ -38,7 +38,7 @@
 ## Install
 
 ```sh
-yarn install
+pip install -r requirements.txt
 ```
 
 ## Usage
