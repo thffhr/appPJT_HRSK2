@@ -72,7 +72,6 @@ class CreateArticle extends Component {
         foods: this.state.foods,
       },
     });
-    console.log(this.state.articleInfo);
     fetch(`${serverUrl}articles/create/`, {
       method: 'POST',
       body: JSON.stringify(this.state.articleInfo),
@@ -143,7 +142,6 @@ class CreateArticle extends Component {
     return result;
   }
   render() {
-    console.log('1111', this.state.articleInfo.tags);
     return (
       <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.next} onPress={this.createArticle}>

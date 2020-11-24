@@ -46,10 +46,6 @@ class DetatilImage extends Component {
   componentDidMount = async () => {
     console.log(this.state.picture);
     this.getFood();
-    const token = await AsyncStorage.getItem('auth-token');
-    this.setState({
-      token: token,
-    });
   };
   getFood = () => {
     fetch(`${serverUrl}gallery/getFood/${this.state.imageId}/`, {
@@ -80,7 +76,7 @@ class DetatilImage extends Component {
     fetch(`${serverUrl}gallery/${this.state.imageId}/delImg/`, {
       method: 'POST',
       headers: {
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     }).then(() => {
       this.props.navigation.dispatch(
@@ -104,11 +100,11 @@ class DetatilImage extends Component {
       body: form,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then(() => {
         this.setModalVisible(!this.state.modalVisible);
         this.getFood();
       })
@@ -128,11 +124,11 @@ class DetatilImage extends Component {
         body: form,
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Token ${this.state.token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
-        .then((response) => {
+        .then(() => {
           this.getFood();
         })
         .catch((err) => console.error(err));
@@ -146,11 +142,11 @@ class DetatilImage extends Component {
       body: form,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${this.state.token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then(() => {
         this.getFood();
       })
       .catch((err) => console.error(err));
@@ -170,7 +166,6 @@ class DetatilImage extends Component {
     this.setFIModalVisible(true, id);
   }
   setFIModalVisible(tf, id) {
-    console.log(this.state.sendFood);
     this.setState({
       InputModalVisible: tf,
       updateFoodId: id,
@@ -193,19 +188,16 @@ class DetatilImage extends Component {
         body: newFoodInfo,
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Token ${this.state.token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-        })
+        .then(() => {})
         .catch((err) => console.error(err));
       this.setFIModalVisible(false, this.state.updateFoodId);
       this.getFood();
     } else {
       var newFoodInfo = new FormData();
-      // newFoodInfo.append('image', this.state.image)
       newFoodInfo.append('menuId', this.state.imageId);
       newFoodInfo.append('foodId', foodInfo.id);
       newFoodInfo.append('location', []);
@@ -216,13 +208,11 @@ class DetatilImage extends Component {
         body: newFoodInfo,
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Token ${this.state.token}`,
+          Authorization: `Token ${this.props.user.token}`,
         },
       })
         .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-        })
+        .then(() => {})
         .catch((err) => console.error(err));
       this.setFIModalVisible(false, -1);
       this.getFood();
@@ -626,7 +616,6 @@ const styles = StyleSheet.create({
   image: {
     width: width,
     height: width,
-    // resizeMode:'contain'
   },
   // date
   chartDayicon: {
@@ -656,7 +645,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFBE6',
     borderRadius: 5,
     padding: 15,
-    // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -674,7 +662,6 @@ const styles = StyleSheet.create({
   },
   FImodalView: {
     width: width * 0.85,
-    // height: height*0.8,
     margin: 20,
     backgroundColor: '#FFFBE6',
     borderRadius: 5,

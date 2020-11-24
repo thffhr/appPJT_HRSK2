@@ -15,7 +15,6 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 # Create your views here.
-
 def add_tag(request):
     # article이랑 똑같이 crudㄱ
     pass

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -9,7 +8,6 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 
 export default class Camera extends Component {
@@ -17,7 +15,6 @@ export default class Camera extends Component {
     super(props);
   }
   state = {
-    // avatarSource: '',
     selectedCameraModal: false,
   };
   visibleModal = (visible) => {

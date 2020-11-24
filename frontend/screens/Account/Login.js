@@ -24,12 +24,11 @@ const mapDispatchToProps = (dispatch) => ({
 class Login extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      username: '',
-      password: '',
-    };
   }
+  state = {
+    username: '',
+    password: '',
+  };
   async componentDidMount() {
     const token = await AsyncStorage.getItem('auth-token');
     const username = await AsyncStorage.getItem('username');
@@ -254,5 +253,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default Login;
 export default connect(null, mapDispatchToProps)(Login);

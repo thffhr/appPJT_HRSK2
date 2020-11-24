@@ -212,7 +212,6 @@ def getBestUsers(request):
     for BestUser in BestUsers:
         serializer = UserSerializer(BestUser)
         lst.append(serializer.data)
-    print(lst)
     return Response(lst)
 
 

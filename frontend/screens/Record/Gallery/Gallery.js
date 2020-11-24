@@ -28,19 +28,18 @@ let date = today.getDate(); // 날짜
 class Gallery extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      pictures: [],
-      selected: {id: null, image: null},
-      pictureTime: {},
-      // 뱃지
-      badgeColors: ['#2ECC71', '#3498DB', '#8E44AD', '#F1C40F', '#F312A4'],
-    };
   }
+  state = {
+    pictures: [],
+    selected: {id: null, image: null},
+    pictureTime: {},
+    // 뱃지
+    badgeColors: ['#2ECC71', '#3498DB', '#8E44AD', '#F1C40F', '#F312A4'],
+  };
   componentDidMount() {
     this.onGallery();
   }
-  onGallery = async () => {
+  onGallery = () => {
     fetch(`${serverUrl}gallery/myImgs/`, {
       method: 'POST',
       headers: {
@@ -73,20 +72,8 @@ class Gallery extends Component {
     var sendDate = `${newYear}-${newMonth}-${newDate}`;
     this.props.navigation.navigate('MyDatePicker', {
       date: sendDate,
-      // image: image,
     });
   };
-  // onDate = (image) => {
-  //   var newYear = this.pad(`${year}`, 4);
-  //   var newMonth = this.pad(`${month}`, 2);
-  //   var newDate = this.pad(`${date}`, 2);
-  //   var sendDate = `${newYear}-${newMonth}-${newDate}`;
-  //   this.props.navigation.navigate('MyDatePicker', {
-  //     date: sendDate,
-  //     image: image,
-
-  //   })
-  // };
   // 뱃지
   getBadgeStyle(mealTime) {
     if (mealTime === '아침') {

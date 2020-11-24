@@ -23,12 +23,12 @@ const mapStateToProps = (state) => ({
 class StartSex extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      need: {sex: ''},
-      malecolor: 'transparent',
-      femalecolor: 'transparent',
-    };
   }
+  state = {
+    need: {sex: ''},
+    malecolor: 'transparent',
+    femalecolor: 'transparent',
+  };
   infoNext = () => {
     if (this.state.need.sex) {
       fetch(`${serverUrl}accounts/need/`, {
@@ -44,7 +44,7 @@ class StartSex extends Component {
           this.props.navigation.push('Startinfo');
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       alert('성별을 선택해주세요');
@@ -75,7 +75,6 @@ class StartSex extends Component {
         </TouchableOpacity>
         <View style={{width: W * 0.4, height: W * 0.4}}>
           <Image
-            // source={require('../../assets/images/sex.png')}
             source={{
               uri:
                 'https://cdn3.iconfinder.com/data/icons/virus-transmision/32/gender_corona_virus_covid19-256.png',
@@ -184,5 +183,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default StartSex;
 export default connect(mapStateToProps)(StartSex);

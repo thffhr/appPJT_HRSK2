@@ -8,7 +8,6 @@ import {
   ScrollView,
   Image,
   Modal,
-  TouchableHighlight,
   Alert,
   Dimensions,
   SafeAreaView,
@@ -66,13 +65,14 @@ class Community extends Component {
     if (visible) {
       this.setState({
         modalData: recipe,
+        modalVisible: visible,
       });
     } else {
       this.setState({
         modalData: '',
+        modalVisible: visible,
       });
     }
-    this.setState({modalVisible: visible});
   };
   delArticle = (articleId) => {
     fetch(`${serverUrl}articles/${articleId}/delete/`, {
@@ -275,18 +275,6 @@ class Community extends Component {
                           </View>
                         )}
                       </View>
-                      {/* </View> */}
-                      {/* <View style={styles.tags}>
-                        {article.tags.map((tag) => {
-                          return (
-                            <Text
-                              key={tag}
-                              style={{marginRight: 5, fontSize: 20}}>
-                              #{tag}
-                            </Text>
-                          );
-                        })}
-                      </View> */}
                       <Image
                         style={styles.articleImg}
                         source={{

@@ -7,7 +7,6 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import {AsyncStorage, Image} from 'react-native';
 import {serverUrl} from '../../constants';
@@ -74,7 +73,7 @@ class Comment extends Component {
         },
       )
         .then((response) => response.json())
-        .then((response) => {
+        .then(() => {
           this.setState({
             myComment: {
               ...this.state.myComment,
@@ -120,7 +119,6 @@ class Comment extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         var newComments = this.state.comments;
         newComments[i]['replys'] = response;
         this.setState({

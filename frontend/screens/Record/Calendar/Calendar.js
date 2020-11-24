@@ -14,7 +14,6 @@ import {
   LocaleConfig,
   Arrow,
 } from 'react-native-calendars';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {serverUrl} from '../../../constants';
 import {connect} from 'react-redux';
 
@@ -77,35 +76,32 @@ let day = today.getDay(); // 요일
 class Calendar extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedDate: {
-        date: null,
-        아침: 0,
-        점심: 0,
-        저녁: 0,
-        간식: 0,
-        야식: 0,
-        총합: 0,
-      },
-      nextDays: {},
-    };
   }
+  state = {
+    selectedDate: {
+      date: null,
+      아침: 0,
+      점심: 0,
+      저녁: 0,
+      간식: 0,
+      야식: 0,
+      총합: 0,
+    },
+    nextDays: {},
+  };
   componentDidMount() {
     this.onCalendar();
   }
-  onCalendar = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  onCalendar = () => {
     fetch(`${serverUrl}gallery/getCalendar/`, {
       method: 'GET',
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
         'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           nextDays: response,
         });

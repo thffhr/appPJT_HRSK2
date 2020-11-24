@@ -219,7 +219,6 @@ class Record extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         this.setState({
           dayMenus: response['Menus'],
           TotalCal: response['TotalCal'],
@@ -306,20 +305,6 @@ class Record extends Component {
       ? n
       : new Array(width - n.length + 1).join('0') + n;
   };
-
-  // getDayInfo = () => {
-  //   const YMD = `${this.state.dateTime.year}-${this.state.dateTime.month}-${this.state.dateTime.day}`;
-  //   fetch(`${serverUrl}gallery/`, {
-  //     method: 'GET',
-  //     body: YMD,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Token ${this.state.authToken}`,
-  //     },
-  //   })
-  //     .then(() => {})
-  //     .catch((error) => console.error(error));
-  // };
   render() {
     return (
       <SafeAreaView style={styles.container}>

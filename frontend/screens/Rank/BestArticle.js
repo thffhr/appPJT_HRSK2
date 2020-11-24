@@ -26,30 +26,28 @@ const mapStateToProps = (state) => ({
 class BestArticle extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      articles: [
-        {
-          title: '제목1',
-          user: '작성자1',
-          content: '내용1',
-          id: 1,
-          tags: ['태그1', '태그2', '태그3'],
-        },
-        {
-          title: '제목2',
-          user: '작성자2',
-          content: '내용2',
-          id: 2,
-          tags: ['태그1', '태그2', '태그3'],
-        },
-      ],
-      BestArticle: [],
-      modalData: '',
-      modalVisible: false,
-    };
   }
-
+  state = {
+    articles: [
+      {
+        title: '제목1',
+        user: '작성자1',
+        content: '내용1',
+        id: 1,
+        tags: ['태그1', '태그2', '태그3'],
+      },
+      {
+        title: '제목2',
+        user: '작성자2',
+        content: '내용2',
+        id: 2,
+        tags: ['태그1', '태그2', '태그3'],
+      },
+    ],
+    BestArticle: [],
+    modalData: '',
+    modalVisible: false,
+  };
   componentDidMount() {
     this.getArticles();
   }
@@ -57,21 +55,21 @@ class BestArticle extends Component {
     if (visible) {
       this.setState({
         modalData: recipe,
+        modalVisible: visible,
       });
     } else {
       this.setState({
         modalData: '',
+        modalVisible: visible,
       });
     }
-    this.setState({modalVisible: visible});
   };
-  getArticles = async () => {
-    const token = await AsyncStorage.getItem('auth-token');
+  getArticles = () => {
     fetch(`${serverUrl}articles/getbest/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${this.props.user.token}`,
       },
     })
       .then((response) => response.json())
@@ -243,21 +241,17 @@ class BestArticle extends Component {
                       <View style={styles.articleBtns}>
                         <TouchableOpacity
                           style={{marginRight: 10}}
-                          onPress={async () => {
-                            const token = await AsyncStorage.getItem(
-                              'auth-token',
-                            );
+                          onPress={() => {
                             fetch(`${serverUrl}articles/articleLikeBtn/`, {
                               method: 'POST',
                               body: JSON.stringify({articleId: article.id}),
                               headers: {
-                                Authorization: `Token ${token}`,
+                                Authorization: `Token ${this.props.user.token}`,
                                 'Content-Type': 'application/json',
                               },
                             })
                               .then((response) => response.json())
                               .then((response) => {
-                                console.log(response);
                                 const isliked = article.isliked;
                                 const num_of_like = article.num_of_like;
                                 if (response === 'like') {
@@ -287,7 +281,7 @@ class BestArticle extends Component {
                                 }
                               })
                               .catch((err) => {
-                                console.log(err);
+                                console.error(err);
                               });
                           }}>
                           {article.isliked && (
