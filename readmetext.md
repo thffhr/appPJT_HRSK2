@@ -50,7 +50,7 @@ python manage.py runserver 8080
 
 
 ## 📖 Documentation
-
+![KakaoTalk_20201124_161536123](/uploads/edcb0566b9f0f6e2d648cc6cdb6e2461/KakaoTalk_20201124_161536123.gif)
 
 * 로그인 / 회원가입
 
