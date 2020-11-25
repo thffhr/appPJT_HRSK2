@@ -61,7 +61,7 @@ python manage.py runserver 8080
 * 회원가입
 
 <div>
-   ![KakaoTalk_20201125_114352987_01](/uploads/5bf0ac700ad3d045a7c3a9d8fd039d46/KakaoTalk_20201125_114352987_01.jpg)
+   ![KakaoTalk_20201125_114352987_01](/images/5bf0ac700ad3d045a7c3a9d8fd039d46/KakaoTalk_20201125_114352987_01.jpg)
    ![KakaoTalk_20201125_114352987_02](/uploads/bddc3f2a77fbb433d2b51640ef99f06f/KakaoTalk_20201125_114352987_02.jpg)
    ![KakaoTalk_20201125_114352987_03](/uploads/0ac6cd0bc7b8f8d86550381ab4d6de0b/KakaoTalk_20201125_114352987_03.jpg)
 </div>
