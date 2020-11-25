@@ -127,7 +127,7 @@ python manage.py runserver 8080
 
 ## Contributors
 
-Team: 이상한 나라의 앨리스
+Team: 삼시세끼
 * [박세진](https://lab.ssafy.com/psj8532)은 FrontEnd 구현을 도왔습니다.
 * [전성환](https://lab.ssafy.com/jeonsung02)은 DB 설계 및 BackEnd 구현을 도왔습니다.
 * [김성현](https://lab.ssafy.com/tjdgus2319)은 ML 훈련 및 레시피 기능을 도왔습니다.
