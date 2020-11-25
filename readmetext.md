@@ -51,6 +51,33 @@ python manage.py runserver 8080
 
 ## 📖 Documentation
 
+* 로그인
+
+<div>
+    ![KakaoTalk_20201125_114352987](/uploads/f6c3cfb50a49f723792377c35f9d58f5/KakaoTalk_20201125_114352987.gif)
+</div>
+
+
+* 회원가입
+
+<div>
+   ![KakaoTalk_20201125_114352987_01](/uploads/5bf0ac700ad3d045a7c3a9d8fd039d46/KakaoTalk_20201125_114352987_01.jpg)
+   ![KakaoTalk_20201125_114352987_02](/uploads/bddc3f2a77fbb433d2b51640ef99f06f/KakaoTalk_20201125_114352987_02.jpg)
+   ![KakaoTalk_20201125_114352987_03](/uploads/0ac6cd0bc7b8f8d86550381ab4d6de0b/KakaoTalk_20201125_114352987_03.jpg)
+</div>
+
+
+* 내정보
+<div>
+![KakaoTalk_20201125_114352987_04](/uploads/e3c1754b269c51b8e41178cb9c6f6ad1/KakaoTalk_20201125_114352987_04.gif)
+</div>
+
+
+*메인화면
+<div>
+![KakaoTalk_20201125_114352987_06](/uploads/ee91b4d2ec8b741164de15224b615199/KakaoTalk_20201125_114352987_06.gif)   
+</div>
+
 
 * 사진을 분석하여 음식을 검출할 수 있습니다. 검출 못한 음식은 추가 할 수 있습니다.
 
