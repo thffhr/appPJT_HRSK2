@@ -52,41 +52,46 @@ python manage.py runserver 8080
 ## 📖 Documentation
 
 
-* 로그인 / 회원가입
+* 사진을 분석하여 음식을 검출할 수 있습니다. 검출 못한 음식은 추가 할 수 있습니다.
 
 <div>
-    ![KakaoTalk_20201124_161536123](/uploads/edcb0566b9f0f6e2d648cc6cdb6e2461/KakaoTalk_20201124_161536123.gif)
-    ![KakaoTalk_20201124_161536123_01](/uploads/735dab12c985b9576e442bdd6f4ffbc8/KakaoTalk_20201124_161536123_01.gif)    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2FKakaoTalk_20200820_174540790.jpg?alt=media&token=3ac3d58a-a977-474a-835d-2a803cfbffd6">
+    ![det](/uploads/bd927bcb11d88d48c39f73252ccccae6/det.gif)
+    ![search](/uploads/4f752c84f009d0331553054213ce875a/search.gif)
+    ![추가할데이터영역선택](/uploads/f161d7885c6d36a07c4a00075f3dfe30/추가할데이터영역선택.gif)
 </div>
 
 
 
-* 메인화면 / 팀 지원 및 팀 생성을 할 수 있고 상대방 프로필을 확인 할 수 있습니다.
+* 기록 / 오늘 먹은 음식의 영양성분 및 칼로리를 확인하고 기록 할 수 있습니다. 
 
 <div>
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2FKakaoTalk_20200820_183838866.gif?alt=media&token=499087a2-088d-4744-9c3c-c8dda24aab59">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2FKakaoTalk_20200820_185711169.gif?alt=media&token=bf9cdbfe-366f-4e05-a1c1-f452bb033b84">
+![기록추가](/uploads/7643cd5ab9c3ea6bdbd49ca0a71a4a3b/기록추가.gif)
+![기록에서영양성분및칼로리확인](/uploads/cad026590ee1d72527c883fde655970c/기록에서영양성분및칼로리확인.gif)
 </div>
 
-* 촬영한 사진을 
+* 기록을 추가 할 때 날짜와 시간대를 설정하세요 
 
 <div>
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2F%EA%B2%80%EC%83%89.gif?alt=media&token=3b58ae9d-13fd-478a-994f-5ac11532b01c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2F%EB%82%B4%20%EC%A0%95%EB%B3%B4%20%EC%88%98%EC%A0%95.gif?alt=media&token=43fe9c70-1372-4d5b-8048-3a605b4ec3f1">
-</div>
-
-
-
-* 팀게시판 목록을 관리 할 수 있습니다.(게시판 글 등록 및 일정 관리, 팀원 평가) / 외부 공모전을 찾아 볼 수 있습니다.
-
-<div>
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2F%ED%8C%80%EA%B2%8C%EC%8B%9C%ED%8C%90.gif?alt=media&token=dd1ce44f-7c94-44dc-8faf-8287ba5dd5c9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="190" src="https://firebasestorage.googleapis.com/v0/b/neonaedong.appspot.com/o/readmeMD%2F%EC%99%B8%EB%B6%80%20%EA%B3%B5%EB%AA%A8%EC%A0%84.gif?alt=media&token=9946618b-6984-4cdc-8727-5dff9990422f">
-
+    ![날짜변경](/uploads/33d4a8bafb1e06a47a14ddb2489d06a3/날짜변경.gif)
+    ![시간추가](/uploads/9fe3794f7b2c3b7c9366bee00e8326de/시간추가.gif)
+    ![달력기능](/uploads/1556ad8beb896030a99f2d5d68e47a14/달력기능.gif)
 </div>
 
 
 
+* 식단을 공유하기 위한 피드 / 다른 사람의 식단을 보고 댓글로 소통하세요
+<div>
+![피드확인좋아요](/uploads/a4551b2afc61d8bca26e05fdcd867304/피드확인좋아요.gif)
+![댓글달기](/uploads/b5c31a113d6d01445b3d123dc0d54b54/댓글달기.gif)
+</div>
+
+* 게시물 등록 시 레시피와 태그를 추가할 수 있습니다.
+
+<div>
+![피드게시물생성](/uploads/cd33c5e37753fb587f83db26569e4485/피드게시물생성.gif)
+![피드게시물태그추카](/uploads/ce4be9f8c7aa5c4e9000808ae7e002bf/피드게시물태그추카.gif)
+![레시피추가](/uploads/79c08d7249e912f68d076c6a99bb16d4/레시피추가.gif)
+</div>
 
 ## 🌐 Supported Browsers
 |<img width="40" src="https://simpleicons.org/icons/android.svg" alt="Android">|
