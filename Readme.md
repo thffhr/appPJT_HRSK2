@@ -73,14 +73,13 @@ python manage.py runserver 8080
 </div>
 
 
-*메인화면
+* 메인화면
 <div>
 ![KakaoTalk_20201125_114352987_06](/uploads/ee91b4d2ec8b741164de15224b615199/KakaoTalk_20201125_114352987_06.gif)   
 </div>
 
 
 * 사진을 분석하여 음식을 검출할 수 있습니다. 검출 못한 음식은 추가 할 수 있습니다.
-
 <div>
     ![det](/uploads/bd927bcb11d88d48c39f73252ccccae6/det.gif)
     ![search](/uploads/4f752c84f009d0331553054213ce875a/search.gif)
@@ -90,7 +89,6 @@ python manage.py runserver 8080
 
 
 * 기록 / 오늘 먹은 음식의 영양성분 및 칼로리를 확인하고 기록 할 수 있습니다. 
-
 <div>
 ![기록추가](/uploads/7643cd5ab9c3ea6bdbd49ca0a71a4a3b/기록추가.gif)
 ![기록에서영양성분및칼로리확인](/uploads/cad026590ee1d72527c883fde655970c/기록에서영양성분및칼로리확인.gif)
